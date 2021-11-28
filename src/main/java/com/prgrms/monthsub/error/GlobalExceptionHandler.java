@@ -77,7 +77,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(BusinessException.class)
     protected ApiResponse<ErrorResponse> handleBusinessException(final BusinessException e) {
-        log.error("handleEntityNotFoundException", e);
+        log.error("handleBusinessException", e);
         final ErrorCode errorCode = e.getErrorCode();
         final ErrorResponse response = ErrorResponse.of(errorCode);
         return ApiResponse.fail(errorCode.getStatus().value(), response);
@@ -85,7 +85,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     protected ApiResponse<ErrorResponse> handleException(Exception e) {
-        log.error("handleEntityNotFoundException", e);
+        log.error("handleException", e);
         final ErrorResponse response = ErrorResponse.of(ErrorCode.INTERNAL_SERVER_ERROR);
         return ApiResponse.fail(HttpStatus.INTERNAL_SERVER_ERROR.value(), response);
     }
