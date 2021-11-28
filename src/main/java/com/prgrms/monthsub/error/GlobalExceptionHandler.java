@@ -1,12 +1,12 @@
 package com.prgrms.monthsub.error;
 
+import com.prgrms.monthsub.ApiResponse;
 import com.prgrms.monthsub.error.exception.BusinessException;
 import com.prgrms.monthsub.error.exception.InvalidInputException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.TypeMismatchDataAccessException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindException;
@@ -24,38 +24,41 @@ public class GlobalExceptionHandler {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    protected ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+    protected ApiResponse<ErrorResponse> handleMethodArgumentNotValidException(
+        MethodArgumentNotValidException e) {
         log.error("handleMethodArgumentNotValidException", e);
         final ErrorResponse response = ErrorResponse.of(ErrorCode.INVALID_INPUT_VALUE, e.getBindingResult());
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        return ApiResponse.fail(HttpStatus.BAD_REQUEST.value(), response);
     }
 
     @ExceptionHandler(BindException.class)
-    protected ResponseEntity<ErrorResponse> handleBindException(BindException e) {
+    protected ApiResponse<ErrorResponse> handleBindException(BindException e) {
         log.error("handleBindException", e);
         final ErrorResponse response = ErrorResponse.of(ErrorCode.INVALID_INPUT_VALUE, e.getBindingResult());
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        return ApiResponse.fail(HttpStatus.BAD_REQUEST.value(), response);
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    protected ResponseEntity<ErrorResponse> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {
+    protected ApiResponse<ErrorResponse> handleMethodArgumentTypeMismatchException(
+        MethodArgumentTypeMismatchException e) {
         log.error("handleMethodArgumentTypeMismatchException", e);
         final ErrorResponse response = ErrorResponse.of(e);
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        return ApiResponse.fail(HttpStatus.BAD_REQUEST.value(), response);
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    protected ResponseEntity<ErrorResponse> handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
+    protected ApiResponse<ErrorResponse> handleHttpRequestMethodNotSupportedException(
+        HttpRequestMethodNotSupportedException e) {
         log.error("handleHttpRequestMethodNotSupportedException", e);
         final ErrorResponse response = ErrorResponse.of(ErrorCode.METHOD_NOT_ALLOWED);
-        return new ResponseEntity<>(response, HttpStatus.METHOD_NOT_ALLOWED);
+        return ApiResponse.fail(HttpStatus.METHOD_NOT_ALLOWED.value(), response);
     }
 
     @ExceptionHandler(AccessDeniedException.class)
-    protected ResponseEntity<ErrorResponse> handleAccessDeniedException(AccessDeniedException e) {
+    protected ApiResponse<ErrorResponse> handleAccessDeniedException(AccessDeniedException e) {
         log.error("handleAccessDeniedException", e);
         final ErrorResponse response = ErrorResponse.of(ErrorCode.HANDLE_ACCESS_DENIED);
-        return new ResponseEntity<>(response, ErrorCode.HANDLE_ACCESS_DENIED.getStatus());
+        return ApiResponse.fail(ErrorCode.HANDLE_ACCESS_DENIED.getStatus().value(), response);
     }
 
     @ExceptionHandler({
@@ -66,24 +69,25 @@ public class GlobalExceptionHandler {
         MissingServletRequestParameterException.class,
         MultipartException.class
     })
-    protected ResponseEntity<ErrorResponse> handleBadRequestException(InvalidInputException e){
+    protected ApiResponse<ErrorResponse> handleBadRequestException(InvalidInputException e) {
         log.error("handleBadRequestException", e);
         final ErrorResponse response = ErrorResponse.of(ErrorCode.INVALID_INPUT_VALUE);
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        return ApiResponse.fail(HttpStatus.BAD_REQUEST.value(), response);
     }
 
     @ExceptionHandler(BusinessException.class)
-    protected ResponseEntity<ErrorResponse> handleBusinessException(final BusinessException e) {
+    protected ApiResponse<ErrorResponse> handleBusinessException(final BusinessException e) {
         log.error("handleEntityNotFoundException", e);
         final ErrorCode errorCode = e.getErrorCode();
         final ErrorResponse response = ErrorResponse.of(errorCode);
-        return new ResponseEntity<>(response, errorCode.getStatus());
+        return ApiResponse.fail(errorCode.getStatus().value(), response);
     }
 
     @ExceptionHandler(Exception.class)
-    protected ResponseEntity<ErrorResponse> handleException(Exception e) {
+    protected ApiResponse<ErrorResponse> handleException(Exception e) {
         log.error("handleEntityNotFoundException", e);
         final ErrorResponse response = ErrorResponse.of(ErrorCode.INTERNAL_SERVER_ERROR);
-        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        return ApiResponse.fail(HttpStatus.INTERNAL_SERVER_ERROR.value(), response);
     }
+
 }
