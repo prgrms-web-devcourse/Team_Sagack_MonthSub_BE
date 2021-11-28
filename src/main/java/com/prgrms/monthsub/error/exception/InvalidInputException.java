@@ -2,7 +2,7 @@ package com.prgrms.monthsub.error.exception;
 
 import com.prgrms.monthsub.error.ErrorCode;
 
-public class InvalidInputException extends BusinessException{
+public class InvalidInputException extends BusinessException {
 
     public InvalidInputException(String message, ErrorCode errorCode) {
         super(message, errorCode);
@@ -12,5 +12,6 @@ public class InvalidInputException extends BusinessException{
         super(errorCode);
     }
 
-    public InvalidInputException() { super(ErrorCode.INVALID_INPUT_VALUE); }
+    public InvalidInputException() {super(ErrorCode.INVALID_INPUT_VALUE);}
+
 }

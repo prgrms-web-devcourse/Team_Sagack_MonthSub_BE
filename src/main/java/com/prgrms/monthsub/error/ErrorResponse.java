@@ -15,8 +15,11 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 public class ErrorResponse {
 
     private String message;
+
     private int status;
+
     private List<FieldError> errors;
+
     private LocalDateTime severTime;
 
     private ErrorResponse(final ErrorCode code, final List<FieldError> errors) {
@@ -47,15 +50,19 @@ public class ErrorResponse {
 
     public static ErrorResponse of(MethodArgumentTypeMismatchException e) {
         final String value = e.getValue() == null ? "" : e.getValue().toString();
-        final List<ErrorResponse.FieldError> errors = ErrorResponse.FieldError.of(e.getName(), value, e.getErrorCode());
+        final List<ErrorResponse.FieldError> errors = ErrorResponse.FieldError.of(
+            e.getName(), value, e.getErrorCode());
         return new ErrorResponse(ErrorCode.INVALID_TYPE_VALUE, errors);
     }
 
     @Getter
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     public static class FieldError {
+
         private String field;
+
         private String value;
+
         private String reason;
 
         private FieldError(final String field, final String value, final String reason) {
@@ -76,8 +83,11 @@ public class ErrorResponse {
                 .map(error -> new FieldError(
                     error.getField(),
                     error.getRejectedValue() == null ? "" : error.getRejectedValue().toString(),
-                    error.getDefaultMessage()))
+                    error.getDefaultMessage()
+                ))
                 .collect(Collectors.toList());
         }
+
     }
+
 }
