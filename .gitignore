@@ -37,3 +37,5 @@ out/
 .vscode/
 
 /node_modules
+.env
+.envrc
