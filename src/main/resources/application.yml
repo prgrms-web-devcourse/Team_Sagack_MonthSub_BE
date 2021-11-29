@@ -1,3 +1,25 @@
 spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
   flyway:
     enabled: false
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: update
+      naming.physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+    show-sql: true
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    properties:
+      hibernate.format_sql: true
+  output:
+    ansi.enabled: always
+server:
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true

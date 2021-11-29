@@ -27,6 +27,11 @@ jobs:
         run: ./gradlew clean build
         shell: bash
 
+        env:
+          DB_URL: ${{secrets.DB_URL}}
+          DB_USER: ${{secrets.DB_USER}}
+          DB_PASSWORD: ${{secrets.DB_PASSWORD}}
+
       - name: Get current time
         uses: 1466587594/get-current-time@v2
         id: current-time
