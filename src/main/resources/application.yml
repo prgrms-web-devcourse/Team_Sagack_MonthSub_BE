@@ -17,6 +17,11 @@ spring:
       hibernate.format_sql: true
   output:
     ansi.enabled: always
+
+springdoc:
+  swagger-ui:
+    path: /swagger-monthsub.html
+
 server:
   servlet:
     encoding:
