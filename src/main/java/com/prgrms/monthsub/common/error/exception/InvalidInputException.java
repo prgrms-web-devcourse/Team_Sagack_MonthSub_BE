@@ -1,6 +1,6 @@
-package com.prgrms.monthsub.error.exception;
+package com.prgrms.monthsub.common.error.exception;
 
-import com.prgrms.monthsub.error.ErrorCode;
+import com.prgrms.monthsub.common.error.ErrorCode;
 
 public class InvalidInputException extends BusinessException {
 

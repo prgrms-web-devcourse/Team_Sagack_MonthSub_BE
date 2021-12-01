@@ -1,8 +1,7 @@
-package com.prgrms.monthsub.error;
+package com.prgrms.monthsub.common.error;
 
-import com.prgrms.monthsub.ApiResponse;
-import com.prgrms.monthsub.error.exception.BusinessException;
-import com.prgrms.monthsub.error.exception.InvalidInputException;
+import com.prgrms.monthsub.common.error.exception.BusinessException;
+import com.prgrms.monthsub.common.error.exception.InvalidInputException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.TypeMismatchDataAccessException;
@@ -28,14 +27,14 @@ public class GlobalExceptionHandler {
         MethodArgumentNotValidException e) {
         log.error("handleMethodArgumentNotValidException", e);
         final ErrorResponse response = ErrorResponse.of(ErrorCode.INVALID_INPUT_VALUE, e.getBindingResult());
-        return ApiResponse.fail(HttpStatus.BAD_REQUEST.value(), response);
+        return ApiResponse.fail(HttpStatus.BAD_REQUEST.value(), response.getCode(), response);
     }
 
     @ExceptionHandler(BindException.class)
     protected ApiResponse<ErrorResponse> handleBindException(BindException e) {
         log.error("handleBindException", e);
         final ErrorResponse response = ErrorResponse.of(ErrorCode.INVALID_INPUT_VALUE, e.getBindingResult());
-        return ApiResponse.fail(HttpStatus.BAD_REQUEST.value(), response);
+        return ApiResponse.fail(HttpStatus.BAD_REQUEST.value(), response.getCode(), response);
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
@@ -43,7 +42,7 @@ public class GlobalExceptionHandler {
         MethodArgumentTypeMismatchException e) {
         log.error("handleMethodArgumentTypeMismatchException", e);
         final ErrorResponse response = ErrorResponse.of(e);
-        return ApiResponse.fail(HttpStatus.BAD_REQUEST.value(), response);
+        return ApiResponse.fail(HttpStatus.BAD_REQUEST.value(), response.getCode(), response);
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
@@ -51,14 +50,15 @@ public class GlobalExceptionHandler {
         HttpRequestMethodNotSupportedException e) {
         log.error("handleHttpRequestMethodNotSupportedException", e);
         final ErrorResponse response = ErrorResponse.of(ErrorCode.METHOD_NOT_ALLOWED);
-        return ApiResponse.fail(HttpStatus.METHOD_NOT_ALLOWED.value(), response);
+        return ApiResponse.fail(HttpStatus.METHOD_NOT_ALLOWED.value(), response.getCode(), response);
     }
 
     @ExceptionHandler(AccessDeniedException.class)
     protected ApiResponse<ErrorResponse> handleAccessDeniedException(AccessDeniedException e) {
         log.error("handleAccessDeniedException", e);
         final ErrorResponse response = ErrorResponse.of(ErrorCode.HANDLE_ACCESS_DENIED);
-        return ApiResponse.fail(ErrorCode.HANDLE_ACCESS_DENIED.getStatus().value(), response);
+        return ApiResponse.fail(ErrorCode.HANDLE_ACCESS_DENIED.getStatus().value(),
+            response.getCode(), response);
     }
 
     @ExceptionHandler({
@@ -72,7 +72,7 @@ public class GlobalExceptionHandler {
     protected ApiResponse<ErrorResponse> handleBadRequestException(InvalidInputException e) {
         log.error("handleBadRequestException", e);
         final ErrorResponse response = ErrorResponse.of(ErrorCode.INVALID_INPUT_VALUE);
-        return ApiResponse.fail(HttpStatus.BAD_REQUEST.value(), response);
+        return ApiResponse.fail(HttpStatus.BAD_REQUEST.value(), response.getCode(), response);
     }
 
     @ExceptionHandler(BusinessException.class)
@@ -80,14 +80,14 @@ public class GlobalExceptionHandler {
         log.error("handleBusinessException", e);
         final ErrorCode errorCode = e.getErrorCode();
         final ErrorResponse response = ErrorResponse.of(errorCode);
-        return ApiResponse.fail(errorCode.getStatus().value(), response);
+        return ApiResponse.fail(errorCode.getStatus().value(), response.getCode(), response);
     }
 
     @ExceptionHandler(Exception.class)
     protected ApiResponse<ErrorResponse> handleException(Exception e) {
         log.error("handleException", e);
         final ErrorResponse response = ErrorResponse.of(ErrorCode.INTERNAL_SERVER_ERROR);
-        return ApiResponse.fail(HttpStatus.INTERNAL_SERVER_ERROR.value(), response);
+        return ApiResponse.fail(HttpStatus.INTERNAL_SERVER_ERROR.value(), response.getCode(), response);
     }
 
 }

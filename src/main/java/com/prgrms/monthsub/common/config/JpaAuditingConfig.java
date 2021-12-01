@@ -1,4 +1,4 @@
-package com.prgrms.monthsub.config;
+package com.prgrms.monthsub.common.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;

@@ -1,4 +1,4 @@
-package com.prgrms.monthsub;
+package com.prgrms.monthsub.common.error;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -18,21 +18,25 @@ public class ApiResponse<T> {
 
     private int statusCode;
 
+    private String code;
+
     private T data;
 
     @Builder
-    public ApiResponse(boolean success, String httpMethod, int statusCode, T data) {
+    public ApiResponse(boolean success, String httpMethod, int statusCode, String code, T data) {
         this.success = success;
         this.httpMethod = httpMethod;
         this.statusCode = statusCode;
         this.data = data;
+        this.code = code;
     }
 
     @Builder
-    public ApiResponse(boolean success, int statusCode, T data) {
+    public ApiResponse(boolean success, int statusCode, String code, T data) {
         this.success = success;
         this.statusCode = statusCode;
         this.data = data;
+        this.code = code;
     }
 
     public static <T> ApiResponse<T> ok(HttpMethod httpMethod, T data) {
@@ -44,10 +48,11 @@ public class ApiResponse<T> {
             .build();
     }
 
-    public static <T> ApiResponse<T> fail(int statusCode, T data) {
+    public static <T> ApiResponse<T> fail(int statusCode, String code, T data) {
         return ApiResponse.<T>builder()
             .success(false)
             .statusCode(statusCode)
+            .code(code)
             .data(data)
             .build();
     }
