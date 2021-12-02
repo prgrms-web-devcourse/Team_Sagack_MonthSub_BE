@@ -1,6 +1,6 @@
 package com.prgrms.monthsub.controller;
 
-import com.prgrms.monthsub.ApiResponse;
+import com.prgrms.monthsub.common.error.ApiResponse;
 import com.prgrms.monthsub.dto.request.SeriesSubscribePostRequest;
 import com.prgrms.monthsub.dto.response.SeriesSubscribePostResponse;
 import com.prgrms.monthsub.service.S3Uploader;
