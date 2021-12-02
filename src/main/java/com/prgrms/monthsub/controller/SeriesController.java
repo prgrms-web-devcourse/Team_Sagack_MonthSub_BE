@@ -1,19 +1,15 @@
-package com.prgrms.monthsub.Controller;
+package com.prgrms.monthsub.controller;
 
 import com.prgrms.monthsub.ApiResponse;
 import com.prgrms.monthsub.dto.request.SeriesSubscribePostRequest;
 import com.prgrms.monthsub.dto.response.SeriesSubscribePostResponse;
-import com.prgrms.monthsub.sampleDto;
 import com.prgrms.monthsub.service.S3Uploader;
 import io.swagger.v3.oas.annotations.Operation;
 import java.io.IOException;
-import javax.validation.Valid;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
