@@ -28,4 +28,10 @@ sudo chmod +x $JAR_NAME
 
 echo "> $JAR_NAME 실행"
 
+cd /home/ec2-user/app
+
+source /home/ec2-user/app/env
+
+source /home/ec2-user/.bashrc
+
 nohup java -jar $JAR_NAME -Dspring.config.location=classpath:/application.yml &
