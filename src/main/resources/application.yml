@@ -17,6 +17,10 @@ spring:
       hibernate.format_sql: true
   output:
     ansi.enabled: always
+  servlet:
+    multipart:
+      maxFileSize: 5MB
+      maxRequestSize: 5MB
 
 springdoc:
   swagger-ui:
@@ -28,3 +32,15 @@ server:
       charset: UTF-8
       enabled: true
       force: true
+
+cloud:
+  aws:
+    credentials:
+      accessKey: ${IAM_ACCESS_KEY}
+      secretKey: ${IAM_SECRET_KEY}
+    s3:
+      bucket: monthsub-image-bucket
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
