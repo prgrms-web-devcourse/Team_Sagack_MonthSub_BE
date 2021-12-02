@@ -4,6 +4,8 @@ import com.prgrms.monthsub.domain.enumType.SeriesStatus;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -62,6 +64,7 @@ public class Series {
     @Column(name = "article_count", columnDefinition = "INT", nullable = false)
     private int articleCount;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "subscribe_status", columnDefinition = "VARCHAR(50)", nullable = false)
     private SeriesStatus subscribeStatus;
 
