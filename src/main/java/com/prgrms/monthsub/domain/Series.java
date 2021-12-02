@@ -1,5 +1,6 @@
 package com.prgrms.monthsub.domain;
 
+import com.prgrms.monthsub.domain.enumType.Category;
 import com.prgrms.monthsub.domain.enumType.SeriesStatus;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
@@ -73,7 +74,7 @@ public class Series {
     private int likes;
 
     @Column(name = "category", columnDefinition = "VARCHAR(50)", nullable = false)
-    private SeriesStatus category;
+    private Category category;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "writer_id", referencedColumnName = "id")
