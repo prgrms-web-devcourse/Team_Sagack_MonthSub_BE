@@ -25,8 +25,7 @@ public class SeriesController {
     public SeriesController(S3Uploader s3Uploader) {this.s3Uploader = s3Uploader;}
 
     @Operation(summary = "시리즈 공고 게시글을 작성할 수 있습니다.")
-    @PostMapping
-    @RequestMapping("/writers/{writerId}")
+    @PostMapping("/writers/{writerId}")
     public ApiResponse<SeriesSubscribePostResponse> postSeries(@PathVariable Long writerId,
         @RequestPart MultipartFile thumbnail,
         @RequestPart SeriesSubscribePostRequest request) throws IOException {
