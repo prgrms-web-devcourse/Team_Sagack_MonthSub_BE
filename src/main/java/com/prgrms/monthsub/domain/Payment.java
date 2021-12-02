@@ -3,7 +3,6 @@ package com.prgrms.monthsub.domain;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -29,7 +28,7 @@ public class Payment {
     @Column(name = "id", columnDefinition = "BIGINT")
     private Long id;
 
-    @Column(name = "user_id", columnDefinition = "LONG", nullable = false)
+    @Column(name = "user_id", columnDefinition = "BIGINT", nullable = false)
     private Long userId;
 
     @OneToOne(fetch = FetchType.LAZY)

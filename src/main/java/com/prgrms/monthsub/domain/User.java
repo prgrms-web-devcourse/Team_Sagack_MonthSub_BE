@@ -1,7 +1,6 @@
 package com.prgrms.monthsub.domain;
 
 import com.prgrms.monthsub.common.BaseEntity;
-import com.prgrms.monthsub.domain.enumType.UserStatus;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -22,12 +21,15 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Entity
 @Table(name = "user")
-public class User extends BaseEntity{
+public class User extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", columnDefinition = "BIGINT")
     private Long id;
+
+    @Column(name = "nickname", columnDefinition = "VARCHAR(50)")
+    private String nickname;
 
     @Pattern(regexp = "\\b[\\w\\.-]+@[\\w\\.-]+\\.\\w{2,4}\\b")
     @Column(name = "email", columnDefinition = "VARCHAR(50)", nullable = false)
@@ -36,23 +38,17 @@ public class User extends BaseEntity{
     @Column(name = "username", columnDefinition = "VARCHAR(50)", nullable = false)
     private String username;
 
-    @Column(name = "password", columnDefinition = "VARCHAR(50)", nullable = false)
+    @Column(name = "password", columnDefinition = "VARCHAR(100)", nullable = false)
     private String password;
 
-    @Column(name = "profile_image", columnDefinition = "VARCHAR(50)")
+    @Column(name = "profile_image", columnDefinition = "TEXT")
     private String profileImage;
 
     @Column(name = "profile_introduce", columnDefinition = "VARCHAR(50)")
     private String profileIntroduce;
 
-    @Column(name = "role", columnDefinition = "VARCHAR(50)", nullable = false)
-    private UserStatus role;
-
     @Min(0)
-    @Column(name = "point", columnDefinition = "BIGINT")
+    @Column(name = "point", columnDefinition = "INT")
     private int point;
-
-    @Column(name = "nickname", columnDefinition = "VARCHAR(50)")
-    private String nickname;
 
 }

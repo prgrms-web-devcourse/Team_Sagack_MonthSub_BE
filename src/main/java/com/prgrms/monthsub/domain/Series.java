@@ -5,13 +5,11 @@ import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Min;
 import lombok.AccessLevel;
@@ -33,20 +31,20 @@ public class Series {
     @Column(name = "id", columnDefinition = "BIGINT")
     private Long id;
 
-    @Column(name = "thumbnail", columnDefinition = "VARCHAR(100)", nullable = false)
+    @Column(name = "thumbnail", columnDefinition = "TEXT", nullable = false)
     private String thumbnail;
 
-    @Column(name = "title", columnDefinition = "VARCHAR(50)", nullable = false)
+    @Column(name = "title", columnDefinition = "VARCHAR(300)", nullable = false)
     private String title;
 
     @Column(name = "introduce_text", columnDefinition = "TEXT", nullable = false)
     private String introduceText;
 
-    @Column(name = "introduce_sentence", columnDefinition = "VARCHAR(50)", nullable = false)
+    @Column(name = "introduce_sentence", columnDefinition = "VARCHAR(300)", nullable = false)
     private String introduceSentence;
 
     @Min(0)
-    @Column(name = "price", columnDefinition = "BIGINT", nullable = false)
+    @Column(name = "price", columnDefinition = "INT", nullable = false)
     private int price;
 
     @Column(name = "subscribe_start_date", columnDefinition = "TIMESTAMP", updatable = false, nullable = false)
@@ -61,14 +59,14 @@ public class Series {
     @Column(name = "series_end_date", columnDefinition = "TIMESTAMP", updatable = false, nullable = false)
     private LocalDateTime seriesEndDate;
 
-    @Column(name = "article_count", columnDefinition = "BIGINT", nullable = false)
+    @Column(name = "article_count", columnDefinition = "INT", nullable = false)
     private int articleCount;
 
     @Column(name = "subscribe_status", columnDefinition = "VARCHAR(50)", nullable = false)
     private SeriesStatus subscribeStatus;
 
     @Min(0)
-    @Column(name = "likes", columnDefinition = "LONG")
+    @Column(name = "likes", columnDefinition = "INT")
     private int likes;
 
     @Column(name = "category", columnDefinition = "VARCHAR(50)", nullable = false)
@@ -77,5 +75,11 @@ public class Series {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "writer_id", referencedColumnName = "id")
     private Writer writer;
+
+    @Column(name = "upload_date", columnDefinition = "VARCHAR(50)", nullable = false)
+    private String uploadDate;
+
+    @Column(name = "upload_time", columnDefinition = "time", nullable = false)
+    private LocalDateTime uploadTime;
 
 }

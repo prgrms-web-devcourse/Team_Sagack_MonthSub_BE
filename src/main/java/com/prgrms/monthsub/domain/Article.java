@@ -4,7 +4,6 @@ import com.prgrms.monthsub.common.BaseEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -16,7 +15,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
 
 @Getter
 @Builder
@@ -35,7 +33,7 @@ public class Article extends BaseEntity {
     @JoinColumn(name = "series_id", referencedColumnName = "id")
     private Series series;
 
-    @Column(name = "title", columnDefinition = "VARCHAR(50)", nullable = false)
+    @Column(name = "title", columnDefinition = "VARCHAR(300)", nullable = false)
     private String title;
 
     @Column(name = "content", columnDefinition = "TEXT", nullable = false)
