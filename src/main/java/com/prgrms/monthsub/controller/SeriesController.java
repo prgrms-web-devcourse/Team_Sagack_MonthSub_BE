@@ -26,7 +26,7 @@ public class SeriesController {
 
     @Operation(summary = "시리즈 공고 게시글을 작성할 수 있습니다.")
     @PostMapping
-    @RequestMapping("/writer/{writerId}")
+    @RequestMapping("/writers/{writerId}")
     public ApiResponse<SeriesSubscribePostResponse> postSeries(@PathVariable Long writerId,
         @RequestPart MultipartFile thumbnail,
         @RequestPart SeriesSubscribePostRequest request) throws IOException {
