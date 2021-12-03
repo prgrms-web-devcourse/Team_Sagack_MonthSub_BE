@@ -14,6 +14,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class SeriesConverter {
 
+    private static final int DEFAULT_LIKES = 0;
+
     public Series SeriesSubscribePostResponseToEntity(Writer writer, String imageUrl,
         SeriesSubscribePostRequest req) {
         return Series.builder()
@@ -28,7 +30,7 @@ public class SeriesConverter {
             .seriesEndDate(LocalDate.parse(req.seriesEndDate()))
             .articleCount(req.articleCount())
             .subscribeStatus(SeriesStatus.SUBSCRIPTION_AVAILABLE)
-            .likes(0)
+            .likes(DEFAULT_LIKES)
             .uploadDate(convertUploadDateListToUploadDateString(req.uploadDate()))
             .category(Category.of(req.category()))
             .uploadTime(LocalTime.parse(req.uploadTime()))

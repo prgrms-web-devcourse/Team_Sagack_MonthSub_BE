@@ -5,6 +5,7 @@ import com.prgrms.monthsub.dto.request.SeriesSubscribePostRequest;
 import com.prgrms.monthsub.dto.response.SeriesSubscribePostResponse;
 import com.prgrms.monthsub.service.SeriesService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.io.IOException;
 import javax.validation.Valid;
 import org.springframework.http.HttpMethod;
@@ -17,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/series")
+@Tag(name = "시리즈 관련 화면", description = " API 목록입니다.")
 public class SeriesController {
 
     private final SeriesService seriesService;
