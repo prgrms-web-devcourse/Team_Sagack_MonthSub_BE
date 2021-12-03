@@ -1,6 +1,6 @@
 package com.prgrms.monthsub.dto.response;
 
-public record ArticleGetListBySeriesIdResponse(
+public record BriefArticleBySeriesIdResponse(
     Long articleId,
     String title,
     String contents,

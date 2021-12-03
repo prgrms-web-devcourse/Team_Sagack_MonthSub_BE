@@ -1,8 +1,8 @@
 package com.prgrms.monthsub.dto.response;
 
-public record SeriesGetWithWriterResponse(
+public record SeriesOneWithWriterResponse(
     Long writerId,
     int followCount,
-    SeriesGetWithUserResponse user
+    SeriesOneWithUserResponse user
 ) {
 }

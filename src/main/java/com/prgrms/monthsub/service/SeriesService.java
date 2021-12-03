@@ -6,7 +6,7 @@ import com.prgrms.monthsub.domain.Article;
 import com.prgrms.monthsub.domain.Series;
 import com.prgrms.monthsub.domain.Writer;
 import com.prgrms.monthsub.dto.request.SeriesSubscribePostRequest;
-import com.prgrms.monthsub.dto.response.SeriesSubscribeGetResponse;
+import com.prgrms.monthsub.dto.response.SeriesOneResponse;
 import com.prgrms.monthsub.dto.response.SeriesSubscribePostResponse;
 import com.prgrms.monthsub.repository.ArticleRepository;
 import com.prgrms.monthsub.repository.SeriesRepository;
@@ -51,10 +51,10 @@ public class SeriesService {
         return new SeriesSubscribePostResponse(seriesRepository.save(entity).getId());
     }
 
-    public SeriesSubscribeGetResponse getSeriesBySeriesId(Long seriesId) {
+    public SeriesOneResponse getSeriesBySeriesId(Long seriesId) {
         List<Article> articleList = articleRepository.findAllArticleBySeriesId(seriesId);
         return seriesRepository.findSeriesById(seriesId)
-            .map(series -> seriesConverter.seriesToSeriesSubscribeGetResponse(series, articleList))
+            .map(series -> seriesConverter.seriesToSeriesOneResponse(series, articleList))
             .orElseThrow(EntityNotFoundException::new);
     }
 

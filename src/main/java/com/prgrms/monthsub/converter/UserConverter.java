@@ -1,14 +1,14 @@
 package com.prgrms.monthsub.converter;
 
 import com.prgrms.monthsub.domain.User;
-import com.prgrms.monthsub.dto.response.SeriesGetWithUserResponse;
+import com.prgrms.monthsub.dto.response.SeriesOneWithUserResponse;
 import org.springframework.stereotype.Component;
 
 @Component
 public class UserConverter {
 
-    public SeriesGetWithUserResponse userToSeriesGetWithUserResponse(User user) {
-        return new SeriesGetWithUserResponse(
+    public SeriesOneWithUserResponse userToSeriesOneWithUserResponse(User user) {
+        return new SeriesOneWithUserResponse(
             user.getId(),
             user.getEmail(),
             user.getProfileImage(),

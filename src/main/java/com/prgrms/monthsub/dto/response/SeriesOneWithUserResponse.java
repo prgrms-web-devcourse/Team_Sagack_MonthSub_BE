@@ -1,6 +1,6 @@
 package com.prgrms.monthsub.dto.response;
 
-public record SeriesGetWithUserResponse(
+public record SeriesOneWithUserResponse(
     Long userId,
     String email,
     String profileImage,

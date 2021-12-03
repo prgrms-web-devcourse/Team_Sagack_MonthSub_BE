@@ -1,7 +1,7 @@
 package com.prgrms.monthsub.converter;
 
 import com.prgrms.monthsub.domain.Writer;
-import com.prgrms.monthsub.dto.response.SeriesGetWithWriterResponse;
+import com.prgrms.monthsub.dto.response.SeriesOneWithWriterResponse;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -13,11 +13,11 @@ public class WriterConverter {
         this.userConverter = userConverter;
     }
 
-    public SeriesGetWithWriterResponse writerToResponse(Writer writer) {
-        return new SeriesGetWithWriterResponse(
+    public SeriesOneWithWriterResponse writerToSeriesOneWithWriterResponse(Writer writer) {
+        return new SeriesOneWithWriterResponse(
             writer.getId(),
             writer.getFollowCount(),
-            userConverter.userToSeriesGetWithUserResponse(writer.getUser())
+            userConverter.userToSeriesOneWithUserResponse(writer.getUser())
         );
     }
 
