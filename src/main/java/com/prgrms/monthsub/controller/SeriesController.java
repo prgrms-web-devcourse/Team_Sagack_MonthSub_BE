@@ -18,7 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/series")
-@Tag(name = "시리즈 관련 화면", description = " API 목록입니다.")
+@Tag(name = "Series")
 public class SeriesController {
 
     private final SeriesService seriesService;
@@ -27,8 +27,9 @@ public class SeriesController {
         this.seriesService = seriesService;
     }
 
-    @Operation(summary = "시리즈 공고 게시글을 작성할 수 있습니다.")
     @PostMapping("/users/{userId}")
+    @Operation(summary = "시리즈 공고 게시글 작성")
+    @Tag(name = "[화면]-시리즈")
     public ApiResponse<SeriesSubscribePostResponse> postSeries(
         @PathVariable Long userId,
         @RequestPart MultipartFile thumbnail,
