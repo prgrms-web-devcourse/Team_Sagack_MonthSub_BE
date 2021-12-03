@@ -41,6 +41,7 @@ public class SeriesController {
 
     @Operation(summary = "시리즈 공고 게시글 단건 조회를 할 수 있습니다.")
     @GetMapping("/{id}")
+    @Tag(name = "[화면]-시리즈")
     public ApiResponse<SeriesOneResponse> getSeriesById(
         @PathVariable Long id) {
         return ApiResponse.ok(HttpMethod.GET, seriesService.getSeriesBySeriesId(id));
