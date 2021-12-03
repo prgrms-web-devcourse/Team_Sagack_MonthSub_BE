@@ -1,12 +1,17 @@
 package com.prgrms.monthsub.service;
 
+import com.prgrms.monthsub.common.error.exception.EntityNotFoundException;
 import com.prgrms.monthsub.converter.SeriesConverter;
+import com.prgrms.monthsub.domain.Article;
 import com.prgrms.monthsub.domain.Series;
 import com.prgrms.monthsub.domain.Writer;
 import com.prgrms.monthsub.dto.request.SeriesSubscribePostRequest;
+import com.prgrms.monthsub.dto.response.SeriesSubscribeGetResponse;
 import com.prgrms.monthsub.dto.response.SeriesSubscribePostResponse;
+import com.prgrms.monthsub.repository.ArticleRepository;
 import com.prgrms.monthsub.repository.SeriesRepository;
 import java.io.IOException;
+import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,6 +23,8 @@ public class SeriesService {
 
     private final SeriesRepository seriesRepository;
 
+    private final ArticleRepository articleRepository;
+
     private final WriterService writerService;
 
     private final S3Uploader s3Uploader;
@@ -25,9 +32,11 @@ public class SeriesService {
     private final SeriesConverter seriesConverter;
 
     public SeriesService(SeriesRepository seriesRepository,
-        WriterService writerService, SeriesConverter seriesConverter,
+        ArticleRepository articleRepository, WriterService writerService,
+        SeriesConverter seriesConverter,
         S3Uploader s3Uploader) {
         this.seriesRepository = seriesRepository;
+        this.articleRepository = articleRepository;
         this.writerService = writerService;
         this.seriesConverter = seriesConverter;
         this.s3Uploader = s3Uploader;
@@ -40,6 +49,13 @@ public class SeriesService {
         Writer writer = writerService.findByUserId(userId);
         Series entity = seriesConverter.SeriesSubscribePostResponseToEntity(writer, imageUrl, request);
         return new SeriesSubscribePostResponse(seriesRepository.save(entity).getId());
+    }
+
+    public SeriesSubscribeGetResponse getSeriesBySeriesId(Long seriesId) {
+        List<Article> articleList = articleRepository.findAllArticleBySeriesId(seriesId);
+        return seriesRepository.findSeriesById(seriesId)
+            .map(series -> seriesConverter.seriesToSeriesSubscribeGetResponse(series, articleList))
+            .orElseThrow(EntityNotFoundException::new);
     }
 
 }

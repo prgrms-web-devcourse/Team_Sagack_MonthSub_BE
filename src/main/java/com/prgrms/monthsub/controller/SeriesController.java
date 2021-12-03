@@ -2,6 +2,7 @@ package com.prgrms.monthsub.controller;
 
 import com.prgrms.monthsub.common.error.ApiResponse;
 import com.prgrms.monthsub.dto.request.SeriesSubscribePostRequest;
+import com.prgrms.monthsub.dto.response.SeriesSubscribeGetResponse;
 import com.prgrms.monthsub.dto.response.SeriesSubscribePostResponse;
 import com.prgrms.monthsub.service.SeriesService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -9,6 +10,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import java.io.IOException;
 import javax.validation.Valid;
 import org.springframework.http.HttpMethod;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,6 +37,13 @@ public class SeriesController {
         @RequestPart MultipartFile thumbnail,
         @Valid @RequestPart SeriesSubscribePostRequest request) throws IOException {
         return ApiResponse.ok(HttpMethod.POST, seriesService.createSeries(userId, thumbnail, request));
+    }
+
+    @Operation(summary = "시리즈 공고 게시글에 대한 단건 조회를 할 수 있습니다.")
+    @GetMapping("/{seriesId}")
+    public ApiResponse<SeriesSubscribeGetResponse> getSeriesBySeries(
+        @PathVariable Long seriesId) {
+        return ApiResponse.ok(HttpMethod.GET, seriesService.getSeriesBySeriesId(seriesId));
     }
 
 }
