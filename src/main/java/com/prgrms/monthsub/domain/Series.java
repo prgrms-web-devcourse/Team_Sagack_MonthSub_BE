@@ -2,8 +2,8 @@ package com.prgrms.monthsub.domain;
 
 import com.prgrms.monthsub.domain.enumType.Category;
 import com.prgrms.monthsub.domain.enumType.SeriesStatus;
-import java.sql.Time;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -85,6 +85,6 @@ public class Series {
     private String uploadDate;
 
     @Column(name = "upload_time", nullable = false)
-    private Time uploadTime;
+    private LocalDateTime uploadTime;
 
 }

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(readOnly = true)
 public class UserService {
 
     private final PasswordEncoder passwordEncoder;
@@ -21,7 +22,6 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    @Transactional(readOnly = true)
     public User login(String email, String credentials) {
         User user = userRepository.findByEmail(email)
             .orElseThrow(UserNotFoundException::new);

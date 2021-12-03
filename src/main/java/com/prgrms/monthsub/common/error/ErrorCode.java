@@ -12,7 +12,7 @@ public enum ErrorCode {
     //400
     INVALID_INPUT_VALUE("U001", HttpStatus.BAD_REQUEST, "잘못된 입력 방식입니다."),
     INVALID_TYPE_VALUE("U002", HttpStatus.BAD_REQUEST, "유효한 타입이 아닙니다"),
-    INVALID_CREDENTIALS_VALUE("A003", HttpStatus.BAD_REQUEST, "아디이 혹은 비밀번호가 일치하지 않습니다."),
+    INVALID_CREDENTIALS_VALUE("A003", HttpStatus.BAD_REQUEST, "아이디 혹은 비밀번호가 일치하지 않습니다."),
 
     //405
     METHOD_NOT_ALLOWED("M001", HttpStatus.METHOD_NOT_ALLOWED, "지원하지 않은 HTTP 메서드입니다."),

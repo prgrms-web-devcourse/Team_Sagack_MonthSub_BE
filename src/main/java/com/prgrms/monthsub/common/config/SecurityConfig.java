@@ -33,7 +33,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     public SecurityConfig(JwtConfig jwtConfig) {this.jwtConfig = jwtConfig;}
 
-
     @Override
     public void configure(WebSecurity web) {
         web.ignoring().antMatchers("/assets/**", "/h2-console/**");
@@ -71,13 +70,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new JwtAuthenticationProvider(jwt, userService);
     }
 
-
     @Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
-
 
     public JwtAuthenticationFilter jwtAuthenticationFilter() {
         Jwt jwt = getApplicationContext().getBean(Jwt.class);
@@ -112,5 +109,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .addFilterAfter(jwtAuthenticationFilter(), SecurityContextPersistenceFilter.class)
         ;
     }
-
 }

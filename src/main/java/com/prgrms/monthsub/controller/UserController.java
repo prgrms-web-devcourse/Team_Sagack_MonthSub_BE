@@ -18,21 +18,21 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api")
-public class UserRestController {
+public class UserController {
 
     private final UserService userService;
 
     private final AuthenticationManager authenticationManager;
 
-    public UserRestController(UserService userService, AuthenticationManager authenticationManager) {
+    public UserController(UserService userService, AuthenticationManager authenticationManager) {
         this.userService = userService;
         this.authenticationManager = authenticationManager;
     }
 
-    @PostMapping(path = "/user/login")
+    @PostMapping(path = "/users/login")
     public ApiResponse<UserLoginResponse> login(@RequestBody UserLoginRequest request) {
         JwtAuthenticationToken authToken = new JwtAuthenticationToken(
-            request.getEmail(), request.getPassword());
+            request.email(), request.password());
         Authentication resultToken = authenticationManager.authenticate(authToken);
         JwtAuthentication authentication = (JwtAuthentication) resultToken.getPrincipal();
         User user = (User) resultToken.getDetails();
