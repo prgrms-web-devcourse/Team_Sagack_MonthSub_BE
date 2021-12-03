@@ -34,9 +34,6 @@ public class Writer extends BaseEntity {
     @Column(name = "follow_count", columnDefinition = "INT")
     private int followCount;
 
-    @Column(name = "nickname", columnDefinition = "VARCHAR(50)")
-    private String nickname;
-
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;

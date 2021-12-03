@@ -32,6 +32,7 @@ dependencies {
     implementation 'org.flywaydb:flyway-core'
     implementation 'org.springdoc:springdoc-openapi-ui:1.5.12'
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-aws', version: '2.2.1.RELEASE'
+    implementation 'com.auth0:java-jwt:3.18.2'
 
     compileOnly 'org.projectlombok:lombok'
 
@@ -39,6 +40,8 @@ dependencies {
     runtimeOnly 'mysql:mysql-connector-java'
 
     annotationProcessor 'org.projectlombok:lombok'
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
