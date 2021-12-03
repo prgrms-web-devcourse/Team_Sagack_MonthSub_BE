@@ -25,6 +25,8 @@ spring:
 springdoc:
   swagger-ui:
     path: /swagger-monthsub.html
+    tagsSorter: alpha
+    operationsSorter: alpha
 
 server:
   servlet:
@@ -32,6 +34,7 @@ server:
       charset: UTF-8
       enabled: true
       force: true
+  port: ${PORT:8080}
 
 cloud:
   aws:

@@ -10,6 +10,8 @@ import com.prgrms.monthsub.dto.response.UserMeResponse;
 import com.prgrms.monthsub.jwt.JwtAuthentication;
 import com.prgrms.monthsub.jwt.JwtAuthenticationToken;
 import com.prgrms.monthsub.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@Tag(name = "Users")
 public class UserController {
 
     private final UserService userService;
@@ -32,6 +35,8 @@ public class UserController {
     }
 
     @PostMapping(path = "/users/login")
+    @Operation(summary = "로그인")
+    @Tag(name = "[화면]-로그인")
     public ApiResponse<UserLoginResponse> login(@RequestBody UserLoginRequest request) {
         JwtAuthenticationToken authToken = new JwtAuthenticationToken(
             request.email(), request.password());
@@ -44,6 +49,8 @@ public class UserController {
     }
 
     @GetMapping(path = "/users/me")
+    @Operation(summary = "내 정보 확인")
+    @Tag(name = "[화면]-내정보")
     public ApiResponse<UserMeResponse> me(@AuthenticationPrincipal JwtAuthentication authentication) {
         return ApiResponse.ok(HttpMethod.GET, userService.findByUserName(authentication.username)
             .map(user ->
