@@ -1,6 +1,7 @@
 package com.prgrms.monthsub.service;
 
-
+import com.prgrms.monthsub.common.error.ErrorCode;
+import com.prgrms.monthsub.common.error.exception.EntityNotFoundException;
 import com.prgrms.monthsub.common.error.exception.UserNotFoundException;
 import com.prgrms.monthsub.domain.User;
 import com.prgrms.monthsub.repository.UserRepository;
@@ -28,6 +29,11 @@ public class UserService {
             .orElseThrow(UserNotFoundException::new);
         user.checkPassword(passwordEncoder, credentials);
         return user;
+    }
+
+    public User findByUserId(Long userId) {
+        return userRepository.findById(userId)
+            .orElseThrow(() -> new EntityNotFoundException(ErrorCode.ENTITY_NOT_FOUND));
     }
 
     public Optional<User> findByUserName(String username) {

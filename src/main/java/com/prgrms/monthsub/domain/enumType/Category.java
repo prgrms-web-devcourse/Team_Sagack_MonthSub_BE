@@ -10,6 +10,6 @@ public enum Category {
     ETC;
 
     public static Category of(String category) {
-        return Category.valueOf(category);
+        return Category.valueOf(category.toUpperCase());
     }
 }
