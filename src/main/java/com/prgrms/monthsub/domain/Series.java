@@ -74,6 +74,7 @@ public class Series {
     @Column(name = "likes", columnDefinition = "INT")
     private int likes;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "category", columnDefinition = "VARCHAR(50)")
     private Category category;
 

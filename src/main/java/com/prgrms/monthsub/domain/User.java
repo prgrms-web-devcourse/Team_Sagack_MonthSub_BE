@@ -71,4 +71,8 @@ public class User extends BaseEntity {
         }
     }
 
+    public void changePart(Part part) {
+        this.part = part;
+    }
+
 }

@@ -6,6 +6,6 @@ public enum SeriesStatus {
     SUBSCRIPTION_AVAILABLE;
 
     public static SeriesStatus of(String seriesStatus) {
-        return SeriesStatus.valueOf(seriesStatus);
+        return SeriesStatus.valueOf(seriesStatus.toUpperCase());
     }
 }

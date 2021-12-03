@@ -19,8 +19,8 @@ spring:
     ansi.enabled: always
   servlet:
     multipart:
-      maxFileSize: 5MB
-      maxRequestSize: 5MB
+      maxFileSize: 20MB
+      maxRequestSize: 20MB
 
 springdoc:
   swagger-ui:
