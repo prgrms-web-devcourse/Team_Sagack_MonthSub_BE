@@ -8,6 +8,7 @@ import com.prgrms.monthsub.domain.Writer;
 import com.prgrms.monthsub.domain.enumType.Category;
 import com.prgrms.monthsub.domain.enumType.SeriesStatus;
 import com.prgrms.monthsub.dto.request.SeriesSubscribePostRequest;
+import com.prgrms.monthsub.dto.response.SeriesListResponse;
 import com.prgrms.monthsub.dto.response.SeriesOneResponse;
 import com.prgrms.monthsub.dto.response.SeriesOneResponse.SeriesObject;
 import com.prgrms.monthsub.dto.response.SeriesOneResponse.SubscribeObject;
@@ -94,6 +95,33 @@ public class SeriesConverter {
             articleList.stream()
                 .map(articleConverter::articleToArticleBySeriesIdResponse)
                 .collect(Collectors.toList())
+        );
+    }
+
+    public SeriesListResponse seriesListToResponse(Series seriesEntity) {
+        var writerResponse = writerConverter.writerToSeriesOneWithWriterResponse(
+            seriesEntity.getWriter());
+        return new SeriesListResponse(
+            SeriesObject.builder()
+                .id(seriesEntity.getId())
+                .thumbnail(seriesEntity.getThumbnail())
+                .title(seriesEntity.getTitle())
+                .introduceSentence(seriesEntity.getIntroduceSentence())
+                .startDate(seriesEntity.getSeriesStartDate())
+                .endDate(seriesEntity.getSeriesEndDate())
+                .articleCount(seriesEntity.getArticleCount())
+                .likes(seriesEntity.getLikes())
+                .build(),
+            SubscribeObject.builder()
+                .startDate(seriesEntity.getSubscribeStartDate())
+                .endDate(seriesEntity.getSubscribeEndDate())
+                .status(String.valueOf(seriesEntity.getSubscribeStatus()))
+                .build(),
+            seriesEntity.getCategory(),
+            WriterObject.builder()
+                .id(writerResponse.writerId())
+                .nickname(writerResponse.user().nickname())
+                .build()
         );
     }
 

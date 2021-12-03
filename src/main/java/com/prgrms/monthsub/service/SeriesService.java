@@ -6,12 +6,14 @@ import com.prgrms.monthsub.domain.Article;
 import com.prgrms.monthsub.domain.Series;
 import com.prgrms.monthsub.domain.Writer;
 import com.prgrms.monthsub.dto.request.SeriesSubscribePostRequest;
+import com.prgrms.monthsub.dto.response.SeriesListResponse;
 import com.prgrms.monthsub.dto.response.SeriesOneResponse;
 import com.prgrms.monthsub.dto.response.SeriesSubscribePostResponse;
 import com.prgrms.monthsub.repository.ArticleRepository;
 import com.prgrms.monthsub.repository.SeriesRepository;
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -56,6 +58,12 @@ public class SeriesService {
         return seriesRepository.findSeriesById(seriesId)
             .map(series -> seriesConverter.seriesToSeriesOneResponse(series, articleList))
             .orElseThrow(EntityNotFoundException::new);
+    }
+
+    public List<SeriesListResponse> getSeriesList() {
+        List<Series> seriesList = seriesRepository.findSeriesList();
+        return seriesList.stream().map(seriesConverter::seriesListToResponse)
+            .collect(Collectors.toList());
     }
 
 }
