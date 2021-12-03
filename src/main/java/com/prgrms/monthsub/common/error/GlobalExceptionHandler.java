@@ -8,6 +8,7 @@ import org.springframework.dao.TypeMismatchDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.BindException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -88,6 +89,15 @@ public class GlobalExceptionHandler {
         log.error("handleException", e);
         final ErrorResponse response = ErrorResponse.of(ErrorCode.INTERNAL_SERVER_ERROR);
         return ApiResponse.fail(HttpStatus.INTERNAL_SERVER_ERROR.value(), response.getCode(), response);
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    protected ApiResponse<ErrorResponse> handleBadCredentialsException(BadCredentialsException e) {
+        log.error("BadCredentialsException", e);
+        final ErrorResponse response = ErrorResponse.of(ErrorCode.INVALID_CREDENTIALS_VALUE);
+        return ApiResponse.fail(ErrorCode.INVALID_CREDENTIALS_VALUE.getStatus().value(),
+            response.getCode(), response
+        );
     }
 
 }

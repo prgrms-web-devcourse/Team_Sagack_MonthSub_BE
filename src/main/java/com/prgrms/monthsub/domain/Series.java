@@ -2,7 +2,8 @@ package com.prgrms.monthsub.domain;
 
 import com.prgrms.monthsub.domain.enumType.Category;
 import com.prgrms.monthsub.domain.enumType.SeriesStatus;
-import java.time.LocalDateTime;
+import java.sql.Time;
+import java.time.LocalDate;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -50,17 +51,17 @@ public class Series {
     @Column(name = "price", columnDefinition = "INT", nullable = false)
     private int price;
 
-    @Column(name = "subscribe_start_date", columnDefinition = "TIMESTAMP", updatable = false, nullable = false)
-    private LocalDateTime subscribeStartDate;
+    @Column(name = "subscribe_start_date", updatable = false, nullable = false)
+    private LocalDate subscribeStartDate;
 
-    @Column(name = "subscribe_end_date", columnDefinition = "TIMESTAMP", updatable = false, nullable = false)
-    private LocalDateTime subscribeEndDate;
+    @Column(name = "subscribe_end_date", updatable = false, nullable = false)
+    private LocalDate subscribeEndDate;
 
-    @Column(name = "series_start_date", columnDefinition = "TIMESTAMP", updatable = false, nullable = false)
-    private LocalDateTime seriesStartDate;
+    @Column(name = "series_start_date", updatable = false, nullable = false)
+    private LocalDate seriesStartDate;
 
-    @Column(name = "series_end_date", columnDefinition = "TIMESTAMP", updatable = false, nullable = false)
-    private LocalDateTime seriesEndDate;
+    @Column(name = "series_end_date", updatable = false, nullable = false)
+    private LocalDate seriesEndDate;
 
     @Column(name = "article_count", columnDefinition = "INT", nullable = false)
     private int articleCount;
@@ -73,7 +74,7 @@ public class Series {
     @Column(name = "likes", columnDefinition = "INT")
     private int likes;
 
-    @Column(name = "category", columnDefinition = "VARCHAR(50)", nullable = false)
+    @Column(name = "category", columnDefinition = "VARCHAR(50)")
     private Category category;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -83,7 +84,7 @@ public class Series {
     @Column(name = "upload_date", columnDefinition = "VARCHAR(50)", nullable = false)
     private String uploadDate;
 
-    @Column(name = "upload_time", columnDefinition = "time", nullable = false)
-    private LocalDateTime uploadTime;
+    @Column(name = "upload_time", nullable = false)
+    private Time uploadTime;
 
 }

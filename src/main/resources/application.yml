@@ -44,3 +44,8 @@ cloud:
       static: ap-northeast-2
     stack:
       auto: false
+jwt:
+  header: token
+  issuer: monthsub
+  client-secret: ${JWT_CLIENT_SECRET}
+  expiry-seconds: 3600
