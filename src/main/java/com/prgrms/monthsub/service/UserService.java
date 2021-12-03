@@ -4,6 +4,7 @@ package com.prgrms.monthsub.service;
 import com.prgrms.monthsub.common.error.exception.UserNotFoundException;
 import com.prgrms.monthsub.domain.User;
 import com.prgrms.monthsub.repository.UserRepository;
+import java.util.Optional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +28,10 @@ public class UserService {
             .orElseThrow(UserNotFoundException::new);
         user.checkPassword(passwordEncoder, credentials);
         return user;
+    }
+
+    public Optional<User> findByUserName(String username) {
+        return userRepository.findByUsername(username);
     }
 
 }
