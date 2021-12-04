@@ -16,13 +16,11 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.UUID;
 import javax.annotation.PostConstruct;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
-@RequiredArgsConstructor
 public class S3UploaderService {
 
     private AmazonS3 s3Client;
