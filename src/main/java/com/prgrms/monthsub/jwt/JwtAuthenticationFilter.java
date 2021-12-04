@@ -7,6 +7,8 @@ import java.net.URLDecoder;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.stream.Collectors;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -47,6 +49,19 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
 
+        Map<String, String> headers = Collections
+            .list(request.getHeaderNames())
+            .stream()
+            .collect(Collectors.toMap(header -> header, request::getHeader));
+
+        log.info(String.format(
+            "[%s] %s %s",
+            request.getMethod(),
+            request.getRequestURI().toLowerCase(),
+            (request.getQueryString() != null) ? request.getQueryString() : ""
+        ));
+        log.info(String.format("header=%s", headers));
+
         if (SecurityContextHolder.getContext().getAuthentication() == null) {
             String token = getToken(request);
             if (token != null) {
@@ -61,7 +76,8 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
                         JwtAuthenticationToken authentication
                             = new JwtAuthenticationToken(
                             new JwtAuthentication(token, username), null, authorities);
-                        authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                        authentication.setDetails(
+                            new WebAuthenticationDetailsSource().buildDetails(request));
                         SecurityContextHolder.getContext().setAuthentication(authentication);
                     }
 

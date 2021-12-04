@@ -51,3 +51,7 @@ jwt:
   issuer: monthsub
   client-secret: ${JWT_CLIENT_SECRET}
   expiry-seconds: 3600
+
+logging:
+  level:
+    com.prgrms: INFO
