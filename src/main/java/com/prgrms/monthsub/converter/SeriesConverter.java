@@ -7,7 +7,7 @@ import com.prgrms.monthsub.domain.Series;
 import com.prgrms.monthsub.domain.Writer;
 import com.prgrms.monthsub.domain.enumType.Category;
 import com.prgrms.monthsub.domain.enumType.SeriesStatus;
-import com.prgrms.monthsub.dto.request.SeriesSubscribePostRequest;
+import com.prgrms.monthsub.dto.SeriesSubscribePost;
 import com.prgrms.monthsub.dto.response.SeriesListResponse;
 import com.prgrms.monthsub.dto.response.SeriesOneResponse;
 import com.prgrms.monthsub.dto.response.SeriesOneResponse.SeriesObject;
@@ -36,7 +36,7 @@ public class SeriesConverter {
     }
 
     public Series SeriesSubscribePostResponseToEntity(Writer writer, String imageUrl,
-        SeriesSubscribePostRequest req) {
+        SeriesSubscribePost.Request req) {
         return Series.builder()
             .thumbnail(imageUrl)
             .title(req.title())
