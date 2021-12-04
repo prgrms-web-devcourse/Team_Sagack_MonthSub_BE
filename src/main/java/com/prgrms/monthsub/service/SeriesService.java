@@ -29,14 +29,14 @@ public class SeriesService {
 
     private final WriterService writerService;
 
-    private final S3Uploader s3Uploader;
+    private final S3UploaderService s3Uploader;
 
     private final SeriesConverter seriesConverter;
 
     public SeriesService(SeriesRepository seriesRepository, ArticleService articleService,
         WriterService writerService,
         SeriesConverter seriesConverter,
-        S3Uploader s3Uploader) {
+        S3UploaderService s3Uploader) {
         this.seriesRepository = seriesRepository;
         this.articleService = articleService;
         this.writerService = writerService;

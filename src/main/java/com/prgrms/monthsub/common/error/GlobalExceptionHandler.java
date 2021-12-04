@@ -59,7 +59,8 @@ public class GlobalExceptionHandler {
         log.error("handleAccessDeniedException", e);
         final ErrorResponse response = ErrorResponse.of(ErrorCode.HANDLE_ACCESS_DENIED);
         return ApiResponse.fail(ErrorCode.HANDLE_ACCESS_DENIED.getStatus().value(),
-            response.getCode(), response);
+            response.getCode(), response
+        );
     }
 
     @ExceptionHandler({

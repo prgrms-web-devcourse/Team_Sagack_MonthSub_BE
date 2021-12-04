@@ -9,8 +9,11 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.util.IOUtils;
+import com.prgrms.monthsub.common.error.ErrorCode;
+import com.prgrms.monthsub.common.error.exception.BusinessException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.UUID;
 import javax.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
-public class S3Uploader {
+public class S3UploaderService {
 
     private AmazonS3 s3Client;
 
@@ -48,6 +51,8 @@ public class S3Uploader {
     }
 
     public String upload(MultipartFile file, String dirName) throws IOException {
+        fileExtensionCheck(file.getContentType().split("/"));
+
         InputStream uploadFile = file.getInputStream();
         String fileName = dirName + "/" + UUID.randomUUID() + uploadFile;
 
@@ -64,6 +69,14 @@ public class S3Uploader {
         return s3Client
             .getUrl(bucket, fileName)
             .toString();
+    }
+
+    private void fileExtensionCheck(String[] fileInfo) {
+        boolean isImage = Arrays.stream(fileInfo)
+            .anyMatch(info -> (info.contains("jpeg") || info.contains("png") || (info.contains("jpg"))));
+        if (!isImage) {
+            throw new BusinessException(ErrorCode.INVALID_UPLOAD_FILE_TYPE);
+        }
     }
 
 }
