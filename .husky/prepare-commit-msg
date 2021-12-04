@@ -16,7 +16,7 @@ fi
 
 BRANCH_NAME=$(git symbolic-ref --short HEAD)
 BRANCH_NAME="${BRANCH_NAME##*/}"
-JIRA_ID=`echo $BRANCH_NAME | egrep -o '^\w.-[0-9]+'`
+JIRA_ID=`echo $BRANCH_NAME | egrep -o '^\w+-[0-9]+'`
 JIRA_ID=`echo $JIRA_ID | tr '[:lower:]' '[:upper:]'`
 
 COMMIT_MESSAGE="$(cat $1)"
