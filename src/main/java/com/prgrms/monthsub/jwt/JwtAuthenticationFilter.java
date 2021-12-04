@@ -2,6 +2,7 @@ package com.prgrms.monthsub.jwt;
 
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
+import com.prgrms.monthsub.common.error.exception.UnAuthorizedException;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.util.Arrays;
@@ -67,6 +68,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 
                 } catch (Exception e) {
                     log.error("Invalid token:{}", e.getMessage());
+                    throw new UnAuthorizedException();
                 }
             }
         } else {
