@@ -35,3 +35,5 @@ source /home/ec2-user/app/env
 source /home/ec2-user/.bashrc
 
 nohup java -jar $JAR_NAME -Dspring.config.location=classpath:/application.yml &
+
+chmod 755 nohup.out
