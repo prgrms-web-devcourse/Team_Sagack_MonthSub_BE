@@ -4,9 +4,8 @@ package com.prgrms.monthsub.controller;
 import com.prgrms.monthsub.common.error.ApiResponse;
 import com.prgrms.monthsub.common.error.exception.UserNotFoundException;
 import com.prgrms.monthsub.domain.User;
-import com.prgrms.monthsub.dto.request.UserLoginRequest;
-import com.prgrms.monthsub.dto.response.UserLoginResponse;
-import com.prgrms.monthsub.dto.response.UserMeResponse;
+import com.prgrms.monthsub.dto.UserLogin;
+import com.prgrms.monthsub.dto.UserMe;
 import com.prgrms.monthsub.jwt.JwtAuthentication;
 import com.prgrms.monthsub.jwt.JwtAuthenticationToken;
 import com.prgrms.monthsub.service.UserService;
@@ -37,13 +36,13 @@ public class UserController {
     @PostMapping(path = "/users/login")
     @Operation(summary = "로그인")
     @Tag(name = "[화면]-로그인")
-    public ApiResponse<UserLoginResponse> login(@RequestBody UserLoginRequest request) {
+    public ApiResponse<UserLogin.Response> login(@RequestBody UserLogin.Request request) {
         JwtAuthenticationToken authToken = new JwtAuthenticationToken(
             request.email(), request.password());
         Authentication resultToken = authenticationManager.authenticate(authToken);
         JwtAuthentication authentication = (JwtAuthentication) resultToken.getPrincipal();
         User user = (User) resultToken.getDetails();
-        return ApiResponse.ok(HttpMethod.POST, new UserLoginResponse(user.getId(),
+        return ApiResponse.ok(HttpMethod.POST, new UserLogin.Response(user.getId(),
             authentication.token, authentication.username, user.getPart().getName()
         ));
     }
@@ -51,10 +50,10 @@ public class UserController {
     @GetMapping(path = "/users/me")
     @Operation(summary = "내 정보 확인")
     @Tag(name = "[화면]-내정보")
-    public ApiResponse<UserMeResponse> me(@AuthenticationPrincipal JwtAuthentication authentication) {
+    public ApiResponse<UserMe.Response> me(@AuthenticationPrincipal JwtAuthentication authentication) {
         return ApiResponse.ok(HttpMethod.GET, userService.findByUserName(authentication.username)
             .map(user ->
-                new UserMeResponse(
+                new UserMe.Response(
                     user.getId(), authentication.token, user.getNickname(),
                     user.getProfileImage(),
                     user.getProfileIntroduce(), user.getPart().getName()
