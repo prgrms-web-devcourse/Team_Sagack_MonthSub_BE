@@ -41,7 +41,7 @@ public class SeriesController {
         return ApiResponse.ok(HttpMethod.POST, seriesService.createSeries(userId, thumbnail, request));
     }
 
-    @Operation(summary = "시리즈 공고 게시글 단건 조회를 할 수 있습니다.")
+    @Operation(summary = "시리즈 공고 게시글 단건 조회")
     @GetMapping("/{id}")
     @Tag(name = "[화면]-시리즈")
     public ApiResponse<SeriesOneResponse> getSeriesById(
@@ -49,7 +49,7 @@ public class SeriesController {
         return ApiResponse.ok(HttpMethod.GET, seriesService.getSeriesBySeriesId(id));
     }
 
-    @Operation(summary = "시리즈 공고 게시글 리스트 조회를 할 수 있습니다.")
+    @Operation(summary = "시리즈 공고 게시글 리스트 조회")
     @GetMapping("")
     @Tag(name = "[화면]-시리즈")
     public ApiResponse<List<SeriesListResponse>> getSeriesList() {

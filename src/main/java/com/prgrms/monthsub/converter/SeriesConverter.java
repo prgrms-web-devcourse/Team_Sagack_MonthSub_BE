@@ -14,6 +14,7 @@ import com.prgrms.monthsub.dto.response.SeriesOneResponse.SeriesObject;
 import com.prgrms.monthsub.dto.response.SeriesOneResponse.SubscribeObject;
 import com.prgrms.monthsub.dto.response.SeriesOneResponse.UploadObject;
 import com.prgrms.monthsub.dto.response.SeriesOneResponse.WriterObject;
+import com.prgrms.monthsub.dto.response.SeriesOneWithWriterResponse;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -58,7 +59,7 @@ public class SeriesConverter {
 
     public SeriesOneResponse seriesToSeriesOneResponse(Series seriesEntity,
         List<Article> articleList) {
-        var writerResponse = writerConverter.writerToSeriesOneWithWriterResponse(
+        SeriesOneWithWriterResponse writerResponse = writerConverter.writerToSeriesOneWithWriterResponse(
             seriesEntity.getWriter());
         return new SeriesOneResponse(
             SeriesObject.builder()
@@ -99,7 +100,7 @@ public class SeriesConverter {
     }
 
     public SeriesListResponse seriesListToResponse(Series seriesEntity) {
-        var writerResponse = writerConverter.writerToSeriesOneWithWriterResponse(
+        SeriesOneWithWriterResponse writerResponse = writerConverter.writerToSeriesOneWithWriterResponse(
             seriesEntity.getWriter());
         return new SeriesListResponse(
             SeriesObject.builder()

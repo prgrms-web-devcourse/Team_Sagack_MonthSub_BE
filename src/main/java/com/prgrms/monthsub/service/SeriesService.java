@@ -9,7 +9,6 @@ import com.prgrms.monthsub.dto.request.SeriesSubscribePostRequest;
 import com.prgrms.monthsub.dto.response.SeriesListResponse;
 import com.prgrms.monthsub.dto.response.SeriesOneResponse;
 import com.prgrms.monthsub.dto.response.SeriesSubscribePostResponse;
-import com.prgrms.monthsub.repository.ArticleRepository;
 import com.prgrms.monthsub.repository.SeriesRepository;
 import java.io.IOException;
 import java.util.List;
@@ -19,13 +18,14 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
+@Transactional(readOnly = true)
 public class SeriesService {
 
     private static final String DIRECTORY = "seriesThumbnails";
 
     private final SeriesRepository seriesRepository;
 
-    private final ArticleRepository articleRepository;
+    private final ArticleService articleService;
 
     private final WriterService writerService;
 
@@ -33,12 +33,12 @@ public class SeriesService {
 
     private final SeriesConverter seriesConverter;
 
-    public SeriesService(SeriesRepository seriesRepository,
-        ArticleRepository articleRepository, WriterService writerService,
+    public SeriesService(SeriesRepository seriesRepository, ArticleService articleService,
+        WriterService writerService,
         SeriesConverter seriesConverter,
         S3Uploader s3Uploader) {
         this.seriesRepository = seriesRepository;
-        this.articleRepository = articleRepository;
+        this.articleService = articleService;
         this.writerService = writerService;
         this.seriesConverter = seriesConverter;
         this.s3Uploader = s3Uploader;
@@ -54,7 +54,7 @@ public class SeriesService {
     }
 
     public SeriesOneResponse getSeriesBySeriesId(Long seriesId) {
-        List<Article> articleList = articleRepository.findAllArticleBySeriesId(seriesId);
+        List<Article> articleList = articleService.getArticleListBySeriesId(seriesId);
         return seriesRepository.findSeriesById(seriesId)
             .map(series -> seriesConverter.seriesToSeriesOneResponse(series, articleList))
             .orElseThrow(EntityNotFoundException::new);
