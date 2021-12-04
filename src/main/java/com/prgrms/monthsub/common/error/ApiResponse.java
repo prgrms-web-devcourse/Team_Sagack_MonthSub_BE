@@ -4,12 +4,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 
 @Setter
 @Getter
 @NoArgsConstructor
+@ToString
 public class ApiResponse<T> {
 
     private Boolean success;

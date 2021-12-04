@@ -14,6 +14,9 @@ public enum ErrorCode {
     INVALID_TYPE_VALUE("U002", HttpStatus.BAD_REQUEST, "유효한 타입이 아닙니다"),
     INVALID_CREDENTIALS_VALUE("A003", HttpStatus.BAD_REQUEST, "아이디 혹은 비밀번호가 일치하지 않습니다."),
 
+    //401
+    UN_AUTHORIZED("A004", HttpStatus.UNAUTHORIZED, "인증 실패하였습니다."),
+
     //405
     METHOD_NOT_ALLOWED("M001", HttpStatus.METHOD_NOT_ALLOWED, "지원하지 않은 HTTP 메서드입니다."),
 

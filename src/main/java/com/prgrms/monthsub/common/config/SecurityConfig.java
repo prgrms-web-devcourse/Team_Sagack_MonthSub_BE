@@ -1,5 +1,6 @@
 package com.prgrms.monthsub.common.config;
 
+import com.prgrms.monthsub.common.error.FilterExceptionHandler;
 import com.prgrms.monthsub.jwt.Jwt;
 import com.prgrms.monthsub.jwt.JwtAuthenticationFilter;
 import com.prgrms.monthsub.jwt.JwtAuthenticationProvider;
@@ -7,6 +8,7 @@ import com.prgrms.monthsub.service.UserService;
 import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -81,6 +83,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new JwtAuthenticationFilter(jwtConfig.getHeader(), jwt);
     }
 
+    @Autowired
+    private FilterExceptionHandler exceptionHandlerFilter;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -107,6 +112,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
             .addFilterAfter(jwtAuthenticationFilter(), SecurityContextPersistenceFilter.class)
+            .addFilterBefore(exceptionHandlerFilter, jwtAuthenticationFilter().getClass())
         ;
     }
 }
