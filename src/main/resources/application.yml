@@ -11,10 +11,7 @@ spring:
     hibernate:
       ddl-auto: update
       naming.physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
-    show-sql: true
     database-platform: org.hibernate.dialect.MySQL8Dialect
-    properties:
-      hibernate.format_sql: true
   output:
     ansi.enabled: always
   servlet:
@@ -27,6 +24,8 @@ springdoc:
     path: /swagger-monthsub.html
     tagsSorter: alpha
     operationsSorter: alpha
+    oauth:
+      client-secret:
 
 server:
   servlet:
