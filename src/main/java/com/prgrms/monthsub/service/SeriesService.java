@@ -5,10 +5,9 @@ import com.prgrms.monthsub.converter.SeriesConverter;
 import com.prgrms.monthsub.domain.Article;
 import com.prgrms.monthsub.domain.Series;
 import com.prgrms.monthsub.domain.Writer;
-import com.prgrms.monthsub.dto.request.SeriesSubscribePostRequest;
+import com.prgrms.monthsub.dto.SeriesSubscribePost;
 import com.prgrms.monthsub.dto.response.SeriesListResponse;
 import com.prgrms.monthsub.dto.response.SeriesOneResponse;
-import com.prgrms.monthsub.dto.response.SeriesSubscribePostResponse;
 import com.prgrms.monthsub.repository.SeriesRepository;
 import java.io.IOException;
 import java.util.List;
@@ -45,12 +44,12 @@ public class SeriesService {
     }
 
     @Transactional
-    public SeriesSubscribePostResponse createSeries(Long userId, MultipartFile thumbnail,
-        SeriesSubscribePostRequest request) throws IOException {
+    public SeriesSubscribePost.Response createSeries(Long userId, MultipartFile thumbnail,
+        SeriesSubscribePost.Request request) throws IOException {
         String imageUrl = s3Uploader.upload(thumbnail, DIRECTORY);
         Writer writer = writerService.findByUserId(userId);
         Series entity = seriesConverter.SeriesSubscribePostResponseToEntity(writer, imageUrl, request);
-        return new SeriesSubscribePostResponse(seriesRepository.save(entity).getId());
+        return new SeriesSubscribePost.Response(seriesRepository.save(entity).getId());
     }
 
     public SeriesOneResponse getSeriesBySeriesId(Long seriesId) {

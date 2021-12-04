@@ -1,10 +1,9 @@
 package com.prgrms.monthsub.controller;
 
 import com.prgrms.monthsub.common.error.ApiResponse;
-import com.prgrms.monthsub.dto.request.SeriesSubscribePostRequest;
+import com.prgrms.monthsub.dto.SeriesSubscribePost;
 import com.prgrms.monthsub.dto.response.SeriesListResponse;
 import com.prgrms.monthsub.dto.response.SeriesOneResponse;
-import com.prgrms.monthsub.dto.response.SeriesSubscribePostResponse;
 import com.prgrms.monthsub.service.SeriesService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -34,10 +33,10 @@ public class SeriesController {
     @PostMapping("/users/{userId}")
     @Operation(summary = "시리즈 공고 게시글 작성")
     @Tag(name = "[화면]-시리즈")
-    public ApiResponse<SeriesSubscribePostResponse> postSeries(
+    public ApiResponse<SeriesSubscribePost.Response> postSeries(
         @PathVariable Long userId,
         @RequestPart MultipartFile thumbnail,
-        @Valid @RequestPart SeriesSubscribePostRequest request) throws IOException {
+        @Valid @RequestPart SeriesSubscribePost.Request request) throws IOException {
         return ApiResponse.ok(HttpMethod.POST, seriesService.createSeries(userId, thumbnail, request));
     }
 
