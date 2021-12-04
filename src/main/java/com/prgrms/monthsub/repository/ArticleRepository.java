@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 public interface ArticleRepository extends JpaRepository<Article, Long> {
 
-    @Query("select a from Article as a where a.series = :seriesId")
+    @Query("select a from Article as a where a.series.id = :seriesId")
     List<Article> findAllArticleBySeriesId(@Param("seriesId") Long seriesId);
 
 }

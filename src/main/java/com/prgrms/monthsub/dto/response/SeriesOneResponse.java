@@ -18,64 +18,64 @@ public record SeriesOneResponse(
     @Builder
     public static class SeriesObject {
 
-        private Long id;
+        public Long id;
 
-        private String thumbnail;
+        public String thumbnail;
 
-        private String title;
+        public String title;
 
-        private String introduceText;
+        public String introduceText;
 
-        private String introduceSentence;
+        public String introduceSentence;
 
-        private int price;
+        public int price;
 
-        private LocalDate startDate;
+        public LocalDate startDate;
 
-        private LocalDate endDate;
+        public LocalDate endDate;
 
-        private int articleCount;
+        public int articleCount;
 
-        private int likes;
+        public int likes;
 
     }
 
     @Builder
     public static class UploadObject {
 
-        private String[] date;
+        public String[] date;
 
-        private LocalTime time;
+        public LocalTime time;
 
     }
 
     @Builder
     public static class SubscribeObject {
 
-        private LocalDate startDate;
+        public LocalDate startDate;
 
-        private LocalDate endDate;
+        public LocalDate endDate;
 
-        private String status;
+        public String status;
 
     }
 
     @Builder
     public static class WriterObject {
 
-        private Long id;
+        public Long id;
 
-        private Long userId;
+        public Long userId;
 
-        private int followCount;
+        public int followCount;
 
-        private String email;
+        public String email;
 
-        private String profileImage;
+        public String profileImage;
 
-        private String profileIntroduce;
+        public String profileIntroduce;
 
-        private String nickname;
+        public String nickname;
 
     }
 
