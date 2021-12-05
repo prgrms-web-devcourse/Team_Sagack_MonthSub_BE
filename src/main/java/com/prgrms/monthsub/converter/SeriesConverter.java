@@ -7,14 +7,16 @@ import com.prgrms.monthsub.domain.Series;
 import com.prgrms.monthsub.domain.Writer;
 import com.prgrms.monthsub.domain.enumType.Category;
 import com.prgrms.monthsub.domain.enumType.SeriesStatus;
+import com.prgrms.monthsub.dto.SeriesSubscribeList;
+import com.prgrms.monthsub.dto.SeriesSubscribeList.SeriesObject;
+import com.prgrms.monthsub.dto.SeriesSubscribeList.SeriesOneWithWriterResponse;
+import com.prgrms.monthsub.dto.SeriesSubscribeList.SubscribeObject;
+import com.prgrms.monthsub.dto.SeriesSubscribeList.UploadObject;
+import com.prgrms.monthsub.dto.SeriesSubscribeList.WriterObject;
+import com.prgrms.monthsub.dto.SeriesSubscribeOne;
+import com.prgrms.monthsub.dto.SeriesSubscribeOne.Response;
+import com.prgrms.monthsub.dto.SeriesSubscribeOne.ResponseUsageEdit;
 import com.prgrms.monthsub.dto.SeriesSubscribePost;
-import com.prgrms.monthsub.dto.response.SeriesListResponse;
-import com.prgrms.monthsub.dto.response.SeriesOneResponse;
-import com.prgrms.monthsub.dto.response.SeriesOneResponse.SeriesObject;
-import com.prgrms.monthsub.dto.response.SeriesOneResponse.SubscribeObject;
-import com.prgrms.monthsub.dto.response.SeriesOneResponse.UploadObject;
-import com.prgrms.monthsub.dto.response.SeriesOneResponse.WriterObject;
-import com.prgrms.monthsub.dto.response.SeriesOneWithWriterResponse;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -57,11 +59,11 @@ public class SeriesConverter {
             .build();
     }
 
-    public SeriesOneResponse seriesToSeriesOneResponse(Series seriesEntity,
+    public SeriesSubscribeOne.Response seriesToSeriesOneResponse(Series seriesEntity,
         List<Article> articleList) {
         SeriesOneWithWriterResponse writerResponse = writerConverter.writerToSeriesOneWithWriterResponse(
             seriesEntity.getWriter());
-        return new SeriesOneResponse(
+        return new Response(
             SeriesObject.builder()
                 .id(seriesEntity.getId())
                 .thumbnail(seriesEntity.getThumbnail())
@@ -99,10 +101,10 @@ public class SeriesConverter {
         );
     }
 
-    public SeriesListResponse seriesListToResponse(Series seriesEntity) {
+    public SeriesSubscribeList.Response seriesListToResponse(Series seriesEntity) {
         SeriesOneWithWriterResponse writerResponse = writerConverter.writerToSeriesOneWithWriterResponse(
             seriesEntity.getWriter());
-        return new SeriesListResponse(
+        return new SeriesSubscribeList.Response(
             SeriesObject.builder()
                 .id(seriesEntity.getId())
                 .thumbnail(seriesEntity.getThumbnail())
@@ -122,6 +124,28 @@ public class SeriesConverter {
             WriterObject.builder()
                 .id(writerResponse.writerId())
                 .nickname(writerResponse.user().nickname())
+                .build()
+        );
+    }
+
+    public SeriesSubscribeOne.ResponseUsageEdit seriesToResponseUsageEdit(Series series) {
+        return new ResponseUsageEdit(
+            SeriesObject.builder()
+                .id(series.getId())
+                .title(series.getTitle())
+                .introduceSentence(series.getIntroduceSentence())
+                .thumbnail(series.getThumbnail())
+                .price(series.getPrice())
+                .build(),
+            series.getCategory(),
+            UploadObject.builder()
+                .date(series.getUploadDate().split("\\$"))
+                .time(series.getUploadTime())
+                .build(),
+            SubscribeObject.builder()
+                .startDate(series.getSubscribeStartDate())
+                .endDate(series.getSubscribeEndDate())
+                .status(String.valueOf(series.getSubscribeStatus()))
                 .build()
         );
     }

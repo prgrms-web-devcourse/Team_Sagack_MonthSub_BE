@@ -2,9 +2,9 @@ package com.prgrms.monthsub.controller;
 
 import com.prgrms.monthsub.common.error.ApiResponse;
 import com.prgrms.monthsub.dto.SeriesSubscribeEdit;
+import com.prgrms.monthsub.dto.SeriesSubscribeList;
+import com.prgrms.monthsub.dto.SeriesSubscribeOne;
 import com.prgrms.monthsub.dto.SeriesSubscribePost;
-import com.prgrms.monthsub.dto.response.SeriesListResponse;
-import com.prgrms.monthsub.dto.response.SeriesOneResponse;
 import com.prgrms.monthsub.jwt.JwtAuthentication;
 import com.prgrms.monthsub.service.SeriesService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -49,7 +49,7 @@ public class SeriesController {
     @Operation(summary = "시리즈 공고 게시글 단건 조회")
     @GetMapping("/{id}")
     @Tag(name = "[화면]-시리즈")
-    public ApiResponse<SeriesOneResponse> getSeriesById(
+    public ApiResponse<SeriesSubscribeOne.Response> getSeriesById(
         @PathVariable Long id) {
         return ApiResponse.ok(HttpMethod.GET, seriesService.getSeriesBySeriesId(id));
     }
@@ -57,7 +57,7 @@ public class SeriesController {
     @Operation(summary = "시리즈 공고 게시글 리스트 조회")
     @GetMapping("")
     @Tag(name = "[화면]-시리즈")
-    public ApiResponse<List<SeriesListResponse>> getSeriesList() {
+    public ApiResponse<List<SeriesSubscribeList.Response>> getSeriesList() {
         return ApiResponse.ok(HttpMethod.GET, seriesService.getSeriesList());
     }
 
@@ -67,10 +67,20 @@ public class SeriesController {
     public ApiResponse<SeriesSubscribeEdit.Response> editSeries(
         @AuthenticationPrincipal JwtAuthentication authentication,
         @PathVariable Long seriesId,
-        @RequestPart MultipartFile thumbnail,
+        @RequestPart(required = false) MultipartFile thumbnail,
         @Valid @RequestPart SeriesSubscribeEdit.Request request) throws IOException {
         return ApiResponse.ok(
             HttpMethod.PUT, seriesService.editSeries(seriesId, thumbnail, request));
+    }
+
+    @GetMapping("/edit/{id}")
+    @Operation(summary = "수정 요청시 시리즈 공고 단건 조회")
+    @Tag(name = "[화면]-시리즈")
+    public ApiResponse<SeriesSubscribeOne.ResponseUsageEdit> getSeriesByIdUsageEdit(
+        @AuthenticationPrincipal JwtAuthentication authentication,
+        @PathVariable Long id
+    ) {
+        return ApiResponse.ok(HttpMethod.GET, seriesService.getSeriesUsageEdit(id));
     }
 
 }

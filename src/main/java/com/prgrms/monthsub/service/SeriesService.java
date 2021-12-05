@@ -6,9 +6,9 @@ import com.prgrms.monthsub.domain.Article;
 import com.prgrms.monthsub.domain.Series;
 import com.prgrms.monthsub.domain.Writer;
 import com.prgrms.monthsub.dto.SeriesSubscribeEdit;
+import com.prgrms.monthsub.dto.SeriesSubscribeList;
+import com.prgrms.monthsub.dto.SeriesSubscribeOne;
 import com.prgrms.monthsub.dto.SeriesSubscribePost;
-import com.prgrms.monthsub.dto.response.SeriesListResponse;
-import com.prgrms.monthsub.dto.response.SeriesOneResponse;
 import com.prgrms.monthsub.repository.SeriesRepository;
 import java.io.IOException;
 import java.util.List;
@@ -54,14 +54,14 @@ public class SeriesService {
         return new SeriesSubscribePost.Response(seriesRepository.save(entity).getId());
     }
 
-    public SeriesOneResponse getSeriesBySeriesId(Long seriesId) {
+    public SeriesSubscribeOne.Response getSeriesBySeriesId(Long seriesId) {
         List<Article> articleList = articleService.getArticleListBySeriesId(seriesId);
         return seriesRepository.findSeriesById(seriesId)
             .map(series -> seriesConverter.seriesToSeriesOneResponse(series, articleList))
             .orElseThrow(() -> new SeriesNotFound("seriesId=" + seriesId));
     }
 
-    public List<SeriesListResponse> getSeriesList() {
+    public List<SeriesSubscribeList.Response> getSeriesList() {
         List<Series> seriesList = seriesRepository.findSeriesList();
         return seriesList.stream().map(seriesConverter::seriesListToResponse)
             .collect(Collectors.toList());
@@ -75,6 +75,12 @@ public class SeriesService {
             .orElseThrow(() -> new SeriesNotFound("seriesId=" + seriesId));
         series.editSeries(imageUrl, request);
         return new SeriesSubscribeEdit.Response(seriesRepository.save(series).getId());
+    }
+
+    public SeriesSubscribeOne.ResponseUsageEdit getSeriesUsageEdit(Long seriesId) {
+        return seriesRepository.findById(seriesId)
+            .map(seriesConverter::seriesToResponseUsageEdit)
+            .orElseThrow(() -> new SeriesNotFound("seriesId=" + seriesId));
     }
 
 }
