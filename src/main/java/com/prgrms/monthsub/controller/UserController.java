@@ -2,7 +2,6 @@ package com.prgrms.monthsub.controller;
 
 
 import com.prgrms.monthsub.common.error.ApiResponse;
-import com.prgrms.monthsub.common.error.exception.UserNotFoundException;
 import com.prgrms.monthsub.domain.User;
 import com.prgrms.monthsub.dto.UserLogin;
 import com.prgrms.monthsub.dto.UserMe;
@@ -50,16 +49,16 @@ public class UserController {
     @GetMapping(path = "/users/me")
     @Operation(summary = "내 정보 확인")
     @Tag(name = "[화면]-내정보")
-    public ApiResponse<UserMe.Response> me(@AuthenticationPrincipal JwtAuthentication authentication) {
-        return ApiResponse.ok(HttpMethod.GET, userService.findByUserName(authentication.username)
-            .map(user ->
-                new UserMe.Response(
-                    user.getId(), authentication.token, user.getNickname(),
-                    user.getProfileImage(),
-                    user.getProfileIntroduce(), user.getPart().getName()
-                )
-            )
-            .orElseThrow(UserNotFoundException::new));
+    public ApiResponse<UserMe.Response> me(
+        @AuthenticationPrincipal JwtAuthentication authentication) {
+        User user = userService.findByUserId(authentication.userId);
+        UserMe.Response me = new UserMe.Response(
+            user.getId(), authentication.token, user.getNickname(),
+            user.getProfileImage(),
+            user.getProfileIntroduce(), user.getPart().getName()
+        );
+
+        return ApiResponse.ok(HttpMethod.GET, me);
     }
 
 }

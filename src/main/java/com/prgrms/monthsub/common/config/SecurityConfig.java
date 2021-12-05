@@ -4,6 +4,7 @@ import com.prgrms.monthsub.common.error.FilterExceptionHandler;
 import com.prgrms.monthsub.jwt.Jwt;
 import com.prgrms.monthsub.jwt.JwtAuthenticationFilter;
 import com.prgrms.monthsub.jwt.JwtAuthenticationProvider;
+import com.prgrms.monthsub.service.AuthenticationService;
 import com.prgrms.monthsub.service.UserService;
 import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
@@ -33,7 +34,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final JwtConfig jwtConfig;
 
-    public SecurityConfig(JwtConfig jwtConfig) {this.jwtConfig = jwtConfig;}
+    private final AuthenticationService authenticationService;
+
+    @Autowired
+    private FilterExceptionHandler exceptionHandlerFilter;
+
+    public SecurityConfig(JwtConfig jwtConfig, AuthenticationService authenticationService) {
+        this.jwtConfig = jwtConfig;
+        this.authenticationService = authenticationService;
+    }
 
     @Override
     public void configure(WebSecurity web) {
@@ -80,39 +89,37 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     public JwtAuthenticationFilter jwtAuthenticationFilter() {
         Jwt jwt = getApplicationContext().getBean(Jwt.class);
-        return new JwtAuthenticationFilter(jwtConfig.getHeader(), jwt);
+        return new JwtAuthenticationFilter(authenticationService, jwtConfig.getHeader(), jwt);
     }
-
-    @Autowired
-    private FilterExceptionHandler exceptionHandlerFilter;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
             .authorizeRequests()
-                .antMatchers("/users/me").hasAnyRole("USER")
-                .anyRequest().permitAll()
-                .and()
+            .antMatchers("/users/me").hasAnyRole("USER")
+            .anyRequest().permitAll()
+            .and()
             .csrf()
-                .disable()
+            .disable()
             .headers()
-                .disable()
+            .disable()
             .formLogin()
-                .disable()
+            .disable()
             .httpBasic()
-                .disable()
+            .disable()
             .rememberMe()
-                .disable()
+            .disable()
             .logout()
-                .disable()
+            .disable()
             .exceptionHandling()
-                .accessDeniedHandler(accessDeniedHandler())
-                .and()
+            .accessDeniedHandler(accessDeniedHandler())
+            .and()
             .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
+            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            .and()
             .addFilterAfter(jwtAuthenticationFilter(), SecurityContextPersistenceFilter.class)
             .addFilterBefore(exceptionHandlerFilter, jwtAuthenticationFilter().getClass())
         ;
     }
+
 }

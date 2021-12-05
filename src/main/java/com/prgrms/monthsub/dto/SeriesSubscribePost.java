@@ -1,10 +1,12 @@
 package com.prgrms.monthsub.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 
 public class SeriesSubscribePost {
 
+    @Schema(name = "SeriesSubscribePost.Request")
     public record Request(
 
         @NotBlank(message = "닉네임이 비어있습니다.")
@@ -47,6 +49,7 @@ public class SeriesSubscribePost {
     ) {
     }
 
+    @Schema(name = "SeriesSubscribePost.Response")
     public record Response(
         Long seriesId
     ) {

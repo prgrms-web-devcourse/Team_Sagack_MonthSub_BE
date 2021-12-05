@@ -4,6 +4,7 @@ import com.prgrms.monthsub.common.error.ApiResponse;
 import com.prgrms.monthsub.dto.SeriesSubscribePost;
 import com.prgrms.monthsub.dto.response.SeriesListResponse;
 import com.prgrms.monthsub.dto.response.SeriesOneResponse;
+import com.prgrms.monthsub.jwt.JwtAuthentication;
 import com.prgrms.monthsub.service.SeriesService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -12,6 +13,7 @@ import java.util.List;
 import javax.validation.Valid;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,15 +33,15 @@ public class SeriesController {
         this.seriesService = seriesService;
     }
 
-    @PostMapping(path = "/users/{userId}",
-        consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+    @PostMapping(consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
     @Operation(summary = "시리즈 공고 게시글 작성")
     @Tag(name = "[화면]-시리즈")
     public ApiResponse<SeriesSubscribePost.Response> postSeries(
-        @PathVariable Long userId,
+        @AuthenticationPrincipal JwtAuthentication authentication,
         @RequestPart MultipartFile thumbnail,
         @Valid @RequestPart SeriesSubscribePost.Request request) throws IOException {
-        return ApiResponse.ok(HttpMethod.POST, seriesService.createSeries(userId, thumbnail, request));
+        return ApiResponse.ok(
+            HttpMethod.POST, seriesService.createSeries(authentication.userId, thumbnail, request));
     }
 
     @Operation(summary = "시리즈 공고 게시글 단건 조회")

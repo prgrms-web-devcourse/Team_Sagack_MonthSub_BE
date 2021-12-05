@@ -47,7 +47,7 @@ cloud:
     stack:
       auto: false
 jwt:
-  header: token
+  header: authorization
   issuer: monthsub
   client-secret: ${JWT_CLIENT_SECRET}
   expiry-seconds: 3600

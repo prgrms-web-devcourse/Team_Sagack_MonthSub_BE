@@ -6,7 +6,6 @@ import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
-
 import io.swagger.v3.oas.models.security.SecurityScheme.Type;
 import java.util.Arrays;
 import org.springdoc.core.customizers.OpenApiCustomiser;
@@ -43,7 +42,7 @@ public class OpenAPIConfig {
                             .addSecuritySchemes(
                                 "bearer",
                                 new SecurityScheme()
-                                    .type(Type.APIKEY)
+                                    .type(Type.HTTP)
                                     .scheme("bearer").bearerFormat("JWT")
                                     .in(SecurityScheme.In.HEADER).name(jwtConfig.getHeader())
                             )
