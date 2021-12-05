@@ -80,7 +80,7 @@ public class SeriesService {
     public SeriesSubscribeOne.ResponseUsageEdit getSeriesUsageEdit(Long seriesId) {
         return seriesRepository.findById(seriesId)
             .map(seriesConverter::seriesToResponseUsageEdit)
-            .orElseThrow(EntityNotFoundException::new);
+            .orElseThrow(() -> new SeriesNotFound("seriesId=" + seriesId));
     }
 
 }
