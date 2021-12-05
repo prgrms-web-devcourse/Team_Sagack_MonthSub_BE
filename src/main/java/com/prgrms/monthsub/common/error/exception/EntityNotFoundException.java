@@ -1,15 +1,17 @@
 package com.prgrms.monthsub.common.error.exception;
 
-import com.prgrms.monthsub.common.error.ErrorCode;
+import com.prgrms.monthsub.common.error.ErrorCodes;
 
 public class EntityNotFoundException extends BusinessException {
 
-    public EntityNotFoundException(String message, ErrorCode errorCode) {super(message, errorCode);}
+    public EntityNotFoundException(String message, ErrorCodes errorCode) {super(message, errorCode);}
 
-    public EntityNotFoundException(ErrorCode errorCode) {
+    public EntityNotFoundException(ErrorCodes errorCode) {
         super(errorCode);
     }
 
-    public EntityNotFoundException() {super(ErrorCode.ENTITY_NOT_FOUND);}
+    public EntityNotFoundException(Class<?> domainClass, String message) {
+        super(ErrorCodes.ENTITY_NOT_FOUND("domainClass=" + domainClass.getSimpleName() + "," + message));
+    }
 
 }

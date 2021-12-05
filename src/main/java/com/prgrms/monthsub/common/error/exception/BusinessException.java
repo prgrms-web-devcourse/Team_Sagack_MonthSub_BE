@@ -1,22 +1,22 @@
 package com.prgrms.monthsub.common.error.exception;
 
-import com.prgrms.monthsub.common.error.ErrorCode;
+import com.prgrms.monthsub.common.error.ErrorCodes;
 
 public class BusinessException extends RuntimeException {
 
-    private final ErrorCode errorCode;
+    private final ErrorCodes errorCode;
 
-    public BusinessException(String message, ErrorCode errorCode) {
+    public BusinessException(String message, ErrorCodes errorCode) {
         super(message);
         this.errorCode = errorCode;
     }
 
-    public BusinessException(ErrorCode errorCode) {
-        super(errorCode.getMessage());
+    public BusinessException(ErrorCodes errorCode) {
+        super(errorCode.message());
         this.errorCode = errorCode;
     }
 
-    public ErrorCode getErrorCode() {
+    public ErrorCodes getErrorCode() {
         return errorCode;
     }
 

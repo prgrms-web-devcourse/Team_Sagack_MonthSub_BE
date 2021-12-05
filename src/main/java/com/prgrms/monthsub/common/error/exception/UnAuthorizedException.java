@@ -1,15 +1,15 @@
 package com.prgrms.monthsub.common.error.exception;
 
-import com.prgrms.monthsub.common.error.ErrorCode;
+import com.prgrms.monthsub.common.error.ErrorCodes;
 
 public class UnAuthorizedException extends BusinessException {
 
-    public UnAuthorizedException(String message, ErrorCode errorCode) {super(message, errorCode);}
+    public UnAuthorizedException(String message, ErrorCodes errorCode) {super(message, errorCode);}
 
-    public UnAuthorizedException(ErrorCode errorCode) {
+    public UnAuthorizedException(ErrorCodes errorCode) {
         super(errorCode);
     }
 
-    public UnAuthorizedException() {super(ErrorCode.UN_AUTHORIZED);}
+    public UnAuthorizedException() {super(ErrorCodes.UN_AUTHORIZED());}
 
 }

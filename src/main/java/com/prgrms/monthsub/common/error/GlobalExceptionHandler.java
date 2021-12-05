@@ -1,5 +1,6 @@
 package com.prgrms.monthsub.common.error;
 
+import com.prgrms.monthsub.common.error.ErrorCodes.ErrorCode;
 import com.prgrms.monthsub.common.error.exception.BusinessException;
 import com.prgrms.monthsub.common.error.exception.InvalidInputException;
 import org.slf4j.Logger;
@@ -27,14 +28,16 @@ public class GlobalExceptionHandler {
     protected ApiResponse<ErrorResponse> handleMethodArgumentNotValidException(
         MethodArgumentNotValidException e) {
         log.error("handleMethodArgumentNotValidException", e);
-        final ErrorResponse response = ErrorResponse.of(ErrorCode.INVALID_INPUT_VALUE, e.getBindingResult());
+        final ErrorResponse response = ErrorResponse.of(
+            ErrorCodes.INVALID_INPUT_VALUE(), e.getBindingResult());
         return ApiResponse.fail(HttpStatus.BAD_REQUEST.value(), response.getCode(), response);
     }
 
     @ExceptionHandler(BindException.class)
     protected ApiResponse<ErrorResponse> handleBindException(BindException e) {
         log.error("handleBindException", e);
-        final ErrorResponse response = ErrorResponse.of(ErrorCode.INVALID_INPUT_VALUE, e.getBindingResult());
+        final ErrorResponse response = ErrorResponse.of(
+            ErrorCodes.INVALID_INPUT_VALUE(), e.getBindingResult());
         return ApiResponse.fail(HttpStatus.BAD_REQUEST.value(), response.getCode(), response);
     }
 
@@ -50,14 +53,14 @@ public class GlobalExceptionHandler {
     protected ApiResponse<ErrorResponse> handleHttpRequestMethodNotSupportedException(
         HttpRequestMethodNotSupportedException e) {
         log.error("handleHttpRequestMethodNotSupportedException", e);
-        final ErrorResponse response = ErrorResponse.of(ErrorCode.METHOD_NOT_ALLOWED);
+        final ErrorResponse response = ErrorResponse.of(ErrorCodes.METHOD_NOT_ALLOWED());
         return ApiResponse.fail(HttpStatus.METHOD_NOT_ALLOWED.value(), response.getCode(), response);
     }
 
     @ExceptionHandler(AccessDeniedException.class)
     protected ApiResponse<ErrorResponse> handleAccessDeniedException(AccessDeniedException e) {
         log.error("handleAccessDeniedException", e);
-        final ErrorResponse response = ErrorResponse.of(ErrorCode.HANDLE_ACCESS_DENIED);
+        final ErrorResponse response = ErrorResponse.of(ErrorCodes.HANDLE_ACCESS_DENIED());
         return ApiResponse.fail(ErrorCode.HANDLE_ACCESS_DENIED.getStatus().value(),
             response.getCode(), response
         );
@@ -73,29 +76,29 @@ public class GlobalExceptionHandler {
     })
     protected ApiResponse<ErrorResponse> handleBadRequestException(InvalidInputException e) {
         log.error("handleBadRequestException", e);
-        final ErrorResponse response = ErrorResponse.of(ErrorCode.INVALID_INPUT_VALUE);
+        final ErrorResponse response = ErrorResponse.of(ErrorCodes.INVALID_INPUT_VALUE());
         return ApiResponse.fail(HttpStatus.BAD_REQUEST.value(), response.getCode(), response);
     }
 
     @ExceptionHandler(BusinessException.class)
     protected ApiResponse<ErrorResponse> handleBusinessException(final BusinessException e) {
         log.error("handleBusinessException", e);
-        final ErrorCode errorCode = e.getErrorCode();
+        final ErrorCodes errorCode = e.getErrorCode();
         final ErrorResponse response = ErrorResponse.of(errorCode, e.getClass());
-        return ApiResponse.fail(errorCode.getStatus().value(), response.getCode(), response);
+        return ApiResponse.fail(errorCode.errorCode().getStatus().value(), response.getCode(), response);
     }
 
     @ExceptionHandler(Exception.class)
     protected ApiResponse<ErrorResponse> handleException(Exception e) {
         log.error("handleException", e);
-        final ErrorResponse response = ErrorResponse.of(ErrorCode.INTERNAL_SERVER_ERROR);
+        final ErrorResponse response = ErrorResponse.of(ErrorCodes.INTERNAL_SERVER_ERROR());
         return ApiResponse.fail(HttpStatus.INTERNAL_SERVER_ERROR.value(), response.getCode(), response);
     }
 
     @ExceptionHandler(BadCredentialsException.class)
     protected ApiResponse<ErrorResponse> handleBadCredentialsException(BadCredentialsException e) {
         log.error("BadCredentialsException", e);
-        final ErrorResponse response = ErrorResponse.of(ErrorCode.INVALID_CREDENTIALS_VALUE);
+        final ErrorResponse response = ErrorResponse.of(ErrorCodes.INVALID_CREDENTIALS_VALUE());
         return ApiResponse.fail(ErrorCode.INVALID_CREDENTIALS_VALUE.getStatus().value(),
             response.getCode(), response
         );

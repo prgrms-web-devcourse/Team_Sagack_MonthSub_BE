@@ -3,6 +3,7 @@ package com.prgrms.monthsub.common.error;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.prgrms.monthsub.common.error.ErrorCodes.ErrorCode;
 import com.prgrms.monthsub.common.error.exception.UnAuthorizedException;
 import java.io.IOException;
 import javax.servlet.FilterChain;
@@ -30,7 +31,7 @@ public class FilterExceptionHandler extends OncePerRequestFilter {
     public void setErrorResponse(HttpStatus status, HttpServletResponse response, Throwable ex) {
         response.setStatus(status.value());
         response.setContentType("application/json");
-        final ErrorResponse errorResponse = ErrorResponse.of(ErrorCode.UN_AUTHORIZED);
+        final ErrorResponse errorResponse = ErrorResponse.of(ErrorCodes.UN_AUTHORIZED());
         ApiResponse<ErrorResponse> json = ApiResponse.fail(
             ErrorCode.UN_AUTHORIZED.getStatus().value(),
             errorResponse.getCode(), errorResponse

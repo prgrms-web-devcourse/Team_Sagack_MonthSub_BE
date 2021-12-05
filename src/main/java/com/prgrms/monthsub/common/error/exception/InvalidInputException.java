@@ -1,17 +1,17 @@
 package com.prgrms.monthsub.common.error.exception;
 
-import com.prgrms.monthsub.common.error.ErrorCode;
+import com.prgrms.monthsub.common.error.ErrorCodes;
 
 public class InvalidInputException extends BusinessException {
 
-    public InvalidInputException(String message, ErrorCode errorCode) {
+    public InvalidInputException(String message, ErrorCodes errorCode) {
         super(message, errorCode);
     }
 
-    public InvalidInputException(ErrorCode errorCode) {
+    public InvalidInputException(ErrorCodes errorCode) {
         super(errorCode);
     }
 
-    public InvalidInputException() {super(ErrorCode.INVALID_INPUT_VALUE);}
+    public InvalidInputException() {super(ErrorCodes.INVALID_INPUT_VALUE());}
 
 }

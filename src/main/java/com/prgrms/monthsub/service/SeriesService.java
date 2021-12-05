@@ -57,7 +57,7 @@ public class SeriesService {
         List<Article> articleList = articleService.getArticleListBySeriesId(seriesId);
         return seriesRepository.findSeriesById(seriesId)
             .map(series -> seriesConverter.seriesToSeriesOneResponse(series, articleList))
-            .orElseThrow(EntityNotFoundException::new);
+            .orElseThrow(() -> new EntityNotFoundException(Series.class, "seriesId=" + seriesId));
     }
 
     public List<SeriesListResponse> getSeriesList() {
@@ -70,7 +70,8 @@ public class SeriesService {
     public SeriesSubscribeEdit.Response editSeries(Long seriesId, MultipartFile thumbnail,
         SeriesSubscribeEdit.Request request) throws IOException {
         String imageUrl = !thumbnail.isEmpty() ? s3Uploader.upload(thumbnail, DIRECTORY) : null;
-        Series series = seriesRepository.findSeriesById(seriesId).orElseThrow(EntityNotFoundException::new);
+        Series series = seriesRepository.findSeriesById(seriesId)
+            .orElseThrow(() -> new EntityNotFoundException(Series.class, "seriesId=" + seriesId));
         series.editSeries(imageUrl, request);
         return new SeriesSubscribeEdit.Response(seriesRepository.save(series).getId());
     }
