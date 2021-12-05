@@ -5,7 +5,8 @@ import com.prgrms.monthsub.dto.SeriesSubscribeList.SeriesOneWithUserResponse;
 import com.prgrms.monthsub.dto.UserSignUp;
 import com.prgrms.monthsub.service.PartService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -14,9 +15,10 @@ public class UserConverter {
 
     static final int point = 0;
 
-    private final BCryptPasswordEncoder bCryptEncoder;
-
     private final PartService partService;
+
+    @Autowired
+    PasswordEncoder bCryptEncoder;
 
     public SeriesOneWithUserResponse userToSeriesOneWithUserResponse(User user) {
         return new SeriesOneWithUserResponse(
