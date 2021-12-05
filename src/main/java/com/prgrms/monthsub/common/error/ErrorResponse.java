@@ -1,6 +1,7 @@
 package com.prgrms.monthsub.common.error;
 
-import com.prgrms.monthsub.common.error.exception.BusinessException;
+import com.prgrms.monthsub.common.error.ErrorCodes.ErrorCode;
+import com.prgrms.monthsub.common.error.exception.global.BusinessException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,24 +28,28 @@ public class ErrorResponse {
 
     private LocalDateTime severTime;
 
-    private ErrorResponse(final ErrorCode code, final List<FieldError> errors) {
-        this.message = code.getMessage();
+    private ErrorResponse(final ErrorCodes exceptions, final List<FieldError> errors) {
+        ErrorCode code = exceptions.errorCode();
+        this.message = exceptions.message();
         this.status = code.getStatus().value();
         this.errors = errors;
         this.code = code.getCode();
         this.severTime = LocalDateTime.now();
     }
 
-    private ErrorResponse(final ErrorCode code) {
-        this.message = code.getMessage();
+    private ErrorResponse(final ErrorCodes exceptions) {
+        ErrorCode code = exceptions.errorCode();
+        this.message = exceptions.message();
         this.status = code.getStatus().value();
         this.errors = new ArrayList<>();
         this.code = code.getCode();
         this.severTime = LocalDateTime.now();
     }
 
-    private ErrorResponse(final ErrorCode code, Class<? extends BusinessException> exceptionClass) {
-        this.message = code.getMessage();
+    private ErrorResponse(final ErrorCodes exceptions,
+        Class<? extends BusinessException> exceptionClass) {
+        ErrorCode code = exceptions.errorCode();
+        this.message = exceptions.message();
         this.status = code.getStatus().value();
         this.errors = new ArrayList<>();
         this.code = code.getCode();
@@ -52,19 +57,20 @@ public class ErrorResponse {
         this.severTime = LocalDateTime.now();
     }
 
-    public static ErrorResponse of(final ErrorCode code, final BindingResult bindingResult) {
+    public static ErrorResponse of(final ErrorCodes code, final BindingResult bindingResult) {
         return new ErrorResponse(code, FieldError.of(bindingResult));
     }
 
-    public static ErrorResponse of(final ErrorCode code) {
+    public static ErrorResponse of(final ErrorCodes code) {
         return new ErrorResponse(code);
     }
 
-    public static ErrorResponse of(final ErrorCode code, Class<? extends BusinessException> exceptionClass) {
+    public static ErrorResponse of(final ErrorCodes code,
+        Class<? extends BusinessException> exceptionClass) {
         return new ErrorResponse(code, exceptionClass);
     }
 
-    public static ErrorResponse of(final ErrorCode code, final List<FieldError> errors) {
+    public static ErrorResponse of(final ErrorCodes code, final List<FieldError> errors) {
         return new ErrorResponse(code, errors);
     }
 
@@ -72,7 +78,7 @@ public class ErrorResponse {
         final String value = e.getValue() == null ? "" : e.getValue().toString();
         final List<ErrorResponse.FieldError> errors = ErrorResponse.FieldError.of(
             e.getName(), value, e.getErrorCode());
-        return new ErrorResponse(ErrorCode.INVALID_TYPE_VALUE, errors);
+        return new ErrorResponse(ErrorCodes.INVALID_TYPE_VALUE(), errors);
     }
 
     @Getter

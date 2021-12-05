@@ -1,6 +1,6 @@
 package com.prgrms.monthsub.service;
 
-import com.prgrms.monthsub.common.error.exception.UserNotFoundException;
+import com.prgrms.monthsub.common.error.exception.global.AuthenticationException.UserNotExist;
 import com.prgrms.monthsub.domain.User;
 import com.prgrms.monthsub.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -18,7 +18,7 @@ public class AuthenticationService {
 
     public User findByUserName(String username) {
         return userRepository.findByUsername(username)
-            .orElseThrow(UserNotFoundException::new);
+            .orElseThrow(() -> new UserNotExist("username=" + username));
     }
 
 }
