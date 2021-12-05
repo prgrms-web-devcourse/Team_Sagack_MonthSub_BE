@@ -1,7 +1,7 @@
 package com.prgrms.monthsub.service;
 
-import com.prgrms.monthsub.common.error.ErrorCode;
-import com.prgrms.monthsub.common.error.exception.EntityNotFoundException;
+import com.prgrms.monthsub.common.error.ErrorCodes;
+import com.prgrms.monthsub.common.error.exception.domain.part.PartException.PartNotFound;
 import com.prgrms.monthsub.domain.Part;
 import com.prgrms.monthsub.repository.PartRepository;
 import org.springframework.stereotype.Service;
@@ -15,7 +15,7 @@ public class PartService {
 
     public Part findByName(String name) {
         return writerRepository.findByName(name)
-            .orElseThrow(() -> new EntityNotFoundException(ErrorCode.ENTITY_NOT_FOUND));
+            .orElseThrow(() -> new PartNotFound("name=" + name));
     }
 
 }

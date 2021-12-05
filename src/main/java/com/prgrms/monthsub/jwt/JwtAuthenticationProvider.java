@@ -43,7 +43,9 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
             String token = getToken(user.getUsername(), authorities);
             JwtAuthenticationToken authenticated =
                 new JwtAuthenticationToken(
-                    new JwtAuthentication(token, user.getUsername()), null, authorities);
+                    new JwtAuthentication(token, user.getId(), user.getUsername()), null,
+                    authorities
+                );
             authenticated.setDetails(user);
             return authenticated;
         } catch (IllegalArgumentException e) {

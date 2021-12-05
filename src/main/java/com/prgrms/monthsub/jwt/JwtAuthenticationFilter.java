@@ -2,13 +2,14 @@ package com.prgrms.monthsub.jwt;
 
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
-import com.prgrms.monthsub.common.error.exception.UnAuthorizedException;
+import com.prgrms.monthsub.common.error.exception.global.UnAuthorizedException;
+import com.prgrms.monthsub.domain.User;
+import com.prgrms.monthsub.service.AuthenticationService;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 import javax.servlet.FilterChain;
@@ -27,13 +28,22 @@ import org.springframework.web.filter.GenericFilterBean;
 
 public class JwtAuthenticationFilter extends GenericFilterBean {
 
+    private final String BEARER = "Bearer";
+
     private final Logger log = LoggerFactory.getLogger(getClass());
+
+    private final AuthenticationService authenticationService;
 
     private final String headerKey;
 
     private final Jwt jwt;
 
-    public JwtAuthenticationFilter(String headerKey, Jwt jwt) {
+    public JwtAuthenticationFilter(
+        AuthenticationService authenticationService,
+        String headerKey,
+        Jwt jwt
+    ) {
+        this.authenticationService = authenticationService;
         this.headerKey = headerKey;
         this.jwt = jwt;
     }
@@ -74,9 +84,13 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
                     List<GrantedAuthority> authorities = getAuthorities(claims);
 
                     if (isNotEmpty(username) && authorities.size() > 0) {
+                        User user = this.authenticationService.findByUserName(username);
+
                         JwtAuthenticationToken authentication
                             = new JwtAuthenticationToken(
-                            new JwtAuthentication(token, username), null, authorities);
+                            new JwtAuthentication(token, user.getId(), username), null,
+                            authorities
+                        );
                         authentication.setDetails(
                             new WebAuthenticationDetailsSource().buildDetails(request));
                         SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -102,8 +116,13 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         String token = request.getHeader(headerKey);
         if (isNotEmpty(token)) {
             log.debug("Jwt token detected: {}", token);
+
+            if (!token.startsWith(this.BEARER)) {
+                throw new UnAuthorizedException();
+            }
+
             try {
-                return URLDecoder.decode(token, "UTF-8");
+                return URLDecoder.decode(token.replace(BEARER + " ", ""), "UTF-8");
             } catch (Exception e) {
                 log.error(e.getMessage(), e);
             }

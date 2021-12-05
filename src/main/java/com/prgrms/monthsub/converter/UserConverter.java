@@ -1,11 +1,14 @@
 package com.prgrms.monthsub.converter;
 
 import com.prgrms.monthsub.domain.User;
+
 import com.prgrms.monthsub.dto.UserSignUp;
 import com.prgrms.monthsub.dto.response.SeriesOneWithUserResponse;
 import com.prgrms.monthsub.service.PartService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import com.prgrms.monthsub.dto.SeriesSubscribeList.SeriesOneWithUserResponse;
+
 import org.springframework.stereotype.Component;
 
 @Component

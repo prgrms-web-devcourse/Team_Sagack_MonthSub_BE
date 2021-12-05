@@ -1,7 +1,7 @@
 package com.prgrms.monthsub.converter;
 
 import com.prgrms.monthsub.domain.Article;
-import com.prgrms.monthsub.dto.response.BriefArticleBySeriesIdResponse;
+import com.prgrms.monthsub.dto.SeriesSubscribeList.BriefArticleBySeriesIdResponse;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -11,8 +11,8 @@ public class ArticleConverter {
         return new BriefArticleBySeriesIdResponse(
             article.getId(),
             article.getTitle(),
-            article.getContents(),
-            article.getRound()
+            article.getRound(),
+            article.getCreatedAt().toLocalDate()
         );
     }
 
