@@ -1,19 +1,50 @@
-package com.prgrms.monthsub.dto.response;
+package com.prgrms.monthsub.dto;
 
 import com.prgrms.monthsub.domain.enumType.Category;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.List;
 import lombok.Builder;
 
-public record SeriesOneResponse(
-    SeriesObject series,
-    UploadObject upload,
-    SubscribeObject subscribe,
-    Category category,
-    WriterObject writer,
-    List<BriefArticleBySeriesIdResponse> articleList
-) {
+public class SeriesSubscribeList {
+
+    @Schema(name = "SeriesSubscribeList")
+    public record Response(
+        SeriesObject series,
+        SubscribeObject subscribe,
+        Category category,
+        WriterObject writer
+    ) {
+
+    }
+
+    @Schema(name = "SeriesSubscribeList")
+    public record SeriesOneWithUserResponse(
+        Long userId,
+        String email,
+        String profileImage,
+        String profileIntroduce,
+        String nickname
+    ) {
+    }
+
+    @Schema(name = "SeriesSubScribeList")
+    public record SeriesOneWithWriterResponse(
+        Long writerId,
+        int followCount,
+        SeriesOneWithUserResponse user
+    ) {
+    }
+
+    @Schema(name = "SeriesSubScribeList")
+    public record BriefArticleBySeriesIdResponse(
+        Long articleId,
+        String title,
+        String contents,
+        Integer round,
+        LocalDate date
+    ) {
+    }
 
     @Builder
     public static class SeriesObject {
@@ -80,3 +111,5 @@ public record SeriesOneResponse(
     }
 
 }
+
+

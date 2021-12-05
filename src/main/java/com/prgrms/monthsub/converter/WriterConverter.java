@@ -1,7 +1,7 @@
 package com.prgrms.monthsub.converter;
 
 import com.prgrms.monthsub.domain.Writer;
-import com.prgrms.monthsub.dto.response.SeriesOneWithWriterResponse;
+import com.prgrms.monthsub.dto.SeriesSubscribeList.SeriesOneWithWriterResponse;
 import org.springframework.stereotype.Component;
 
 @Component

@@ -93,11 +93,11 @@ public class Series extends BaseEntity {
     private LocalTime uploadTime;
 
     public void editSeries(String thumbnail, SeriesSubscribeEdit.Request request) {
-        this.thumbnail = thumbnail;
-        this.title = request.title();
-        if (request.introduceSentence() != null) {
-            this.introduceSentence = request.introduceSentence();
+        if (thumbnail != null) {
+            this.thumbnail = thumbnail;
         }
+        this.title = request.title();
+        this.introduceSentence = request.introduceSentence();
         this.introduceText = request.introduceText();
         this.uploadDate = convertUploadDateListToUploadDateString(request.uploadDate());
         this.uploadTime = LocalTime.parse(request.uploadTime());
