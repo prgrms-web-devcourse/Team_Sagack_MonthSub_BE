@@ -5,6 +5,7 @@ import com.prgrms.monthsub.converter.SeriesConverter;
 import com.prgrms.monthsub.domain.Article;
 import com.prgrms.monthsub.domain.Series;
 import com.prgrms.monthsub.domain.Writer;
+import com.prgrms.monthsub.dto.SeriesSubscribeEdit;
 import com.prgrms.monthsub.dto.SeriesSubscribePost;
 import com.prgrms.monthsub.dto.response.SeriesListResponse;
 import com.prgrms.monthsub.dto.response.SeriesOneResponse;
@@ -63,6 +64,15 @@ public class SeriesService {
         List<Series> seriesList = seriesRepository.findSeriesList();
         return seriesList.stream().map(seriesConverter::seriesListToResponse)
             .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public SeriesSubscribeEdit.Response editSeries(Long seriesId, MultipartFile thumbnail,
+        SeriesSubscribeEdit.Request request) throws IOException {
+        String imageUrl = !thumbnail.isEmpty() ? s3Uploader.upload(thumbnail, DIRECTORY) : null;
+        Series series = seriesRepository.findSeriesById(seriesId).orElseThrow(EntityNotFoundException::new);
+        series.editSeries(imageUrl, request);
+        return new SeriesSubscribeEdit.Response(seriesRepository.save(series).getId());
     }
 
 }

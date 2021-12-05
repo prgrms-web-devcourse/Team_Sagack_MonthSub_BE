@@ -1,7 +1,11 @@
 package com.prgrms.monthsub.domain;
 
+import static com.prgrms.monthsub.common.utils.TimeUtil.convertUploadDateListToUploadDateString;
+
+import com.prgrms.monthsub.common.BaseEntity;
 import com.prgrms.monthsub.domain.enumType.Category;
 import com.prgrms.monthsub.domain.enumType.SeriesStatus;
+import com.prgrms.monthsub.dto.SeriesSubscribeEdit;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import javax.persistence.Column;
@@ -28,7 +32,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Entity
 @Table(name = "series")
-public class Series {
+public class Series extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -87,5 +91,16 @@ public class Series {
 
     @Column(name = "upload_time", nullable = false)
     private LocalTime uploadTime;
+
+    public void editSeries(String thumbnail, SeriesSubscribeEdit.Request request) {
+        this.thumbnail = thumbnail;
+        this.title = request.title();
+        if (request.introduceSentence() != null) {
+            this.introduceSentence = request.introduceSentence();
+        }
+        this.introduceText = request.introduceText();
+        this.uploadDate = convertUploadDateListToUploadDateString(request.uploadDate());
+        this.uploadTime = LocalTime.parse(request.uploadTime());
+    }
 
 }
