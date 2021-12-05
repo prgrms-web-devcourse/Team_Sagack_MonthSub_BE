@@ -1,8 +1,7 @@
 package com.prgrms.monthsub.service;
 
-import com.prgrms.monthsub.common.error.ErrorCodes;
-import com.prgrms.monthsub.common.error.exception.EntityNotFoundException;
-import com.prgrms.monthsub.common.error.exception.user.UserException.UserNotFound;
+import com.prgrms.monthsub.common.error.exception.domain.user.UserException.UserNotExist;
+import com.prgrms.monthsub.common.error.exception.domain.user.UserException.UserNotFound;
 import com.prgrms.monthsub.domain.User;
 import com.prgrms.monthsub.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,14 +24,14 @@ public class UserService {
 
     public User login(String email, String credentials) {
         User user = userRepository.findByEmail(email)
-            .orElseThrow(() -> new UserNotFound("email=" + email));
+            .orElseThrow(() -> new UserNotExist("email=" + email));
         user.checkPassword(passwordEncoder, credentials);
         return user;
     }
 
     public User findByUserId(Long userId) {
         return userRepository.findById(userId)
-            .orElseThrow(() -> new EntityNotFoundException(ErrorCodes.ENTITY_NOT_FOUND("id=" + userId)));
+            .orElseThrow(() -> new UserNotFound("id=" + userId));
     }
 
 }

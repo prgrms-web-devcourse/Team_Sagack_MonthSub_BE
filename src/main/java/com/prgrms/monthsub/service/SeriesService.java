@@ -1,6 +1,6 @@
 package com.prgrms.monthsub.service;
 
-import com.prgrms.monthsub.common.error.exception.EntityNotFoundException;
+import com.prgrms.monthsub.common.error.exception.domain.series.SeriesException.SeriesNotFound;
 import com.prgrms.monthsub.converter.SeriesConverter;
 import com.prgrms.monthsub.domain.Article;
 import com.prgrms.monthsub.domain.Series;
@@ -49,7 +49,8 @@ public class SeriesService {
         SeriesSubscribePost.Request request) throws IOException {
         String imageUrl = s3Uploader.upload(thumbnail, DIRECTORY);
         Writer writer = writerService.findByUserId(userId);
-        Series entity = seriesConverter.SeriesSubscribePostResponseToEntity(writer, imageUrl, request);
+        Series entity = seriesConverter.SeriesSubscribePostResponseToEntity(
+            writer, imageUrl, request);
         return new SeriesSubscribePost.Response(seriesRepository.save(entity).getId());
     }
 
@@ -57,7 +58,7 @@ public class SeriesService {
         List<Article> articleList = articleService.getArticleListBySeriesId(seriesId);
         return seriesRepository.findSeriesById(seriesId)
             .map(series -> seriesConverter.seriesToSeriesOneResponse(series, articleList))
-            .orElseThrow(() -> new EntityNotFoundException(Series.class, "seriesId=" + seriesId));
+            .orElseThrow(() -> new SeriesNotFound("seriesId=" + seriesId));
     }
 
     public List<SeriesListResponse> getSeriesList() {
@@ -71,7 +72,7 @@ public class SeriesService {
         SeriesSubscribeEdit.Request request) throws IOException {
         String imageUrl = !thumbnail.isEmpty() ? s3Uploader.upload(thumbnail, DIRECTORY) : null;
         Series series = seriesRepository.findSeriesById(seriesId)
-            .orElseThrow(() -> new EntityNotFoundException(Series.class, "seriesId=" + seriesId));
+            .orElseThrow(() -> new SeriesNotFound("seriesId=" + seriesId));
         series.editSeries(imageUrl, request);
         return new SeriesSubscribeEdit.Response(seriesRepository.save(series).getId());
     }

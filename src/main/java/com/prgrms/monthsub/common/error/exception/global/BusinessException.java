@@ -1,4 +1,4 @@
-package com.prgrms.monthsub.common.error.exception;
+package com.prgrms.monthsub.common.error.exception.global;
 
 import com.prgrms.monthsub.common.error.ErrorCodes;
 

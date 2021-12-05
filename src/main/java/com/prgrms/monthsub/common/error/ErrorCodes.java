@@ -41,10 +41,6 @@ public record ErrorCodes(ErrorCode errorCode, String message) {
         return new ErrorCodes(ErrorCode.ENTITY_NOT_FOUND, message);
     }
 
-    public static ErrorCodes USER_NOT_FOUND(String message) {
-        return new ErrorCodes(ErrorCode.USER_NOT_FOUND, message);
-    }
-
     @Getter
     public enum ErrorCode {
 
@@ -67,8 +63,7 @@ public record ErrorCodes(ErrorCode errorCode, String message) {
         HANDLE_ACCESS_DENIED("A001", HttpStatus.FORBIDDEN),
 
         //404
-        ENTITY_NOT_FOUND("U003", HttpStatus.NOT_FOUND),
-        USER_NOT_FOUND("A002", HttpStatus.NOT_FOUND);
+        ENTITY_NOT_FOUND("A002", HttpStatus.NOT_FOUND);
 
         private final HttpStatus status;
 

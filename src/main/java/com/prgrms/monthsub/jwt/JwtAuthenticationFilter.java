@@ -2,7 +2,7 @@ package com.prgrms.monthsub.jwt;
 
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
-import com.prgrms.monthsub.common.error.exception.UnAuthorizedException;
+import com.prgrms.monthsub.common.error.exception.global.UnAuthorizedException;
 import com.prgrms.monthsub.domain.User;
 import com.prgrms.monthsub.service.AuthenticationService;
 import java.io.IOException;

@@ -1,7 +1,7 @@
 package com.prgrms.monthsub.common.error;
 
 import com.prgrms.monthsub.common.error.ErrorCodes.ErrorCode;
-import com.prgrms.monthsub.common.error.exception.BusinessException;
+import com.prgrms.monthsub.common.error.exception.global.BusinessException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;

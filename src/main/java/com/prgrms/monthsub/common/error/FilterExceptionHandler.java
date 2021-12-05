@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.prgrms.monthsub.common.error.ErrorCodes.ErrorCode;
-import com.prgrms.monthsub.common.error.exception.UnAuthorizedException;
+import com.prgrms.monthsub.common.error.exception.global.UnAuthorizedException;
 import java.io.IOException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;

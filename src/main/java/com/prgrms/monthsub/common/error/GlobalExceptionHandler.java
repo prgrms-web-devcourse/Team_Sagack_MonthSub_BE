@@ -1,8 +1,8 @@
 package com.prgrms.monthsub.common.error;
 
 import com.prgrms.monthsub.common.error.ErrorCodes.ErrorCode;
-import com.prgrms.monthsub.common.error.exception.BusinessException;
-import com.prgrms.monthsub.common.error.exception.InvalidInputException;
+import com.prgrms.monthsub.common.error.exception.global.BusinessException;
+import com.prgrms.monthsub.common.error.exception.global.InvalidInputException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.TypeMismatchDataAccessException;
