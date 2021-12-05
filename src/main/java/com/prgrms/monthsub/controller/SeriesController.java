@@ -65,6 +65,7 @@ public class SeriesController {
     @Operation(summary = "시리즈 공고 게시글 수정")
     @Tag(name = "[화면]-시리즈")
     public ApiResponse<SeriesSubscribeEdit.Response> editSeries(
+        @AuthenticationPrincipal JwtAuthentication authentication,
         @PathVariable Long seriesId,
         @RequestPart MultipartFile thumbnail,
         @Valid @RequestPart SeriesSubscribeEdit.Request request) throws IOException {
