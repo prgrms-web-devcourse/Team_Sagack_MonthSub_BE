@@ -1,6 +1,7 @@
 package com.prgrms.monthsub.controller;
 
 import com.prgrms.monthsub.common.error.ApiResponse;
+import com.prgrms.monthsub.dto.SeriesSubscribeEdit;
 import com.prgrms.monthsub.dto.SeriesSubscribePost;
 import com.prgrms.monthsub.dto.response.SeriesListResponse;
 import com.prgrms.monthsub.dto.response.SeriesOneResponse;
@@ -17,6 +18,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -57,6 +59,17 @@ public class SeriesController {
     @Tag(name = "[화면]-시리즈")
     public ApiResponse<List<SeriesListResponse>> getSeriesList() {
         return ApiResponse.ok(HttpMethod.GET, seriesService.getSeriesList());
+    }
+
+    @PutMapping(path = "/{seriesId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(summary = "시리즈 공고 게시글 수정")
+    @Tag(name = "[화면]-시리즈")
+    public ApiResponse<SeriesSubscribeEdit.Response> editSeries(
+        @PathVariable Long seriesId,
+        @RequestPart MultipartFile thumbnail,
+        @Valid @RequestPart SeriesSubscribeEdit.Request request) throws IOException {
+        return ApiResponse.ok(
+            HttpMethod.PUT, seriesService.editSeries(seriesId, thumbnail, request));
     }
 
 }

@@ -5,12 +5,14 @@ import com.prgrms.monthsub.converter.SeriesConverter;
 import com.prgrms.monthsub.domain.Article;
 import com.prgrms.monthsub.domain.Series;
 import com.prgrms.monthsub.domain.Writer;
+import com.prgrms.monthsub.dto.SeriesSubscribeEdit;
 import com.prgrms.monthsub.dto.SeriesSubscribePost;
 import com.prgrms.monthsub.dto.response.SeriesListResponse;
 import com.prgrms.monthsub.dto.response.SeriesOneResponse;
 import com.prgrms.monthsub.repository.SeriesRepository;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -63,6 +65,14 @@ public class SeriesService {
         List<Series> seriesList = seriesRepository.findSeriesList();
         return seriesList.stream().map(seriesConverter::seriesListToResponse)
             .collect(Collectors.toList());
+    }
+
+    public SeriesSubscribeEdit.Response editSeries(Long seriesId, MultipartFile thumbnail,
+        SeriesSubscribeEdit.Request request) throws IOException {
+        String imageUrl = s3Uploader.upload(thumbnail, DIRECTORY);
+        Optional<Series> series = seriesRepository.findSeriesById(seriesId);
+        series.get().editSeries(imageUrl, request);
+        return new SeriesSubscribeEdit.Response(seriesRepository.save(series.get()).getId());
     }
 
 }
