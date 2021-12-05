@@ -9,7 +9,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.Pattern;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -47,7 +46,6 @@ public class User extends BaseEntity {
     @Column(name = "profile_introduce", columnDefinition = "VARCHAR(50)")
     private String profileIntroduce;
 
-    @Min(0)
     @Column(name = "point", columnDefinition = "BIGINT")
     private int point;
 

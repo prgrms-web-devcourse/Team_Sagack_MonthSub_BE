@@ -12,6 +12,8 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class UserConverter {
 
+    static final int point = 0;
+
     private final BCryptPasswordEncoder bCryptEncoder;
 
     private final PartService partService;
@@ -31,7 +33,7 @@ public class UserConverter {
             .email(request.email())
             .nickname(request.nickName())
             .password(bCryptEncoder.encode(request.password()))
-            .point(10000)
+            .point(point)
             .username(request.userName())
             .part(partService.findByName("USER_GROUP"))
             .build();
