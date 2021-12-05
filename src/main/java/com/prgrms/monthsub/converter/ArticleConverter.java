@@ -11,7 +11,6 @@ public class ArticleConverter {
         return new BriefArticleBySeriesIdResponse(
             article.getId(),
             article.getTitle(),
-            article.getContents(),
             article.getRound(),
             article.getCreatedAt().toLocalDate()
         );

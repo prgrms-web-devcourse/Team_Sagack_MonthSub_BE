@@ -40,7 +40,6 @@ public class SeriesSubscribeList {
     public record BriefArticleBySeriesIdResponse(
         Long articleId,
         String title,
-        String contents,
         Integer round,
         LocalDate date
     ) {

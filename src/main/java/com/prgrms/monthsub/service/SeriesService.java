@@ -69,7 +69,7 @@ public class SeriesService {
     @Transactional
     public SeriesSubscribeEdit.Response editSeries(Long seriesId, MultipartFile thumbnail,
         SeriesSubscribeEdit.Request request) throws IOException {
-        String imageUrl = thumbnail != null ? s3Uploader.upload(thumbnail, DIRECTORY) : null;
+        String imageUrl = thumbnail.getContentType() != null ? s3Uploader.upload(thumbnail, DIRECTORY) : null;
         Series series = seriesRepository.findSeriesById(seriesId).orElseThrow(EntityNotFoundException::new);
         series.editSeries(imageUrl, request);
         return new SeriesSubscribeEdit.Response(seriesRepository.save(series).getId());
