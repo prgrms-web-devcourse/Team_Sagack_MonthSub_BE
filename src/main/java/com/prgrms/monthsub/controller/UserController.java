@@ -5,6 +5,7 @@ import com.prgrms.monthsub.common.error.ApiResponse;
 import com.prgrms.monthsub.domain.User;
 import com.prgrms.monthsub.dto.UserLogin;
 import com.prgrms.monthsub.dto.UserMe;
+import com.prgrms.monthsub.dto.UserSignUp;
 import com.prgrms.monthsub.jwt.JwtAuthentication;
 import com.prgrms.monthsub.jwt.JwtAuthenticationToken;
 import com.prgrms.monthsub.service.UserService;
@@ -59,6 +60,13 @@ public class UserController {
         );
 
         return ApiResponse.ok(HttpMethod.GET, me);
+    }
+
+    @PostMapping(path = "/users/signup")
+    @Operation(summary = "회원가입")
+    @Tag(name = "[화면]-회원가입")
+    public ApiResponse<UserSignUp.Response> signUp(@RequestBody UserSignUp.Request request) {
+        return ApiResponse.ok(HttpMethod.POST, userService.signUp(request));
     }
 
 }
