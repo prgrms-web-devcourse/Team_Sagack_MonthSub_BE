@@ -81,7 +81,7 @@ public class GlobalExceptionHandler {
     protected ApiResponse<ErrorResponse> handleBusinessException(final BusinessException e) {
         log.error("handleBusinessException", e);
         final ErrorCode errorCode = e.getErrorCode();
-        final ErrorResponse response = ErrorResponse.of(errorCode);
+        final ErrorResponse response = ErrorResponse.of(errorCode, e.getClass());
         return ApiResponse.fail(errorCode.getStatus().value(), response.getCode(), response);
     }
 

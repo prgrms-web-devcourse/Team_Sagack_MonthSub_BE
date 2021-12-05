@@ -1,5 +1,6 @@
 package com.prgrms.monthsub.common.error;
 
+import com.prgrms.monthsub.common.error.exception.BusinessException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +14,8 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ErrorResponse {
+
+    private String exception;
 
     private String message;
 
@@ -40,12 +43,25 @@ public class ErrorResponse {
         this.severTime = LocalDateTime.now();
     }
 
+    private ErrorResponse(final ErrorCode code, Class<? extends BusinessException> exceptionClass) {
+        this.message = code.getMessage();
+        this.status = code.getStatus().value();
+        this.errors = new ArrayList<>();
+        this.code = code.getCode();
+        this.exception = exceptionClass.getSimpleName();
+        this.severTime = LocalDateTime.now();
+    }
+
     public static ErrorResponse of(final ErrorCode code, final BindingResult bindingResult) {
         return new ErrorResponse(code, FieldError.of(bindingResult));
     }
 
     public static ErrorResponse of(final ErrorCode code) {
         return new ErrorResponse(code);
+    }
+
+    public static ErrorResponse of(final ErrorCode code, Class<? extends BusinessException> exceptionClass) {
+        return new ErrorResponse(code, exceptionClass);
     }
 
     public static ErrorResponse of(final ErrorCode code, final List<FieldError> errors) {
