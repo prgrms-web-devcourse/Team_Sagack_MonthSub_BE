@@ -6,6 +6,7 @@ import com.prgrms.monthsub.common.error.exception.UserNotFoundException;
 import com.prgrms.monthsub.domain.User;
 import com.prgrms.monthsub.dto.UserLogin;
 import com.prgrms.monthsub.dto.UserMe;
+import com.prgrms.monthsub.dto.UserSignUp;
 import com.prgrms.monthsub.jwt.JwtAuthentication;
 import com.prgrms.monthsub.jwt.JwtAuthenticationToken;
 import com.prgrms.monthsub.service.UserService;
@@ -60,6 +61,13 @@ public class UserController {
                 )
             )
             .orElseThrow(UserNotFoundException::new));
+    }
+
+    @PostMapping(path = "/users/signup")
+    @Operation(summary = "회원가입")
+    @Tag(name = "[화면]-회원가입")
+    public ApiResponse<UserSignUp.Response> signUp(@RequestBody UserSignUp.Request request) {
+        return ApiResponse.ok(HttpMethod.POST, userService.signUp(request));
     }
 
 }

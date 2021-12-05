@@ -59,6 +59,16 @@ public class User extends BaseEntity {
     private Part part;
 
     @Builder
+    public User(String email, String nickname, String password, int point, String username, Part part) {
+        this.email = email;
+        this.nickname = nickname;
+        this.password = password;
+        this.point = point;
+        this.username = username;
+        this.part = part;
+    }
+
+    @Builder
     public User(String username, String password, Part part) {
         this.username = username;
         this.password = password;
