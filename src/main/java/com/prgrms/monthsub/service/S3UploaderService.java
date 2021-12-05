@@ -9,8 +9,8 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.util.IOUtils;
-import com.prgrms.monthsub.common.error.ErrorCode;
-import com.prgrms.monthsub.common.error.exception.BusinessException;
+import com.prgrms.monthsub.common.error.ErrorCodes;
+import com.prgrms.monthsub.common.error.exception.global.BusinessException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
@@ -73,7 +73,7 @@ public class S3UploaderService {
         boolean isImage = Arrays.stream(fileInfo)
             .anyMatch(info -> (info.contains("jpeg") || info.contains("png") || (info.contains("jpg"))));
         if (!isImage) {
-            throw new BusinessException(ErrorCode.INVALID_UPLOAD_FILE_TYPE);
+            throw new BusinessException(ErrorCodes.INVALID_UPLOAD_FILE_TYPE());
         }
     }
 
