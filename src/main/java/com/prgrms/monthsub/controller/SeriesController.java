@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.List;
 import javax.validation.Valid;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,7 +31,8 @@ public class SeriesController {
         this.seriesService = seriesService;
     }
 
-    @PostMapping("/users/{userId}")
+    @PostMapping(path = "/users/{userId}",
+        consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
     @Operation(summary = "시리즈 공고 게시글 작성")
     @Tag(name = "[화면]-시리즈")
     public ApiResponse<SeriesSubscribePost.Response> postSeries(
