@@ -1,9 +1,11 @@
 package com.prgrms.monthsub.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import javax.validation.constraints.NotBlank;
 
 public class SeriesSubscribeEdit {
 
+    @Schema(name = "SeriesSubscribeEdit")
     public record Request(
 
         Long writerId,
@@ -24,6 +26,7 @@ public class SeriesSubscribeEdit {
     ) {
     }
 
+    @Schema(name = "SeriesSubscribeEdit")
     public record Response(
         Long seriesId
     ) {
