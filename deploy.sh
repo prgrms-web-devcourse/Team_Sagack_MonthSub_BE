@@ -2,6 +2,10 @@
 
 echo "> Build 파일 복사"
 
+cd /home/ec2-user/app
+
+rm nohup.out
+
 cp /home/ec2-user/app/build/libs/monthSub-0.0.1-SNAPSHOT.jar /home/ec2-user/app/
 
 CURRENT_PID=$(pgrep -fl monthSub | awk '{print $1}')
