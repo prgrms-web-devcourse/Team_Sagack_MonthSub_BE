@@ -1,5 +1,6 @@
 package com.prgrms.monthsub.part.user.converter;
 
+import com.prgrms.monthsub.common.config.S3;
 import com.prgrms.monthsub.part.user.app.PartService;
 import com.prgrms.monthsub.part.user.domain.User;
 import com.prgrms.monthsub.part.user.dto.UserSignUp;
@@ -17,6 +18,8 @@ public class UserConverter {
 
     private final PartService partService;
 
+    private final S3 s3;
+
     @Autowired
     PasswordEncoder bCryptEncoder;
 
@@ -24,7 +27,7 @@ public class UserConverter {
         return new SeriesOneWithUserResponse(
             user.getId(),
             user.getEmail(),
-            user.getProfileKey(),
+            this.s3.getDomain() + "/" + user.getProfileKey(),
             user.getProfileIntroduce(),
             user.getNickname()
         );

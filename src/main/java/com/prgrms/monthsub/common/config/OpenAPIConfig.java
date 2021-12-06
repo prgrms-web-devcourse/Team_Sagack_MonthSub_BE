@@ -44,7 +44,8 @@ public class OpenAPIConfig {
                                 new SecurityScheme()
                                     .type(Type.HTTP)
                                     .scheme("bearer").bearerFormat("JWT")
-                                    .in(SecurityScheme.In.HEADER).name(security.getJwt().getHeader())
+                                    .in(SecurityScheme.In.HEADER)
+                                    .name(security.getJwt().getHeader())
                             )
                     )
                     .addSecurityItem(

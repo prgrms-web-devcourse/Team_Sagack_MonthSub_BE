@@ -1,7 +1,7 @@
 package com.prgrms.monthsub.common.exception.model;
 
-import com.prgrms.monthsub.common.exception.model.ErrorCodes.ErrorCode;
 import com.prgrms.monthsub.common.exception.base.BusinessException;
+import com.prgrms.monthsub.common.exception.model.ErrorCodes.ErrorCode;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -97,7 +97,8 @@ public class ErrorResponse {
             this.reason = reason;
         }
 
-        public static List<FieldError> of(final String field, final String value, final String reason) {
+        public static List<FieldError> of(final String field, final String value,
+            final String reason) {
             List<FieldError> fieldErrors = new ArrayList<>();
             fieldErrors.add(new FieldError(field, value, reason));
             return fieldErrors;

@@ -29,14 +29,18 @@ public class SeriesLikesService {
             LikesStatus changeStatus = seriesLikes.get().changeLikeStatus();
             seriesLikes.get().getSeries().changeLikesCount(changeStatus);
             return new SeriesLikesEvent.Response(
-                seriesLikesRepository.save(seriesLikes.get()).getId(), String.valueOf(changeStatus));
+                seriesLikesRepository.save(seriesLikes.get()).getId(),
+                String.valueOf(changeStatus)
+            );
         }
         Series seriesEntity = seriesService.getSeriesById(seriesId);
         seriesEntity.changeLikesCount(LikesStatus.Like);
         SeriesLikes seriesLikesEntity = SeriesLikes.builder().userId(userId).series(seriesEntity)
             .likesStatus(LikesStatus.Like).build();
         return new SeriesLikesEvent.Response(
-            seriesLikesRepository.save(seriesLikesEntity).getId(), String.valueOf(LikesStatus.Like));
+            seriesLikesRepository.save(seriesLikesEntity).getId(),
+            String.valueOf(LikesStatus.Like)
+        );
     }
 
 }

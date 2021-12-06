@@ -1,15 +1,18 @@
 package com.prgrms.monthsub.part.user.app;
 
+import com.prgrms.monthsub.common.config.AWS;
+import com.prgrms.monthsub.common.config.S3.Bucket;
+import com.prgrms.monthsub.common.utils.S3Uploader;
+import com.prgrms.monthsub.part.user.converter.UserConverter;
+import com.prgrms.monthsub.part.user.domain.User;
 import com.prgrms.monthsub.part.user.domain.exception.UserException.EmailDuplicated;
 import com.prgrms.monthsub.part.user.domain.exception.UserException.NickNameDuplicated;
 import com.prgrms.monthsub.part.user.domain.exception.UserException.UserNotExist;
 import com.prgrms.monthsub.part.user.domain.exception.UserException.UserNotFound;
-import com.prgrms.monthsub.part.user.converter.UserConverter;
-import com.prgrms.monthsub.part.user.domain.User;
 import com.prgrms.monthsub.part.user.dto.UserSignUp;
-import com.prgrms.monthsub.common.utils.S3Uploader;
-import java.util.Optional;
 import java.io.IOException;
+import java.util.Optional;
+import java.util.UUID;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 @Transactional(readOnly = true)
 public class UserService {
+
 
     private final PasswordEncoder passwordEncoder;
 
@@ -29,7 +33,7 @@ public class UserService {
 
     public UserService(PasswordEncoder passwordEncoder,
         UserRepository userRepository, S3Uploader s3Uploader,
-        UserConverter userConverter) {
+        UserConverter userConverter, AWS aws) {
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.s3Uploader = s3Uploader;
@@ -56,8 +60,17 @@ public class UserService {
         return new UserSignUp.Response(userRepository.save(entity).getId());
     }
 
-    public String uploadImage(MultipartFile image, Long userId, String imagePurpose) throws IOException {
-        String imageUrl = s3Uploader.upload(image, User.class.getSimpleName(), userId, imagePurpose);
+    public String uploadProfileImage(MultipartFile image, Long userId)
+        throws IOException {
+
+        String key = User.class.getSimpleName().toLowerCase()
+            + "/" + userId.toString()
+            + "/profile/"
+            + UUID.randomUUID()
+            + s3Uploader.getExtension(image);
+
+        String imageUrl = s3Uploader.upload(Bucket.IMAGE, image, key);
+
         if (imageUrl == null) {
             //Todo profile field null로 갱신
         }
