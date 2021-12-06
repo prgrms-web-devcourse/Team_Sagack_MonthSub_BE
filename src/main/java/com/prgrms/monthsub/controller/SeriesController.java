@@ -61,7 +61,7 @@ public class SeriesController {
         return ApiResponse.ok(HttpMethod.GET, seriesService.getSeriesList());
     }
 
-    @PutMapping(path = "/{seriesId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(path = "/edit/{seriesId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "시리즈 공고 게시글 수정")
     @Tag(name = "[화면]-시리즈")
     public ApiResponse<SeriesSubscribeEdit.Response> editSeries(
@@ -70,7 +70,7 @@ public class SeriesController {
         @RequestPart(required = false) MultipartFile thumbnail,
         @Valid @RequestPart SeriesSubscribeEdit.Request request) throws IOException {
         return ApiResponse.ok(
-            HttpMethod.PUT, seriesService.editSeries(seriesId, thumbnail, request));
+            HttpMethod.PUT, seriesService.editSeries(seriesId, authentication.userId, thumbnail, request));
     }
 
     @GetMapping("/edit/{id}")

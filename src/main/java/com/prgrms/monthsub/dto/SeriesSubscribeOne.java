@@ -11,7 +11,7 @@ import java.util.List;
 
 public class SeriesSubscribeOne {
 
-    @Schema(name = "SeriesSubscribeOne")
+    @Schema(name = "SeriesSubscribeOne.Response")
     public record Response(
         SeriesObject series,
         UploadObject upload,
@@ -23,7 +23,7 @@ public class SeriesSubscribeOne {
 
     }
 
-    @Schema(name = "SeriesSubscribeOne")
+    @Schema(name = "SeriesSubscribeOne.ResponseUsageEdit")
     public record ResponseUsageEdit(
         SeriesObject series,
         Category category,
