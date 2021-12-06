@@ -41,7 +41,10 @@ cloud:
       accessKey: ${IAM_ACCESS_KEY}
       secretKey: ${IAM_SECRET_KEY}
     s3:
-      bucket: monthsub-image-bucket
+      imageBucket: monthsub-image
+      #      videoBucket: monthsub-video
+      domain: https://monthsub-image.s3.ap-northeast-2.amazonaws.com
+
     region:
       static: ap-northeast-2
     stack:

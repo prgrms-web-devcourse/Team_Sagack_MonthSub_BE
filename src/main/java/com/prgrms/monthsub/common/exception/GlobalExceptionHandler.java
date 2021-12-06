@@ -1,10 +1,10 @@
 package com.prgrms.monthsub.common.exception;
 
-import com.prgrms.monthsub.common.exception.model.ErrorCodes;
-import com.prgrms.monthsub.common.exception.model.ErrorCodes.ErrorCode;
 import com.prgrms.monthsub.common.exception.base.BusinessException;
 import com.prgrms.monthsub.common.exception.base.InvalidInputException;
 import com.prgrms.monthsub.common.exception.model.ApiResponse;
+import com.prgrms.monthsub.common.exception.model.ErrorCodes;
+import com.prgrms.monthsub.common.exception.model.ErrorCodes.ErrorCode;
 import com.prgrms.monthsub.common.exception.model.ErrorResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,7 +57,8 @@ public class GlobalExceptionHandler {
         HttpRequestMethodNotSupportedException e) {
         log.error("handleHttpRequestMethodNotSupportedException", e);
         final ErrorResponse response = ErrorResponse.of(ErrorCodes.METHOD_NOT_ALLOWED());
-        return ApiResponse.fail(HttpStatus.METHOD_NOT_ALLOWED.value(), response.getCode(), response);
+        return ApiResponse.fail(
+            HttpStatus.METHOD_NOT_ALLOWED.value(), response.getCode(), response);
     }
 
     @ExceptionHandler(AccessDeniedException.class)
@@ -88,14 +89,16 @@ public class GlobalExceptionHandler {
         log.error("handleBusinessException", e);
         final ErrorCodes errorCode = e.getErrorCode();
         final ErrorResponse response = ErrorResponse.of(errorCode, e.getClass());
-        return ApiResponse.fail(errorCode.errorCode().getStatus().value(), response.getCode(), response);
+        return ApiResponse.fail(
+            errorCode.errorCode().getStatus().value(), response.getCode(), response);
     }
 
     @ExceptionHandler(Exception.class)
     protected ApiResponse<ErrorResponse> handleException(Exception e) {
         log.error("handleException", e);
         final ErrorResponse response = ErrorResponse.of(ErrorCodes.INTERNAL_SERVER_ERROR());
-        return ApiResponse.fail(HttpStatus.INTERNAL_SERVER_ERROR.value(), response.getCode(), response);
+        return ApiResponse.fail(
+            HttpStatus.INTERNAL_SERVER_ERROR.value(), response.getCode(), response);
     }
 
     @ExceptionHandler(BadCredentialsException.class)

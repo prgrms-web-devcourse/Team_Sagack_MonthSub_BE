@@ -1,13 +1,13 @@
 package com.prgrms.monthsub.series.series.app;
 
 import com.prgrms.monthsub.common.exception.model.ApiResponse;
+import com.prgrms.monthsub.common.jwt.JwtAuthentication;
 import com.prgrms.monthsub.series.series.domain.type.SortType;
 import com.prgrms.monthsub.series.series.dto.SeriesLikesEvent;
 import com.prgrms.monthsub.series.series.dto.SeriesSubscribeEdit;
 import com.prgrms.monthsub.series.series.dto.SeriesSubscribeList;
 import com.prgrms.monthsub.series.series.dto.SeriesSubscribeOne;
 import com.prgrms.monthsub.series.series.dto.SeriesSubscribePost;
-import com.prgrms.monthsub.common.jwt.JwtAuthentication;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.io.IOException;
@@ -18,6 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -111,17 +112,20 @@ public class SeriesController {
         @RequestPart MultipartFile thumbnail,
         @Valid @RequestPart SeriesSubscribeEdit.Request request) throws IOException {
         return ApiResponse.ok(
-            HttpMethod.PUT, seriesService.editSeries(id, authentication.userId, thumbnail, request));
+            HttpMethod.PUT,
+            seriesService.editSeries(id, authentication.userId, thumbnail, request)
+        );
     }
 
-    @PostMapping(path = "/thumbnail", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
-    @Operation(summary = "시리즈 썸네일 이미지 업로드")
+    @PatchMapping(path = "/{id}/thumbnail", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+    @Operation(summary = "시리즈 썸네일 이미지 업데이트")
     @Tag(name = "[사진 업로드]")
     public ApiResponse<String> registerImage(
         @AuthenticationPrincipal JwtAuthentication authentication,
+        @PathVariable String id,
         @RequestPart MultipartFile image) throws IOException {
         return ApiResponse.ok(
-            HttpMethod.POST, seriesService.uploadImage(image, authentication.userId, THUMBNAIL));
+            HttpMethod.POST, seriesService.uploadThumbnailImage(image, authentication.userId));
     }
 
     @GetMapping("/sort")

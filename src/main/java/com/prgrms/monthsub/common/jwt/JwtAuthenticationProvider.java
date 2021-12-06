@@ -2,8 +2,8 @@ package com.prgrms.monthsub.common.jwt;
 
 import static org.apache.commons.lang3.ClassUtils.isAssignable;
 
-import com.prgrms.monthsub.part.user.domain.User;
 import com.prgrms.monthsub.part.user.app.UserService;
+import com.prgrms.monthsub.part.user.domain.User;
 import java.util.List;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -28,7 +28,8 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
     }
 
     @Override
-    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+    public Authentication authenticate(Authentication authentication)
+        throws AuthenticationException {
         JwtAuthenticationToken jwtAuthentication = (JwtAuthenticationToken) authentication;
         return processUserAuthentication(
             String.valueOf(jwtAuthentication.getPrincipal()),

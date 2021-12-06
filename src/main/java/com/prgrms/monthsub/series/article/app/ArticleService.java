@@ -1,6 +1,5 @@
 package com.prgrms.monthsub.series.article.app;
 
-import com.prgrms.monthsub.series.article.app.ArticleRepository;
 import com.prgrms.monthsub.series.article.domain.Article;
 import java.util.List;
 import org.springframework.stereotype.Service;

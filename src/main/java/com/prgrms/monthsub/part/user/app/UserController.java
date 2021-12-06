@@ -28,8 +28,6 @@ import org.springframework.web.multipart.MultipartFile;
 @Tag(name = "Users")
 public class UserController {
 
-    private static final String PROFILE = "profile";
-
     private final UserService userService;
 
     private final AuthenticationManager authenticationManager;
@@ -64,7 +62,6 @@ public class UserController {
             user.getProfileKey(),
             user.getProfileIntroduce(), user.getPart().getName()
         );
-
         return ApiResponse.ok(HttpMethod.GET, me);
     }
 
@@ -82,7 +79,7 @@ public class UserController {
         @AuthenticationPrincipal JwtAuthentication authentication,
         @RequestPart(required = false) MultipartFile image) throws IOException {
         return ApiResponse.ok(
-            HttpMethod.POST, userService.uploadImage(image, authentication.userId, PROFILE));
+            HttpMethod.POST, userService.uploadProfileImage(image, authentication.userId));
     }
 
 }
