@@ -32,15 +32,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
-    private final JwtConfig jwtConfig;
+    private final Security security;
 
     private final AuthenticationService authenticationService;
 
     @Autowired
     private FilterExceptionHandler exceptionHandlerFilter;
 
-    public SecurityConfig(JwtConfig jwtConfig, AuthenticationService authenticationService) {
-        this.jwtConfig = jwtConfig;
+    public SecurityConfig(Security security, AuthenticationService authenticationService) {
+        this.security = security;
         this.authenticationService = authenticationService;
     }
 
@@ -70,9 +70,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public Jwt jwt() {
         return new Jwt(
-            jwtConfig.getIssuer(),
-            jwtConfig.getClientSecret(),
-            jwtConfig.getExpirySeconds()
+            security.getJwt().getIssuer(),
+            security.getJwt().getClientSecret(),
+            security.getJwt().getExpirySeconds()
         );
     }
 
@@ -89,7 +89,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     public JwtAuthenticationFilter jwtAuthenticationFilter() {
         Jwt jwt = getApplicationContext().getBean(Jwt.class);
-        return new JwtAuthenticationFilter(authenticationService, jwtConfig.getHeader(), jwt);
+        return new JwtAuthenticationFilter(authenticationService, security.getJwt().getHeader(), jwt);
     }
 
     @Override

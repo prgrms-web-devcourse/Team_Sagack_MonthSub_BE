@@ -19,12 +19,12 @@ public class OpenAPIConfig {
 
     private static final String PROD = "prod";
 
-    private final JwtConfig jwtConfig;
+    private final Security security;
 
     private final Environment environment;
 
-    public OpenAPIConfig(JwtConfig jwtConfig, Environment environment) {
-        this.jwtConfig = jwtConfig;
+    public OpenAPIConfig(Security security, Environment environment) {
+        this.security = security;
         this.environment = environment;
     }
 
@@ -44,7 +44,7 @@ public class OpenAPIConfig {
                                 new SecurityScheme()
                                     .type(Type.HTTP)
                                     .scheme("bearer").bearerFormat("JWT")
-                                    .in(SecurityScheme.In.HEADER).name(jwtConfig.getHeader())
+                                    .in(SecurityScheme.In.HEADER).name(security.getJwt().getHeader())
                             )
                     )
                     .addSecurityItem(

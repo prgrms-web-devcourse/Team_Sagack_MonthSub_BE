@@ -46,11 +46,20 @@ cloud:
       static: ap-northeast-2
     stack:
       auto: false
-jwt:
-  header: authorization
-  issuer: monthsub
-  client-secret: ${JWT_CLIENT_SECRET}
-  expiry-seconds: 3600
+
+security:
+  jwt:
+    header: authorization
+    issuer: monthsub
+    client-secret: ${JWT_CLIENT_SECRET}
+    expiry-seconds: 3600
+  cors:
+    origin:
+      - http://localhost:3000
+      - http://127.0.0.1:3000
+#      프론트 배포 도메인
+#      - https://monthsub.netlify.app
+
 
 logging:
   level:

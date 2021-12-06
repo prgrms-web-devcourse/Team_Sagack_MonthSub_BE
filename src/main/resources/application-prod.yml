@@ -3,3 +3,9 @@ springdoc:
     enabled: false
   api-docs:
     enabled: false
+
+security:
+  cors:
+    origin:
+#      only service url
+#      - https://monthsub.netlify.app
