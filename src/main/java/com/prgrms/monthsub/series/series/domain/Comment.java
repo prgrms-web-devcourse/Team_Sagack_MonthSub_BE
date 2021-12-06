@@ -3,6 +3,8 @@ package com.prgrms.monthsub.series.series.domain;
 import com.prgrms.monthsub.common.domain.BaseEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -38,5 +40,20 @@ public class Comment extends BaseEntity {
 
     @Column(name = "contents", columnDefinition = "VARCHAR(200)", nullable = false)
     private String contents;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "comment_status", columnDefinition = "VARCHAR(50)", nullable = false)
+    private CommentStatus commentStatus;
+
+    public enum CommentStatus {
+
+        CREATED,
+        DELETED;
+
+        public static CommentStatus of(String commentStatus) {
+            return CommentStatus.valueOf(commentStatus.toUpperCase());
+        }
+
+    }
 
 }

@@ -1,9 +1,9 @@
 package com.prgrms.monthsub.part.user.converter;
 
-import com.prgrms.monthsub.part.user.domain.User;
-import com.prgrms.monthsub.series.series.dto.SeriesSubscribeList.SeriesOneWithUserResponse;
-import com.prgrms.monthsub.part.user.dto.UserSignUp;
 import com.prgrms.monthsub.part.user.app.PartService;
+import com.prgrms.monthsub.part.user.domain.User;
+import com.prgrms.monthsub.part.user.dto.UserSignUp;
+import com.prgrms.monthsub.series.series.dto.SeriesSubscribeList.SeriesOneWithUserResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,7 +24,7 @@ public class UserConverter {
         return new SeriesOneWithUserResponse(
             user.getId(),
             user.getEmail(),
-            user.getProfileImage(),
+            user.getProfileKey(),
             user.getProfileIntroduce(),
             user.getNickname()
         );

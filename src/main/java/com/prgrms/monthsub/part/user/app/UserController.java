@@ -1,12 +1,12 @@
 package com.prgrms.monthsub.part.user.app;
 
 import com.prgrms.monthsub.common.exception.model.ApiResponse;
+import com.prgrms.monthsub.common.jwt.JwtAuthentication;
+import com.prgrms.monthsub.common.jwt.JwtAuthenticationToken;
 import com.prgrms.monthsub.part.user.domain.User;
 import com.prgrms.monthsub.part.user.dto.UserLogin;
 import com.prgrms.monthsub.part.user.dto.UserMe;
 import com.prgrms.monthsub.part.user.dto.UserSignUp;
-import com.prgrms.monthsub.common.jwt.JwtAuthentication;
-import com.prgrms.monthsub.common.jwt.JwtAuthenticationToken;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.io.IOException;
@@ -61,7 +61,7 @@ public class UserController {
         User user = userService.findByUserId(authentication.userId);
         UserMe.Response me = new UserMe.Response(
             user.getId(), user.getEmail(), user.getUsername(), user.getNickname(),
-            user.getProfileImage(),
+            user.getProfileKey(),
             user.getProfileIntroduce(), user.getPart().getName()
         );
 

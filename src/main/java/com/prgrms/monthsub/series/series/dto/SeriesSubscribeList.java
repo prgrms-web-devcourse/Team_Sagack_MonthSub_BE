@@ -1,6 +1,6 @@
 package com.prgrms.monthsub.series.series.dto;
 
-import com.prgrms.monthsub.series.series.domain.type.Category;
+import com.prgrms.monthsub.series.series.domain.Series.Category;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
 import java.time.LocalTime;

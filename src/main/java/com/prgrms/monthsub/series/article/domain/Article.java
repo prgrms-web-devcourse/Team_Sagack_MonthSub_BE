@@ -40,6 +40,9 @@ public class Article extends BaseEntity {
     @Column(name = "content", columnDefinition = "TEXT", nullable = false)
     private String contents;
 
+    @Column(name = "thumbnail_key", columnDefinition = "TEXT")
+    private String thumbnailKey;
+
     @Column(name = "round", columnDefinition = "INT", nullable = false)
     private Integer round;
 

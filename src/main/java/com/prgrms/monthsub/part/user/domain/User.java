@@ -10,6 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.PositiveOrZero;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -40,12 +41,13 @@ public class User extends BaseEntity {
     @Column(name = "password", columnDefinition = "VARCHAR(100)", nullable = false)
     private String password;
 
-    @Column(name = "profile_image", columnDefinition = "VARCHAR(50)")
-    private String profileImage;
+    @Column(name = "profile_key", columnDefinition = "VARCHAR(50)")
+    private String profileKey;
 
     @Column(name = "profile_introduce", columnDefinition = "VARCHAR(50)")
     private String profileIntroduce;
 
+    @PositiveOrZero
     @Column(name = "point", columnDefinition = "BIGINT")
     private int point;
 

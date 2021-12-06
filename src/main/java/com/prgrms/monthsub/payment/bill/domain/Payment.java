@@ -1,5 +1,6 @@
 package com.prgrms.monthsub.payment.bill.domain;
 
+import com.prgrms.monthsub.common.domain.BaseEntity;
 import com.prgrms.monthsub.series.series.domain.Series;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -22,7 +23,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Entity
 @Table(name = "payment")
-public class Payment {
+public class Payment extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
