@@ -4,6 +4,7 @@ import static com.prgrms.monthsub.common.utils.TimeUtil.convertUploadDateListToU
 
 import com.prgrms.monthsub.common.BaseEntity;
 import com.prgrms.monthsub.domain.enumType.Category;
+import com.prgrms.monthsub.domain.enumType.LikesStatus;
 import com.prgrms.monthsub.domain.enumType.SeriesStatus;
 import com.prgrms.monthsub.dto.SeriesSubscribeEdit;
 import java.time.LocalDate;
@@ -101,6 +102,10 @@ public class Series extends BaseEntity {
         this.introduceText = request.introduceText();
         this.uploadDate = convertUploadDateListToUploadDateString(request.uploadDate());
         this.uploadTime = LocalTime.parse(request.uploadTime());
+    }
+
+    public void changeLikesCount(LikesStatus changeStatus) {
+        this.likes += changeStatus.equals(LikesStatus.Like) ? 1 : -1;
     }
 
 }

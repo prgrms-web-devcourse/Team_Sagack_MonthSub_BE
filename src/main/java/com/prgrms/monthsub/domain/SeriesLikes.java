@@ -1,8 +1,11 @@
 package com.prgrms.monthsub.domain;
 
 import com.prgrms.monthsub.common.BaseEntity;
+import com.prgrms.monthsub.domain.enumType.LikesStatus;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -35,5 +38,14 @@ public class SeriesLikes extends BaseEntity {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "series_id", referencedColumnName = "id")
     private Series series;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "likes_status", columnDefinition = "VARCHAR(50)")
+    private LikesStatus likesStatus;
+
+    public LikesStatus changeLikeStatus() {
+        this.likesStatus = this.likesStatus.equals(LikesStatus.Like) ? LikesStatus.Nothing : LikesStatus.Like;
+        return this.likesStatus;
+    }
 
 }

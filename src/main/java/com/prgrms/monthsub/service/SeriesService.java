@@ -45,6 +45,10 @@ public class SeriesService {
         this.s3UploaderService = s3UploaderService;
     }
 
+    public Series getSeriesById(Long id) {
+        return seriesRepository.findById(id).orElseThrow(() -> new SeriesNotFound("seriesId=" + id));
+    }
+
     @Transactional
     public SeriesSubscribePost.Response createSeries(Long userId, MultipartFile thumbnail,
         SeriesSubscribePost.Request request) throws IOException {
