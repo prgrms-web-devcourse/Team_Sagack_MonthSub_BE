@@ -1,0 +1,7 @@
+#/bin/bash
+
+# Show env vars
+grep -o -P '\w+(?=\=)' ../.env
+
+# Unset env vars
+unset $(grep -o -P '\w+(?=\=)' ../.env  | xargs)
