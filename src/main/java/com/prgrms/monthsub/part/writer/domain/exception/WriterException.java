@@ -1,0 +1,25 @@
+package com.prgrms.monthsub.part.writer.domain.exception;
+
+import com.prgrms.monthsub.common.exception.model.ErrorCodes;
+import com.prgrms.monthsub.common.exception.base.BusinessException;
+import java.util.Arrays;
+
+public class WriterException {
+
+    public static class WriterNotFound extends BusinessException {
+
+        public WriterNotFound(String... message) {
+            super(ErrorCodes.ENTITY_NOT_FOUND(Arrays.stream(message).toList().toString()));
+        }
+
+    }
+
+    public static class WriterNotExist extends BusinessException {
+
+        public WriterNotExist(String... message) {
+            super(ErrorCodes.ENTITY_NOT_FOUND(Arrays.stream(message).toList().toString()));
+        }
+
+    }
+
+}

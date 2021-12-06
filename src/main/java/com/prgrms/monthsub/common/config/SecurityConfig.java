@@ -1,11 +1,11 @@
 package com.prgrms.monthsub.common.config;
 
-import com.prgrms.monthsub.common.error.FilterExceptionHandler;
-import com.prgrms.monthsub.jwt.Jwt;
-import com.prgrms.monthsub.jwt.JwtAuthenticationFilter;
-import com.prgrms.monthsub.jwt.JwtAuthenticationProvider;
-import com.prgrms.monthsub.service.AuthenticationService;
-import com.prgrms.monthsub.service.UserService;
+import com.prgrms.monthsub.common.exception.FilterExceptionHandler;
+import com.prgrms.monthsub.common.jwt.Jwt;
+import com.prgrms.monthsub.common.jwt.JwtAuthenticationFilter;
+import com.prgrms.monthsub.common.jwt.JwtAuthenticationProvider;
+import com.prgrms.monthsub.part.user.app.AuthenticationService;
+import com.prgrms.monthsub.part.user.app.UserService;
 import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
