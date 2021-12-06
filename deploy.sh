@@ -34,7 +34,7 @@ echo "> $JAR_NAME 실행"
 
 cd /home/ec2-user/app
 
-source /home/ec2-user/app/script/env
+source /home/ec2-user/app/env
 
 source /home/ec2-user/.bashrc
 
