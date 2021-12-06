@@ -41,6 +41,14 @@ public record ErrorCodes(ErrorCode errorCode, String message) {
         return new ErrorCodes(ErrorCode.ENTITY_NOT_FOUND, message);
     }
 
+    public static ErrorCodes DUPLICATED_EMAIL_VALUE(String message) {
+        return new ErrorCodes(ErrorCode.DUPLICATED_EMAIL_VALUE, message);
+    }
+
+    public static ErrorCodes DUPLICATED_NICKNAME_VALUE(String message) {
+        return new ErrorCodes(ErrorCode.DUPLICATED_NICKNAME_VALUE, message);
+    }
+
     @Getter
     public enum ErrorCode {
 
@@ -52,6 +60,8 @@ public record ErrorCodes(ErrorCode errorCode, String message) {
         INVALID_TYPE_VALUE("U002", HttpStatus.BAD_REQUEST),
         INVALID_CREDENTIALS_VALUE("A003", HttpStatus.BAD_REQUEST),
         INVALID_UPLOAD_FILE_TYPE("F001", HttpStatus.BAD_REQUEST),
+        DUPLICATED_EMAIL_VALUE("A005", HttpStatus.BAD_REQUEST),
+        DUPLICATED_NICKNAME_VALUE("A006", HttpStatus.BAD_REQUEST),
 
         //401
         UN_AUTHORIZED("A004", HttpStatus.UNAUTHORIZED),
