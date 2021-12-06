@@ -1,5 +1,6 @@
 package com.prgrms.monthsub.service;
 
+import com.prgrms.monthsub.common.error.exception.domain.writer.WriterException.WriterNotFound;
 import com.prgrms.monthsub.domain.Part;
 import com.prgrms.monthsub.domain.User;
 import com.prgrms.monthsub.domain.Writer;
@@ -29,6 +30,12 @@ public class WriterService {
     public Writer findByUserId(Long userId) {
         return writerRepository.findByUserId(userId).orElseGet(() ->
             this.getWriterAndChangeUserPart(userId));
+    }
+
+    @Transactional(readOnly = true)
+    public Writer findWriterByUserId(Long userId) {
+        return writerRepository.findByUserId(userId)
+            .orElseThrow(() -> new WriterNotFound("id=" + userId));
     }
 
     private Writer getWriterAndChangeUserPart(Long userId) {

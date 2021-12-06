@@ -5,7 +5,7 @@ import javax.validation.constraints.NotBlank;
 
 public class SeriesSubscribeEdit {
 
-    @Schema(name = "SeriesSubscribeEdit")
+    @Schema(name = "SeriesSubscribeEdit.Request")
     public record Request(
 
         Long writerId,
@@ -26,7 +26,7 @@ public class SeriesSubscribeEdit {
     ) {
     }
 
-    @Schema(name = "SeriesSubscribeEdit")
+    @Schema(name = "SeriesSubscribeEdit.Response")
     public record Response(
         Long seriesId
     ) {

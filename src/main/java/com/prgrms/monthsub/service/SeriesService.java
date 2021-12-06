@@ -68,10 +68,11 @@ public class SeriesService {
     }
 
     @Transactional
-    public SeriesSubscribeEdit.Response editSeries(Long seriesId, MultipartFile thumbnail,
+    public SeriesSubscribeEdit.Response editSeries(Long seriesId, Long userId, MultipartFile thumbnail,
         SeriesSubscribeEdit.Request request) throws IOException {
         String imageUrl = !thumbnail.isEmpty() ? s3Uploader.upload(thumbnail, DIRECTORY) : null;
-        Series series = seriesRepository.findSeriesById(seriesId)
+        long writerId = writerService.findWriterByUserId(userId).getId();
+        Series series = seriesRepository.findSeriesByIdAndWriterId(seriesId, writerId)
             .orElseThrow(() -> new SeriesNotFound("seriesId=" + seriesId));
         series.editSeries(imageUrl, request);
         return new SeriesSubscribeEdit.Response(seriesRepository.save(series).getId());

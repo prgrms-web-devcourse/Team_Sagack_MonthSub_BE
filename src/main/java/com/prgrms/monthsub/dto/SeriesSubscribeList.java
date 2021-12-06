@@ -8,7 +8,7 @@ import lombok.Builder;
 
 public class SeriesSubscribeList {
 
-    @Schema(name = "SeriesSubscribeList")
+    @Schema(name = "SeriesSubscribeList.Response")
     public record Response(
         SeriesObject series,
         SubscribeObject subscribe,
@@ -18,7 +18,7 @@ public class SeriesSubscribeList {
 
     }
 
-    @Schema(name = "SeriesSubscribeList")
+    @Schema(name = "SeriesSubscribeList.SeriesOneWithUserResponse")
     public record SeriesOneWithUserResponse(
         Long userId,
         String email,
@@ -28,7 +28,7 @@ public class SeriesSubscribeList {
     ) {
     }
 
-    @Schema(name = "SeriesSubScribeList")
+    @Schema(name = "SeriesSubScribeList.SeriesOneWithWriterResponse")
     public record SeriesOneWithWriterResponse(
         Long writerId,
         int followCount,
@@ -36,7 +36,7 @@ public class SeriesSubscribeList {
     ) {
     }
 
-    @Schema(name = "SeriesSubScribeList")
+    @Schema(name = "SeriesSubScribeList.BriefArticleBySeriesIdResponse")
     public record BriefArticleBySeriesIdResponse(
         Long articleId,
         String title,

@@ -15,4 +15,8 @@ public interface SeriesRepository extends JpaRepository<Series, Long> {
     @Query("select s from Series as s join fetch s.writer sw join fetch sw.user swu")
     List<Series> findSeriesList();
 
+    @Query("select s from Series as s join fetch s.writer sw join fetch sw.user swu where s.id = :seriesId and sw.id = :writerId")
+    Optional<Series> findSeriesByIdAndWriterId(@Param("seriesId") Long seriesId,
+        @Param("writerId") Long writerId);
+
 }
