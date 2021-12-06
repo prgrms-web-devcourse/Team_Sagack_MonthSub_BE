@@ -39,7 +39,7 @@ public class Series extends BaseEntity {
     @Column(name = "id", columnDefinition = "BIGINT")
     private Long id;
 
-    @Column(name = "thumbnail_key", columnDefinition = "TEXT", nullable = false)
+    @Column(name = "thumbnail_key", columnDefinition = "TEXT")
     private String thumbnailKey;
 
     @Column(name = "title", columnDefinition = "VARCHAR(300)", nullable = false)
@@ -76,7 +76,7 @@ public class Series extends BaseEntity {
     private SeriesStatus subscribeStatus;
 
     @PositiveOrZero
-    @Column(name = "likes", columnDefinition = "INT", nullable = false)
+    @Column(name = "likes", columnDefinition = "INT")
     private int likes;
 
     @Enumerated(EnumType.STRING)

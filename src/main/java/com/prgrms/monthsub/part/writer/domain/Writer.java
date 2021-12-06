@@ -11,7 +11,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.PositiveOrZero;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -33,7 +32,7 @@ public class Writer extends BaseEntity {
     private Long id;
 
     @PositiveOrZero
-    @Column(name = "follow_count", columnDefinition = "INT", nullable = false)
+    @Column(name = "follow_count", columnDefinition = "INT")
     private int followCount;
 
     @OneToOne(fetch = FetchType.LAZY)

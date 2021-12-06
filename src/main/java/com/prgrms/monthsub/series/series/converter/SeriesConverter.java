@@ -3,10 +3,10 @@ package com.prgrms.monthsub.series.series.converter;
 import static com.prgrms.monthsub.common.utils.TimeUtil.convertUploadDateListToUploadDateString;
 
 import com.prgrms.monthsub.part.writer.converter.WriterConverter;
+import com.prgrms.monthsub.part.writer.domain.Writer;
 import com.prgrms.monthsub.series.article.converter.ArticleConverter;
 import com.prgrms.monthsub.series.article.domain.Article;
 import com.prgrms.monthsub.series.series.domain.Series;
-import com.prgrms.monthsub.part.writer.domain.Writer;
 import com.prgrms.monthsub.series.series.domain.Series.Category;
 import com.prgrms.monthsub.series.series.domain.Series.SeriesStatus;
 import com.prgrms.monthsub.series.series.dto.SeriesSubscribeList;
@@ -42,7 +42,7 @@ public class SeriesConverter {
     public Series SeriesSubscribePostResponseToEntity(Writer writer, String imageUrl,
         SeriesSubscribePost.Request req) {
         return Series.builder()
-            .thumbnail(imageUrl)
+            .thumbnailKey(imageUrl)
             .title(req.title())
             .introduceText(req.introduceText())
             .introduceSentence(req.introduceSentence())
@@ -68,7 +68,7 @@ public class SeriesConverter {
         return new Response(
             SeriesObject.builder()
                 .id(seriesEntity.getId())
-                .thumbnail(seriesEntity.getThumbnail())
+                .thumbnail(seriesEntity.getThumbnailKey())
                 .title(seriesEntity.getTitle())
                 .introduceText(seriesEntity.getIntroduceText())
                 .introduceSentence(seriesEntity.getIntroduceSentence())
@@ -109,7 +109,7 @@ public class SeriesConverter {
         return new SeriesSubscribeList.Response(
             SeriesObject.builder()
                 .id(seriesEntity.getId())
-                .thumbnail(seriesEntity.getThumbnail())
+                .thumbnail(seriesEntity.getThumbnailKey())
                 .title(seriesEntity.getTitle())
                 .introduceSentence(seriesEntity.getIntroduceSentence())
                 .startDate(seriesEntity.getSeriesStartDate())
@@ -136,7 +136,7 @@ public class SeriesConverter {
                 .id(series.getId())
                 .title(series.getTitle())
                 .introduceSentence(series.getIntroduceSentence())
-                .thumbnail(series.getThumbnail())
+                .thumbnail(series.getThumbnailKey())
                 .price(series.getPrice())
                 .build(),
             series.getCategory(),

@@ -48,7 +48,7 @@ public class User extends BaseEntity {
     private String profileIntroduce;
 
     @PositiveOrZero
-    @Column(name = "point", columnDefinition = "BIGINT", nullable = false)
+    @Column(name = "point", columnDefinition = "BIGINT")
     private int point;
 
     @Column(name = "nickname", columnDefinition = "VARCHAR(50)", unique = true)

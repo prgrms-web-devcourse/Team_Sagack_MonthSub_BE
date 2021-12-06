@@ -31,8 +31,8 @@ public class Expulsion {
     @Column(name = "user_id", columnDefinition = "BIGINT")
     private Long userId;
 
-    @Column(name = "key", columnDefinition = "TEXT", nullable = false)
-    private String key;
+    @Column(name = "image_key", columnDefinition = "TEXT", nullable = false)
+    private String imageKey;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "expulsion_image_status", columnDefinition = "VARCHAR(50)", nullable = false)
