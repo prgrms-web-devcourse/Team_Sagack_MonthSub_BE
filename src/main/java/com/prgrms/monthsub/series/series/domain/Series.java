@@ -4,9 +4,7 @@ import static com.prgrms.monthsub.common.utils.TimeUtil.convertUploadDateListToU
 
 import com.prgrms.monthsub.common.domain.BaseEntity;
 import com.prgrms.monthsub.part.writer.domain.Writer;
-import com.prgrms.monthsub.series.series.domain.type.Category;
-import com.prgrms.monthsub.series.series.domain.type.LikesStatus;
-import com.prgrms.monthsub.series.series.domain.type.SeriesStatus;
+import com.prgrms.monthsub.series.series.domain.SeriesLikes.LikesStatus;
 import com.prgrms.monthsub.series.series.dto.SeriesSubscribeEdit;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -21,7 +19,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.Min;
+import javax.validation.constraints.PositiveOrZero;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -41,8 +39,8 @@ public class Series extends BaseEntity {
     @Column(name = "id", columnDefinition = "BIGINT")
     private Long id;
 
-    @Column(name = "thumbnail", columnDefinition = "TEXT", nullable = false)
-    private String thumbnail;
+    @Column(name = "thumbnail_key", columnDefinition = "TEXT", nullable = false)
+    private String thumbnailKey;
 
     @Column(name = "title", columnDefinition = "VARCHAR(300)", nullable = false)
     private String title;
@@ -53,7 +51,7 @@ public class Series extends BaseEntity {
     @Column(name = "introduce_sentence", columnDefinition = "VARCHAR(300)", nullable = false)
     private String introduceSentence;
 
-    @Min(0)
+    @PositiveOrZero
     @Column(name = "price", columnDefinition = "INT", nullable = false)
     private int price;
 
@@ -69,6 +67,7 @@ public class Series extends BaseEntity {
     @Column(name = "series_end_date", updatable = false, nullable = false)
     private LocalDate seriesEndDate;
 
+    @PositiveOrZero
     @Column(name = "article_count", columnDefinition = "INT", nullable = false)
     private int articleCount;
 
@@ -76,8 +75,8 @@ public class Series extends BaseEntity {
     @Column(name = "subscribe_status", columnDefinition = "VARCHAR(50)", nullable = false)
     private SeriesStatus subscribeStatus;
 
-    @Min(0)
-    @Column(name = "likes", columnDefinition = "INT")
+    @PositiveOrZero
+    @Column(name = "likes", columnDefinition = "INT", nullable = false)
     private int likes;
 
     @Enumerated(EnumType.STRING)
@@ -96,7 +95,7 @@ public class Series extends BaseEntity {
 
     public void editSeries(String thumbnail, SeriesSubscribeEdit.Request request) {
         if (thumbnail != null) {
-            this.thumbnail = thumbnail;
+            this.thumbnailKey = thumbnail;
         }
         this.title = request.title();
         this.introduceSentence = request.introduceSentence();
@@ -107,6 +106,30 @@ public class Series extends BaseEntity {
 
     public void changeLikesCount(LikesStatus changeStatus) {
         this.likes += changeStatus.equals(LikesStatus.Like) ? 1 : -1;
+    }
+
+    public enum Category {
+
+        POEM,
+        NOVEL,
+        INTERVIEW,
+        ESSAY,
+        CRITIQUE,
+        ETC;
+
+        public static Category of(String category) {
+            return Category.valueOf(category.toUpperCase());
+        }
+    }
+
+    public enum SeriesStatus {
+
+        SUBSCRIPTION_UNAVAILABLE,
+        SUBSCRIPTION_AVAILABLE;
+
+        public static SeriesStatus of(String seriesStatus) {
+            return SeriesStatus.valueOf(seriesStatus.toUpperCase());
+        }
     }
 
 }

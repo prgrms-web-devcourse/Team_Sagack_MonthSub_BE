@@ -1,6 +1,6 @@
 package com.prgrms.monthsub.series.series.dto;
 
-import com.prgrms.monthsub.series.series.domain.type.Category;
+import com.prgrms.monthsub.series.series.domain.Series.Category;
 import com.prgrms.monthsub.series.series.dto.SeriesSubscribeList.BriefArticleBySeriesIdResponse;
 import com.prgrms.monthsub.series.series.dto.SeriesSubscribeList.SeriesObject;
 import com.prgrms.monthsub.series.series.dto.SeriesSubscribeList.SubscribeObject;

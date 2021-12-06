@@ -2,7 +2,7 @@ package com.prgrms.monthsub.series.series.app;
 
 import com.prgrms.monthsub.series.series.domain.Series;
 import com.prgrms.monthsub.series.series.domain.SeriesLikes;
-import com.prgrms.monthsub.series.series.domain.type.LikesStatus;
+import com.prgrms.monthsub.series.series.domain.SeriesLikes.LikesStatus;
 import com.prgrms.monthsub.series.series.dto.SeriesLikesEvent;
 import java.util.Optional;
 import org.springframework.stereotype.Service;

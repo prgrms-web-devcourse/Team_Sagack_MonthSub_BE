@@ -1,7 +1,6 @@
 package com.prgrms.monthsub.series.series.domain;
 
 import com.prgrms.monthsub.common.domain.BaseEntity;
-import com.prgrms.monthsub.series.series.domain.type.LikesStatus;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -46,6 +45,17 @@ public class SeriesLikes extends BaseEntity {
     public LikesStatus changeLikeStatus() {
         this.likesStatus = this.likesStatus.equals(LikesStatus.Like) ? LikesStatus.Nothing : LikesStatus.Like;
         return this.likesStatus;
+    }
+
+    public enum LikesStatus {
+
+        Like,
+        Nothing;
+
+        public static LikesStatus of(String likesStatus) {
+            return LikesStatus.valueOf(likesStatus.toUpperCase());
+        }
+
     }
 
 }

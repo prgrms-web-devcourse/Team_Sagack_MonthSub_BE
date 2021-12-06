@@ -3,6 +3,8 @@ package com.prgrms.monthsub.part.writer.domain;
 import com.prgrms.monthsub.common.domain.BaseEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -35,5 +37,22 @@ public class WriterLikes extends BaseEntity {
 
     @Column(name = "user_id", columnDefinition = "BIGINT", nullable = false)
     private Long userId;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "likes_status", columnDefinition = "VARCHAR(50)")
+    private LikesStatus likesStatus;
+
+
+    public enum LikesStatus {
+
+        Like,
+        Nothing;
+
+        public static LikesStatus of(String likesStatus) {
+            return LikesStatus.valueOf(likesStatus.toUpperCase());
+        }
+
+    }
+
 
 }

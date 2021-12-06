@@ -17,7 +17,7 @@ public class PartPermission {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "id", columnDefinition = "BIGINT")
     private Long id;
 
     @ManyToOne
