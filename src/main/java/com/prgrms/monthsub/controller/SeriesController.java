@@ -31,6 +31,8 @@ import org.springframework.web.multipart.MultipartFile;
 @Tag(name = "Series")
 public class SeriesController {
 
+    private static final String THUMBNAIL = "thumbnail";
+
     private final SeriesService seriesService;
 
     public SeriesController(SeriesService seriesService) {
@@ -69,7 +71,7 @@ public class SeriesController {
     public ApiResponse<SeriesSubscribeEdit.Response> editSeries(
         @AuthenticationPrincipal JwtAuthentication authentication,
         @PathVariable Long seriesId,
-        @RequestPart(required = false) MultipartFile thumbnail,
+        @RequestPart MultipartFile thumbnail,
         @Valid @RequestPart SeriesSubscribeEdit.Request request) throws IOException {
         return ApiResponse.ok(
             HttpMethod.PUT, seriesService.editSeries(seriesId, authentication.userId, thumbnail, request));
@@ -83,6 +85,16 @@ public class SeriesController {
         @PathVariable Long id
     ) {
         return ApiResponse.ok(HttpMethod.GET, seriesService.getSeriesUsageEdit(id));
+    }
+
+    @PostMapping(path = "/thumbnail", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+    @Operation(summary = "시리즈 썸네일 이미지 업로드")
+    @Tag(name = "[사진 업로드]")
+    public ApiResponse<String> registerImage(
+        @AuthenticationPrincipal JwtAuthentication authentication,
+        @RequestPart MultipartFile image) throws IOException {
+        return ApiResponse.ok(
+            HttpMethod.POST, seriesService.uploadImage(image, authentication.userId, THUMBNAIL));
     }
 
 

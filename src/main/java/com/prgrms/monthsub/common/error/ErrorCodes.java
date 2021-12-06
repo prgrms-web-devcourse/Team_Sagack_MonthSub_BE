@@ -22,7 +22,7 @@ public record ErrorCodes(ErrorCode errorCode, String message) {
     }
 
     public static ErrorCodes INVALID_UPLOAD_FILE_TYPE() {
-        return new ErrorCodes(ErrorCode.INVALID_UPLOAD_FILE_TYPE, "아이디 혹은 비밀번호가 일치하지 않습니다.");
+        return new ErrorCodes(ErrorCode.INVALID_UPLOAD_FILE_TYPE, "jpeg, jpg, png 형식만 가능합니다.");
     }
 
     public static ErrorCodes UN_AUTHORIZED() {
