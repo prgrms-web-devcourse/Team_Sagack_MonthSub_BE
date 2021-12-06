@@ -1,11 +1,14 @@
 package com.prgrms.monthsub.service;
 
+import com.prgrms.monthsub.common.error.exception.domain.user.UserException.EmailDuplicated;
+import com.prgrms.monthsub.common.error.exception.domain.user.UserException.NickNameDuplicated;
 import com.prgrms.monthsub.common.error.exception.domain.user.UserException.UserNotExist;
 import com.prgrms.monthsub.common.error.exception.domain.user.UserException.UserNotFound;
 import com.prgrms.monthsub.converter.UserConverter;
 import com.prgrms.monthsub.domain.User;
 import com.prgrms.monthsub.dto.UserSignUp;
 import com.prgrms.monthsub.repository.UserRepository;
+import java.util.Optional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,8 +44,26 @@ public class UserService {
 
     @Transactional
     public UserSignUp.Response signUp(UserSignUp.Request request) {
+        checkEmail(request.email());
+        checkNicName(request.nickName());
         User entity = userRepository.save(userConverter.UserSignUpRequestToEntity(request));
         return new UserSignUp.Response(userRepository.save(entity).getId());
+    }
+
+
+    private void checkEmail(String email) {
+        Optional<User> user = userRepository.findByEmail(email);
+        if (user.isPresent()) {
+            throw new EmailDuplicated("email = " + email);
+        }
+    }
+
+    private void checkNicName(String nickName) {
+        Optional<User> user = userRepository.findByNickname(nickName);
+        if (user.isPresent()) {
+            throw new NickNameDuplicated("nickName = " + nickName);
+        }
+
     }
 
 }
