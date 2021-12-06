@@ -5,6 +5,7 @@ import com.prgrms.monthsub.converter.SeriesConverter;
 import com.prgrms.monthsub.domain.Article;
 import com.prgrms.monthsub.domain.Series;
 import com.prgrms.monthsub.domain.Writer;
+import com.prgrms.monthsub.domain.enumType.SortType;
 import com.prgrms.monthsub.dto.SeriesSubscribeEdit;
 import com.prgrms.monthsub.dto.SeriesSubscribeList;
 import com.prgrms.monthsub.dto.SeriesSubscribeOne;
@@ -63,6 +64,18 @@ public class SeriesService {
 
     public List<SeriesSubscribeList.Response> getSeriesList() {
         List<Series> seriesList = seriesRepository.findSeriesList();
+        return seriesList.stream().map(seriesConverter::seriesListToResponse)
+            .collect(Collectors.toList());
+    }
+
+    public List<SeriesSubscribeList.Response> getSeriesListOrderBySort(SortType sort) {
+        List<Series> seriesList;
+
+        seriesList = switch (sort) {
+            case RECENT -> seriesRepository.findSeriesListOrderByCreatedAt();
+            case POPULAR -> seriesRepository.findSeriesListOrderByLike();
+        };
+
         return seriesList.stream().map(seriesConverter::seriesListToResponse)
             .collect(Collectors.toList());
     }

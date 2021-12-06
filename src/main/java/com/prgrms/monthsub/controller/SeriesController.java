@@ -1,6 +1,7 @@
 package com.prgrms.monthsub.controller;
 
 import com.prgrms.monthsub.common.error.ApiResponse;
+import com.prgrms.monthsub.domain.enumType.SortType;
 import com.prgrms.monthsub.dto.SeriesSubscribeEdit;
 import com.prgrms.monthsub.dto.SeriesSubscribeList;
 import com.prgrms.monthsub.dto.SeriesSubscribeOne;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -81,6 +83,15 @@ public class SeriesController {
         @PathVariable Long id
     ) {
         return ApiResponse.ok(HttpMethod.GET, seriesService.getSeriesUsageEdit(id));
+    }
+
+
+    @Operation(summary = "인기순/최신순 시리즈 리스트 조회")
+    @GetMapping("/sort")
+    @Tag(name = "[화면]-시리즈")
+    public ApiResponse<List<SeriesSubscribeList.Response>> getSeriesListOrderBySort(
+        @RequestParam(value = "sort", required = true) SortType sort) {
+        return ApiResponse.ok(HttpMethod.GET, seriesService.getSeriesListOrderBySort(sort));
     }
 
 }
