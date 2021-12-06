@@ -22,7 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Transactional(readOnly = true)
 public class SeriesService {
 
-    private static final String DIRECTORY = "seriesThumbnails";
+    private static final String THUMBNAIL = "thumbnail";
 
     private final SeriesRepository seriesRepository;
 
@@ -30,25 +30,25 @@ public class SeriesService {
 
     private final WriterService writerService;
 
-    private final S3UploaderService s3Uploader;
+    private final S3UploaderService s3UploaderService;
 
     private final SeriesConverter seriesConverter;
 
     public SeriesService(SeriesRepository seriesRepository, ArticleService articleService,
         WriterService writerService,
         SeriesConverter seriesConverter,
-        S3UploaderService s3Uploader) {
+        S3UploaderService s3UploaderService) {
         this.seriesRepository = seriesRepository;
         this.articleService = articleService;
         this.writerService = writerService;
         this.seriesConverter = seriesConverter;
-        this.s3Uploader = s3Uploader;
+        this.s3UploaderService = s3UploaderService;
     }
 
     @Transactional
     public SeriesSubscribePost.Response createSeries(Long userId, MultipartFile thumbnail,
         SeriesSubscribePost.Request request) throws IOException {
-        String imageUrl = s3Uploader.upload(thumbnail, DIRECTORY);
+        String imageUrl = this.uploadImage(thumbnail, userId, THUMBNAIL);
         Writer writer = writerService.findByUserId(userId);
         Series entity = seriesConverter.SeriesSubscribePostResponseToEntity(
             writer, imageUrl, request);
@@ -83,9 +83,9 @@ public class SeriesService {
     @Transactional
     public SeriesSubscribeEdit.Response editSeries(Long seriesId, Long userId, MultipartFile thumbnail,
         SeriesSubscribeEdit.Request request) throws IOException {
-        String imageUrl = !thumbnail.isEmpty() ? s3Uploader.upload(thumbnail, DIRECTORY) : null;
-        long writerId = writerService.findWriterByUserId(userId).getId();
-        Series series = seriesRepository.findSeriesByIdAndWriterId(seriesId, writerId)
+        String imageUrl = this.uploadImage(thumbnail, userId, THUMBNAIL);
+
+        Series series = seriesRepository.findSeriesById(seriesId)
             .orElseThrow(() -> new SeriesNotFound("seriesId=" + seriesId));
         series.editSeries(imageUrl, request);
         return new SeriesSubscribeEdit.Response(seriesRepository.save(series).getId());
@@ -95,6 +95,10 @@ public class SeriesService {
         return seriesRepository.findById(seriesId)
             .map(seriesConverter::seriesToResponseUsageEdit)
             .orElseThrow(() -> new SeriesNotFound("seriesId=" + seriesId));
+    }
+
+    public String uploadImage(MultipartFile image, Long userId, String imagePurpose) throws IOException {
+        return s3UploaderService.upload(image, Series.class.getSimpleName(), userId, imagePurpose);
     }
 
 }

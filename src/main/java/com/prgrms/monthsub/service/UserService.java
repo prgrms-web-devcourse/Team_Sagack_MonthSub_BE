@@ -9,9 +9,11 @@ import com.prgrms.monthsub.domain.User;
 import com.prgrms.monthsub.dto.UserSignUp;
 import com.prgrms.monthsub.repository.UserRepository;
 import java.util.Optional;
+import java.io.IOException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @Transactional(readOnly = true)
@@ -21,12 +23,16 @@ public class UserService {
 
     private final UserRepository userRepository;
 
+    private final S3UploaderService s3UploaderService;
+
     private final UserConverter userConverter;
 
     public UserService(PasswordEncoder passwordEncoder,
-        UserRepository userRepository, UserConverter userConverter) {
+        UserRepository userRepository, S3UploaderService s3UploaderService,
+        UserConverter userConverter) {
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
+        this.s3UploaderService = s3UploaderService;
         this.userConverter = userConverter;
     }
 
@@ -48,6 +54,15 @@ public class UserService {
         checkNicName(request.nickName());
         User entity = userRepository.save(userConverter.UserSignUpRequestToEntity(request));
         return new UserSignUp.Response(userRepository.save(entity).getId());
+    }
+
+    public String uploadImage(MultipartFile image, Long userId, String imagePurpose) throws IOException {
+        String imageUrl = s3UploaderService.upload(image, User.class.getSimpleName(), userId, imagePurpose);
+        if (imageUrl == null) {
+            //Todo profile field null로 갱신
+        }
+
+        return imageUrl;
     }
 
 

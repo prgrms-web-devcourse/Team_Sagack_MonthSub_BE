@@ -9,10 +9,8 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.util.IOUtils;
-import com.prgrms.monthsub.common.error.ErrorCodes;
-import com.prgrms.monthsub.common.error.exception.global.BusinessException;
+import com.prgrms.monthsub.common.error.exception.global.S3UploaderException.ImageExtensionNotMatch;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Arrays;
 import java.util.UUID;
 import javax.annotation.PostConstruct;
@@ -48,19 +46,27 @@ public class S3UploaderService {
             .build();
     }
 
-    public String upload(MultipartFile file, String dirName) throws IOException {
-        fileExtensionCheck(file.getContentType().split("/"));
+    public String upload(MultipartFile image, String domainClassName, Long userId, String imagePurpose)
+        throws IOException {
+        // 도메인 마다 null 허용 정책 다름.
+        if (image.isEmpty()) {
+            return null;
+        }
 
-        InputStream uploadFile = file.getInputStream();
-        String fileName = dirName + "/" + UUID.randomUUID() + uploadFile;
+        fileExtensionCheck(image.getContentType().split("/"));
 
         ObjectMetadata objectMetadata = new ObjectMetadata();
-        byte[] bytes = IOUtils.toByteArray(file.getInputStream());
-        objectMetadata.setContentType(file.getContentType());
+        byte[] bytes = IOUtils.toByteArray(image.getInputStream());
+        objectMetadata.setContentType(image.getContentType());
         objectMetadata.setContentLength(bytes.length);
 
+        String fileName =
+            domainClassName.toLowerCase() + "/" + userId.toString() + "/" + imagePurpose + "/"
+                + UUID.randomUUID();
+
         s3Client.putObject(
-            new PutObjectRequest(bucket, fileName, file.getInputStream(), objectMetadata)
+            new PutObjectRequest(
+                bucket, fileName, image.getInputStream(), objectMetadata)
                 .withCannedAcl(CannedAccessControlList.PublicRead)
         );
 
@@ -73,7 +79,7 @@ public class S3UploaderService {
         boolean isImage = Arrays.stream(fileInfo)
             .anyMatch(info -> (info.contains("jpeg") || info.contains("png") || (info.contains("jpg"))));
         if (!isImage) {
-            throw new BusinessException(ErrorCodes.INVALID_UPLOAD_FILE_TYPE());
+            throw new ImageExtensionNotMatch();
         }
     }
 
