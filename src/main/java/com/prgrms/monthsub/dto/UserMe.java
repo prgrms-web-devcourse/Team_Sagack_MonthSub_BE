@@ -7,7 +7,8 @@ public class UserMe {
     @Schema(name = "UserMe.Response")
     public record Response(
         Long userId,
-        String token,
+        String email,
+        String userName,
         String nicName,
         String profileImage,
         String profileIntroduce,

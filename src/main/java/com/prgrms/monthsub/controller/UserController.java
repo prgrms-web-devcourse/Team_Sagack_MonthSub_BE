@@ -54,7 +54,7 @@ public class UserController {
         @AuthenticationPrincipal JwtAuthentication authentication) {
         User user = userService.findByUserId(authentication.userId);
         UserMe.Response me = new UserMe.Response(
-            user.getId(), authentication.token, user.getNickname(),
+            user.getId(), user.getEmail(), user.getUsername(), user.getNickname(),
             user.getProfileImage(),
             user.getProfileIntroduce(), user.getPart().getName()
         );
