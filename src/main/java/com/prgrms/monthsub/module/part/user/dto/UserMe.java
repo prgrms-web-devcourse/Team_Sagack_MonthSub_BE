@@ -10,7 +10,7 @@ public class UserMe {
         String email,
         String userName,
         String nicName,
-        String profileImage,
+        String profileKey,
         String profileIntroduce,
         String group
     ) {}

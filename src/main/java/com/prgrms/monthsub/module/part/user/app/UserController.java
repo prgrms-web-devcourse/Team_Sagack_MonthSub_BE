@@ -4,6 +4,7 @@ import com.prgrms.monthsub.common.exception.model.ApiResponse;
 import com.prgrms.monthsub.common.jwt.JwtAuthentication;
 import com.prgrms.monthsub.common.jwt.JwtAuthenticationToken;
 import com.prgrms.monthsub.module.part.user.domain.User;
+import com.prgrms.monthsub.module.part.user.dto.UserEdit;
 import com.prgrms.monthsub.module.part.user.dto.UserLogin;
 import com.prgrms.monthsub.module.part.user.dto.UserMe;
 import com.prgrms.monthsub.module.part.user.dto.UserSignUp;
@@ -15,12 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
@@ -53,7 +49,7 @@ public class UserController {
 
     @GetMapping(path = "/me")
     @Operation(summary = "내 정보 확인")
-    @Tag(name = "[화면]-내정보")
+    @Tag(name = "[화면]-마이페이지")
     public ApiResponse<UserMe.Response> me(
         @AuthenticationPrincipal JwtAuthentication authentication) {
         User user = userService.findByUserId(authentication.userId);
@@ -63,6 +59,14 @@ public class UserController {
             user.getProfileIntroduce(), user.getPart().getName()
         );
         return ApiResponse.ok(HttpMethod.GET, me);
+    }
+
+    @PatchMapping(path = "/me")
+    @Operation(summary = "내 정보 수정")
+    @Tag(name = "[화면]-마이페이지")
+    public ApiResponse<UserEdit.Response> edit(@AuthenticationPrincipal JwtAuthentication authentication,
+                                               @RequestBody UserEdit.Request request){
+        return ApiResponse.ok(HttpMethod.PATCH, userService.edit(authentication.userId, request));
     }
 
     @PostMapping(path = "/signup")
