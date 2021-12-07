@@ -46,4 +46,8 @@ public class Article extends BaseEntity {
     @Column(name = "round", columnDefinition = "INT", nullable = false)
     private Integer round;
 
+    public void changeThumbnailKey(String thumbnailKey) {
+        this.thumbnailKey = thumbnailKey;
+    }
+
 }
