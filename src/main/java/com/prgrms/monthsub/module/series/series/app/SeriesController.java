@@ -122,7 +122,7 @@ public class SeriesController {
 
   @PatchMapping(path = "/{id}/thumbnail", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
   @Operation(summary = "시리즈 썸네일 이미지 업데이트")
-  @Tag(name = "[사진 업로드]")
+  @Tag(name = "[화면]-시리즈")
   public ApiResponse<String> registerImage(
     @AuthenticationPrincipal JwtAuthentication authentication,
     @PathVariable String id,
