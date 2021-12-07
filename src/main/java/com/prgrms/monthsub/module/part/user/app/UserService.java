@@ -11,7 +11,12 @@ import com.prgrms.monthsub.module.part.user.domain.exception.UserException.UserN
 import com.prgrms.monthsub.module.part.user.domain.exception.UserException.UserNotFound;
 import com.prgrms.monthsub.module.part.user.dto.UserEdit;
 import com.prgrms.monthsub.module.part.user.dto.UserSignUp;
+import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion;
+import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.ExpulsionImageName;
+import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.ExpulsionImageStatus;
+import com.prgrms.monthsub.module.worker.explusion.domain.ExpulsionService;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -28,17 +33,21 @@ public class UserService {
 
     private final UserRepository userRepository;
 
+    private final ExpulsionService expulsionService;
+
     private final S3Uploader s3Uploader;
 
     private final UserConverter userConverter;
 
     public UserService(PasswordEncoder passwordEncoder,
         UserRepository userRepository, S3Uploader s3Uploader,
-        UserConverter userConverter, AWS aws) {
+        UserConverter userConverter, AWS aws,
+        ExpulsionService expulsionService) {
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.s3Uploader = s3Uploader;
         this.userConverter = userConverter;
+        this.expulsionService = expulsionService;
     }
 
     public User login(String email, String credentials) {
@@ -64,41 +73,55 @@ public class UserService {
     @Transactional
     public UserEdit.Response edit(Long userId, UserEdit.Request request) {
         checkNicName(request.nickName());
-        User user = userRepository.findById(userId)
-            .orElseThrow(() -> new UserNotExist("userId=" + userId));
+        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotExist("userId=" + userId));
         user.editUser(request.nickName(), request.profileIntroduce());
         return new UserEdit.Response(userRepository.save(user).getId());
     }
 
 
+    @Transactional
     public String uploadProfileImage(MultipartFile image, Long userId)
         throws IOException {
 
         String key = User.class.getSimpleName().toLowerCase()
+            + "s"
             + "/" + userId.toString()
             + "/profile/"
             + UUID.randomUUID()
             + s3Uploader.getExtension(image);
 
-        String imageUrl = s3Uploader.upload(Bucket.IMAGE, image, key);
+        String imageUrl = this.s3Uploader.upload(Bucket.IMAGE, image, key);
 
-        if (imageUrl == null) {
-            //Todo profile field null로 갱신
+        User user = this.userRepository.findById(userId)
+            .orElseThrow(() -> new UserNotExist("userId=" + userId));
+
+        String originalProfile = user.getProfileKey();
+        user.changeProfileKey(key);
+
+        if (originalProfile != null) {
+            Expulsion expulsion = Expulsion.builder()
+                .userId(user.getId())
+                .imageKey(key)
+                .expulsionImageStatus(ExpulsionImageStatus.CREATED)
+                .expulsionImageName(ExpulsionImageName.USER_PROFILE)
+                .hardDeleteDate(LocalDateTime.now())
+                .build();
+            expulsionService.save(expulsion);
         }
 
-        return imageUrl;
+        return this.userConverter.UserProfile(imageUrl);
     }
 
 
     private void checkEmail(String email) {
-        Optional<User> user = userRepository.findByEmail(email);
+        Optional<User> user = this.userRepository.findByEmail(email);
         if (user.isPresent()) {
             throw new EmailDuplicated("email = " + email);
         }
     }
 
     private void checkNicName(String nickName) {
-        Optional<User> user = userRepository.findByNickname(nickName);
+        Optional<User> user = this.userRepository.findByNickname(nickName);
         if (user.isPresent()) {
             throw new NickNameDuplicated("nickName = " + nickName);
         }

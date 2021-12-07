@@ -33,6 +33,10 @@ public class UserConverter {
         );
     }
 
+    public String UserProfile(String imageUrl){
+        return this.s3.getDomain()+"/"+ imageUrl;
+    }
+
     public User UserSignUpRequestToEntity(UserSignUp.Request request) {
         return User.builder()
             .email(request.email())

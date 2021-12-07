@@ -41,7 +41,7 @@ public class User extends BaseEntity {
     @Column(name = "password", columnDefinition = "VARCHAR(100)", nullable = false)
     private String password;
 
-    @Column(name = "profile_key", columnDefinition = "VARCHAR(50)")
+    @Column(name = "profile_key", columnDefinition = "VARCHAR(100)")
     private String profileKey;
 
     @Column(name = "profile_introduce", columnDefinition = "VARCHAR(50)")
@@ -86,7 +86,11 @@ public class User extends BaseEntity {
         this.part = part;
     }
 
-    public void editUser(String nickname, String profileIntroduce) {
+    public void changeProfileKey(String profileKey){
+        this.profileKey = profileKey;
+    }
+
+    public void editUser(String nickname, String profileIntroduce){
         this.nickname = nickname;
         this.profileIntroduce = profileIntroduce;
     }

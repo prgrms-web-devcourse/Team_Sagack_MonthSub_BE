@@ -70,8 +70,7 @@ public class UserController {
     @PatchMapping(path = "/me")
     @Operation(summary = "내 정보 수정")
     @Tag(name = "[화면]-마이페이지")
-    public ApiResponse<UserEdit.Response> edit(
-        @AuthenticationPrincipal JwtAuthentication authentication,
+    public ApiResponse<UserEdit.Response> edit(@AuthenticationPrincipal JwtAuthentication authentication,
         @RequestBody UserEdit.Request request) {
         return ApiResponse.ok(HttpMethod.PATCH, userService.edit(authentication.userId, request));
     }
@@ -85,7 +84,7 @@ public class UserController {
 
     @PostMapping(path = "/profile", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
     @Operation(summary = "유저 프로필 이미지 업로드")
-    @Tag(name = "[사진 업로드]")
+    @Tag(name = "[화면]-마이페이지")
     public ApiResponse<String> registerImage(
         @AuthenticationPrincipal JwtAuthentication authentication,
         @RequestPart(required = false) MultipartFile image) throws IOException {
