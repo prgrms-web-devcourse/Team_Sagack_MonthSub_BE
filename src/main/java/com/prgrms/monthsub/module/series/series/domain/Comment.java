@@ -26,34 +26,34 @@ import lombok.NoArgsConstructor;
 @Table(name = "comment")
 public class Comment extends BaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", columnDefinition = "BIGINT")
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "id", columnDefinition = "BIGINT")
+  private Long id;
 
-    @Column(name = "user_id", columnDefinition = "BIGINT", nullable = false)
-    private Long userId;
+  @Column(name = "user_id", columnDefinition = "BIGINT", nullable = false)
+  private Long userId;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "series_id", referencedColumnName = "id")
-    private Series series;
+  @OneToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "series_id", referencedColumnName = "id")
+  private Series series;
 
-    @Column(name = "contents", columnDefinition = "VARCHAR(200)", nullable = false)
-    private String contents;
+  @Column(name = "contents", columnDefinition = "VARCHAR(200)", nullable = false)
+  private String contents;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "comment_status", columnDefinition = "VARCHAR(50)", nullable = false)
-    private CommentStatus commentStatus;
+  @Enumerated(EnumType.STRING)
+  @Column(name = "comment_status", columnDefinition = "VARCHAR(50)", nullable = false)
+  private CommentStatus commentStatus;
 
-    public enum CommentStatus {
+  public enum CommentStatus {
 
-        CREATED,
-        DELETED;
+    CREATED,
+    DELETED;
 
-        public static CommentStatus of(String commentStatus) {
-            return CommentStatus.valueOf(commentStatus.toUpperCase());
-        }
-
+    public static CommentStatus of(String commentStatus) {
+      return CommentStatus.valueOf(commentStatus.toUpperCase());
     }
+
+  }
 
 }

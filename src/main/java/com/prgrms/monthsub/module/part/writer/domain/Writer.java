@@ -25,18 +25,19 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "writer")
 public class Writer extends BaseEntity {
+  public static final int DEFAULT_FOLLOW_COUNT = 0;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", columnDefinition = "BIGINT")
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "id", columnDefinition = "BIGINT")
+  private Long id;
 
-    @PositiveOrZero
-    @Column(name = "follow_count", columnDefinition = "INT")
-    private int followCount;
+  @PositiveOrZero
+  @Column(name = "follow_count", columnDefinition = "INT")
+  private int followCount;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private User user;
+  @OneToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "user_id", referencedColumnName = "id")
+  private User user;
 
 }

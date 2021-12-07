@@ -24,16 +24,16 @@ import lombok.NoArgsConstructor;
 @Table(name = "series_user")
 public class SeriesUser extends BaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", columnDefinition = "BIGINT")
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "id", columnDefinition = "BIGINT")
+  private Long id;
 
-    @Column(name = "user_id", columnDefinition = "BIGINT", nullable = false)
-    private Long userId;
+  @Column(name = "user_id", columnDefinition = "BIGINT", nullable = false)
+  private Long userId;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "series_id", referencedColumnName = "id")
-    private Series series;
+  @OneToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "series_id", referencedColumnName = "id")
+  private Series series;
 
 }

@@ -6,18 +6,22 @@ import java.util.Arrays;
 
 public class SeriesException {
 
-    public static class SeriesNotFound extends BusinessException {
+  public static class SeriesNotFound extends BusinessException {
 
-        public SeriesNotFound(String... message) {
-            super(ErrorCodes.ENTITY_NOT_FOUND(Arrays.stream(message).toList().toString()));
-        }
-
+    public SeriesNotFound(String... message) {
+      super(ErrorCodes.ENTITY_NOT_FOUND(Arrays.stream(message)
+        .toList()
+        .toString()));
     }
 
-    public static class SeriesLikesNotFound extends BusinessException {
-        public SeriesLikesNotFound(String... message) {
-            super(ErrorCodes.ENTITY_NOT_FOUND(Arrays.stream(message).toList().toString()));
-        }
+  }
+
+  public static class SeriesLikesNotFound extends BusinessException {
+    public SeriesLikesNotFound(String... message) {
+      super(ErrorCodes.ENTITY_NOT_FOUND(Arrays.stream(message)
+        .toList()
+        .toString()));
     }
+  }
 
 }

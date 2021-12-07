@@ -1,17 +1,19 @@
 package com.prgrms.monthsub.module.part.user.app;
 
 import com.prgrms.monthsub.common.utils.S3Uploader;
-import com.prgrms.monthsub.config.AWS;
 import com.prgrms.monthsub.config.S3.Bucket;
 import com.prgrms.monthsub.module.part.user.converter.UserConverter;
 import com.prgrms.monthsub.module.part.user.domain.User;
 import com.prgrms.monthsub.module.part.user.domain.exception.UserException.EmailDuplicated;
 import com.prgrms.monthsub.module.part.user.domain.exception.UserException.NickNameDuplicated;
-import com.prgrms.monthsub.module.part.user.domain.exception.UserException.UserNotExist;
 import com.prgrms.monthsub.module.part.user.domain.exception.UserException.UserNotFound;
 import com.prgrms.monthsub.module.part.user.dto.UserEdit;
 import com.prgrms.monthsub.module.part.user.dto.UserSignUp;
-import java.io.IOException;
+import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion;
+import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.ExpulsionImageName;
+import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.ExpulsionImageStatus;
+import com.prgrms.monthsub.module.worker.explusion.domain.ExpulsionService;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,87 +24,132 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 @Transactional(readOnly = true)
 public class UserService {
+  private final PasswordEncoder passwordEncoder;
+  private final UserRepository userRepository;
+  private final ExpulsionService expulsionService;
+  private final S3Uploader s3Uploader;
+  private final UserConverter userConverter;
+
+  public UserService(
+    PasswordEncoder passwordEncoder,
+    UserRepository userRepository,
+    S3Uploader s3Uploader,
+    UserConverter userConverter,
+    ExpulsionService expulsionService
+  ) {
+    this.passwordEncoder = passwordEncoder;
+    this.userRepository = userRepository;
+    this.s3Uploader = s3Uploader;
+    this.userConverter = userConverter;
+    this.expulsionService = expulsionService;
+  }
+
+  public User findById(Long userId) {
+    return this.userRepository
+      .findById(userId)
+      .orElseThrow(() -> new UserNotFound("id=" + userId));
+  }
+
+  public User findByEmail(String email) {
+    return this.userRepository
+      .findByEmail(email)
+      .orElseThrow(() -> new UserNotFound("email=" + email));
+  }
+
+  public User login(
+    String email,
+    String credentials
+  ) {
+    User user = this.findByEmail(email);
+    user.checkPassword(this.passwordEncoder, credentials);
+
+    return user;
+  }
+
+  @Transactional
+  public UserSignUp.Response signUp(UserSignUp.Request request) {
+    checkEmail(request.email());
+    checkNicName(request.nickName());
+    User entity = this.userRepository.save(userConverter.UserSignUpRequestToEntity(request));
+    return new UserSignUp.Response(entity.getId());
+  }
+
+  @Transactional
+  public UserEdit.Response edit(
+    Long id,
+    UserEdit.Request request
+  ) {
+    checkNicName(request.nickName());
+    User user = this.findById(id);
+    user.editUser(request.nickName(), request.profileIntroduce());
+
+    return new UserEdit.Response(this.userRepository.save(user)
+      .getId());
+  }
 
 
-    private final PasswordEncoder passwordEncoder;
+  @Transactional
+  public String uploadProfileImage(
+    Optional<MultipartFile> image,
+    Long userId
+  ) {
 
-    private final UserRepository userRepository;
+    User user = this.findById(userId);
 
-    private final S3Uploader s3Uploader;
+    String profileKey = image.map(imageFile -> {
 
-    private final UserConverter userConverter;
-
-    public UserService(PasswordEncoder passwordEncoder,
-        UserRepository userRepository, S3Uploader s3Uploader,
-        UserConverter userConverter, AWS aws) {
-        this.passwordEncoder = passwordEncoder;
-        this.userRepository = userRepository;
-        this.s3Uploader = s3Uploader;
-        this.userConverter = userConverter;
-    }
-
-    public User login(String email, String credentials) {
-        User user = userRepository.findByEmail(email)
-            .orElseThrow(() -> new UserNotExist("email=" + email));
-        user.checkPassword(passwordEncoder, credentials);
-        return user;
-    }
-
-    public User findByUserId(Long userId) {
-        return userRepository.findById(userId)
-            .orElseThrow(() -> new UserNotFound("id=" + userId));
-    }
-
-    @Transactional
-    public UserSignUp.Response signUp(UserSignUp.Request request) {
-        checkEmail(request.email());
-        checkNicName(request.nickName());
-        User entity = userRepository.save(userConverter.UserSignUpRequestToEntity(request));
-        return new UserSignUp.Response(entity.getId());
-    }
-
-    @Transactional
-    public UserEdit.Response edit(Long userId, UserEdit.Request request) {
-        checkNicName(request.nickName());
-        User user = userRepository.findById(userId)
-            .orElseThrow(() -> new UserNotExist("userId=" + userId));
-        user.editUser(request.nickName(), request.profileIntroduce());
-        return new UserEdit.Response(userRepository.save(user).getId());
-    }
-
-
-    public String uploadProfileImage(MultipartFile image, Long userId)
-        throws IOException {
-
-        String key = User.class.getSimpleName().toLowerCase()
+          String key = User.class.getSimpleName()
+            .toLowerCase()
+            + "s"
             + "/" + userId.toString()
             + "/profile/"
             + UUID.randomUUID()
-            + s3Uploader.getExtension(image);
+            + this.s3Uploader.getExtension(imageFile);
 
-        String imageUrl = s3Uploader.upload(Bucket.IMAGE, image, key);
-
-        if (imageUrl == null) {
-            //Todo profile field null로 갱신
+          return this.s3Uploader.upload(
+            Bucket.IMAGE,
+            imageFile,
+            key,
+            S3Uploader.imageExtensions
+          );
         }
+      )
+      .orElse(null);
 
-        return imageUrl;
+    String originalProfileKey = user.getProfileKey();
+
+    if (originalProfileKey != null) {
+      Expulsion expulsion = Expulsion.builder()
+        .userId(user.getId())
+        .imageKey(originalProfileKey)
+        .expulsionImageStatus(ExpulsionImageStatus.CREATED)
+        .expulsionImageName(ExpulsionImageName.USER_PROFILE)
+        .hardDeleteDate(LocalDateTime.now())
+        .build();
+      this.expulsionService.save(expulsion);
     }
 
+    user.changeProfileKey(profileKey);
+    return this.userConverter.UserProfile(
+      Optional.ofNullable(user.getProfileKey())
+    );
+  }
 
-    private void checkEmail(String email) {
-        Optional<User> user = userRepository.findByEmail(email);
-        if (user.isPresent()) {
-            throw new EmailDuplicated("email = " + email);
-        }
-    }
 
-    private void checkNicName(String nickName) {
-        Optional<User> user = userRepository.findByNickname(nickName);
-        if (user.isPresent()) {
-            throw new NickNameDuplicated("nickName = " + nickName);
-        }
+  private void checkEmail(String email) {
+    this.userRepository
+      .findByEmail(email)
+      .map(user -> {
+        throw new EmailDuplicated("email = " + email);
+      });
+  }
 
-    }
+  private void checkNicName(String nickName) {
+    this.userRepository
+      .findByNickname(nickName)
+      .map(user -> {
+        throw new NickNameDuplicated("nickName = " + nickName);
+      });
+  }
 
 }

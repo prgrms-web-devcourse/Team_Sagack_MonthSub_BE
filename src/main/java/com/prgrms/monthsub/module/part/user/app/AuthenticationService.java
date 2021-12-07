@@ -9,15 +9,16 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class AuthenticationService {
 
-    private final UserRepository userRepository;
+  private final UserRepository userRepository;
 
-    public AuthenticationService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+  public AuthenticationService(UserRepository userRepository) {
+    this.userRepository = userRepository;
+  }
 
-    public User findByUserName(String username) {
-        return userRepository.findByUsername(username)
-            .orElseThrow(() -> new UserNotExist("username=" + username));
-    }
+  public User findByUserName(String username) {
+    return this.userRepository
+      .findByUsername(username)
+      .orElseThrow(() -> new UserNotExist("username=" + username));
+  }
 
 }

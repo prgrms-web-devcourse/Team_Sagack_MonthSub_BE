@@ -11,31 +11,31 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "security")
 public class Security {
 
-    private Jwt jwt;
+  private Jwt jwt;
 
-    private Cors cors;
+  private Cors cors;
 
-    @Getter
-    @Setter
-    public static class Jwt {
+  @Getter
+  @Setter
+  public static class Jwt {
 
-        private String header;
+    private String header;
 
-        private String issuer;
+    private String issuer;
 
-        private String clientSecret;
+    private String clientSecret;
 
-        private int expirySeconds;
+    private int expirySeconds;
 
-    }
+  }
 
-    @Getter
-    @Setter
-    public static class Cors {
+  @Getter
+  @Setter
+  public static class Cors {
 
-        private String[] origin;
+    private String[] origin;
 
-    }
+  }
 
 }
 

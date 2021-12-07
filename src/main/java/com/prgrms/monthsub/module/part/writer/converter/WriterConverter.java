@@ -8,18 +8,18 @@ import org.springframework.stereotype.Component;
 @Component
 public class WriterConverter {
 
-    private final UserConverter userConverter;
+  private final UserConverter userConverter;
 
-    public WriterConverter(UserConverter userConverter) {
-        this.userConverter = userConverter;
-    }
+  public WriterConverter(UserConverter userConverter) {
+    this.userConverter = userConverter;
+  }
 
-    public SeriesOneWithWriterResponse writerToSeriesOneWithWriterResponse(Writer writer) {
-        return new SeriesOneWithWriterResponse(
-            writer.getId(),
-            writer.getFollowCount(),
-            userConverter.userToSeriesOneWithUserResponse(writer.getUser())
-        );
-    }
+  public SeriesOneWithWriterResponse writerToSeriesOneWithWriterResponse(Writer writer) {
+    return new SeriesOneWithWriterResponse(
+      writer.getId(),
+      writer.getFollowCount(),
+      this.userConverter.userToSeriesOneWithUserResponse(writer.getUser())
+    );
+  }
 
 }

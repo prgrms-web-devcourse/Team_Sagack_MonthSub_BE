@@ -26,37 +26,37 @@ import lombok.NoArgsConstructor;
 @Table(name = "series_likes")
 public class SeriesLikes extends BaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", columnDefinition = "BIGINT")
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "id", columnDefinition = "BIGINT")
+  private Long id;
 
-    @Column(name = "user_id", columnDefinition = "BIGINT", nullable = false)
-    private Long userId;
+  @Column(name = "user_id", columnDefinition = "BIGINT", nullable = false)
+  private Long userId;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "series_id", referencedColumnName = "id")
-    private Series series;
+  @OneToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "series_id", referencedColumnName = "id")
+  private Series series;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "likes_status", columnDefinition = "VARCHAR(50)")
-    private LikesStatus likesStatus;
+  @Enumerated(EnumType.STRING)
+  @Column(name = "likes_status", columnDefinition = "VARCHAR(50)")
+  private LikesStatus likesStatus;
 
-    public LikesStatus changeLikeStatus() {
-        this.likesStatus =
-            this.likesStatus.equals(LikesStatus.Like) ? LikesStatus.Nothing : LikesStatus.Like;
-        return this.likesStatus;
+  public LikesStatus changeLikeStatus() {
+    this.likesStatus =
+      this.likesStatus.equals(LikesStatus.Like) ? LikesStatus.Nothing : LikesStatus.Like;
+    return this.likesStatus;
+  }
+
+  public enum LikesStatus {
+
+    Like,
+    Nothing;
+
+    public static LikesStatus of(String likesStatus) {
+      return LikesStatus.valueOf(likesStatus.toUpperCase());
     }
 
-    public enum LikesStatus {
-
-        Like,
-        Nothing;
-
-        public static LikesStatus of(String likesStatus) {
-            return LikesStatus.valueOf(likesStatus.toUpperCase());
-        }
-
-    }
+  }
 
 }

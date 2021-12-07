@@ -5,20 +5,23 @@ import javax.validation.constraints.NotBlank;
 
 public class ArticlePost {
 
-    @Schema(name = "ArticlePost.Request")
-    public record Request(
-        @NotBlank
-        String title,
+  @Schema(name = "ArticlePost.Request")
+  public record Request(
+    @NotBlank
+    Long seriesId,
 
-        @NotBlank
-        String contents
-    ) {
-    }
+    @NotBlank
+    String title,
 
-    @Schema(name = "ArticlePost.Response")
-    public record Response(
-        Long id
-    ) {
-    }
+    @NotBlank
+    String contents
+  ) {
+  }
+
+  @Schema(name = "ArticlePost.Response")
+  public record Response(
+    Long id
+  ) {
+  }
 
 }

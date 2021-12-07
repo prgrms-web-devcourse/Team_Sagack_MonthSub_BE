@@ -1,7 +1,6 @@
 package com.prgrms.monthsub.module.series.series.app;
 
 import com.prgrms.monthsub.common.utils.S3Uploader;
-import com.prgrms.monthsub.config.AWS;
 import com.prgrms.monthsub.config.S3.Bucket;
 import com.prgrms.monthsub.module.part.user.app.inferface.WriterProvider;
 import com.prgrms.monthsub.module.part.writer.app.WriterService;
@@ -27,103 +26,125 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 @Transactional(readOnly = true)
 public class SeriesService {
+  private final SeriesRepository seriesRepository;
+  private final ArticleService articleService;
+  private final WriterProvider writerProvider;
+  private final S3Uploader s3Uploader;
+  private final SeriesConverter seriesConverter;
 
-    private final SeriesRepository seriesRepository;
+  public SeriesService(
+    SeriesRepository seriesRepository,
+    ArticleService articleService,
+    WriterService writerProvider,
+    SeriesConverter seriesConverter,
+    S3Uploader s3Uploader
+  ) {
+    this.seriesRepository = seriesRepository;
+    this.articleService = articleService;
+    this.writerProvider = writerProvider;
+    this.seriesConverter = seriesConverter;
+    this.s3Uploader = s3Uploader;
+  }
 
-    private final ArticleService articleService;
+  public Series getById(Long id) {
+    return this.seriesRepository
+      .findById(id)
+      .orElseThrow(() -> new SeriesNotFound("id=" + id));
+  }
 
-    private final WriterProvider writerProvider;
+  @Transactional
+  public SeriesSubscribePost.Response createSeries(
+    Long userId,
+    MultipartFile thumbnail,
+    SeriesSubscribePost.Request request
+  ) throws IOException {
+    String imageUrl = this.uploadThumbnailImage(thumbnail, userId);
+    Writer writer = this.writerProvider.findByUserId(userId);
+    Series entity = this.seriesConverter.SeriesSubscribePostResponseToEntity(
+      writer,
+      imageUrl,
+      request
+    );
 
-    private final S3Uploader s3Uploader;
+    return new SeriesSubscribePost.Response(this.seriesRepository.save(entity)
+      .getId());
+  }
 
-    private final SeriesConverter seriesConverter;
+  public SeriesSubscribeOne.Response getSeriesBySeriesId(Long seriesId) {
+    List<Article> articleList = this.articleService.getArticleListBySeriesId(seriesId);
+    Series series = getById(seriesId);
 
-    public SeriesService(SeriesRepository seriesRepository, ArticleService articleService,
-        WriterService writerProvider,
-        SeriesConverter seriesConverter,
-        S3Uploader s3Uploader, AWS aws) {
-        this.seriesRepository = seriesRepository;
-        this.articleService = articleService;
-        this.writerProvider = writerProvider;
-        this.seriesConverter = seriesConverter;
-        this.s3Uploader = s3Uploader;
-    }
+    return this.seriesConverter.seriesToSeriesOneResponse(series, articleList);
+  }
 
-    public Series getSeriesById(Long id) {
-        return seriesRepository
-            .findById(id)
-            .orElseThrow(() -> new SeriesNotFound("id=" + id));
-    }
+  public List<SeriesSubscribeList.Response> getSeriesList() {
+    List<Series> seriesList = this.seriesRepository.findSeriesList();
 
-    @Transactional
-    public SeriesSubscribePost.Response createSeries(Long userId, MultipartFile thumbnail,
-        SeriesSubscribePost.Request request) throws IOException {
-        String imageUrl = this.uploadThumbnailImage(thumbnail, userId);
-        Writer writer = writerProvider.findByUserId(userId);
-        Series entity = seriesConverter.SeriesSubscribePostResponseToEntity(
-            writer, imageUrl, request);
-        return new SeriesSubscribePost.Response(seriesRepository.save(entity).getId());
-    }
+    return seriesList.stream()
+      .map(this.seriesConverter::seriesListToResponse)
+      .collect(Collectors.toList());
+  }
 
-    public SeriesSubscribeOne.Response getSeriesBySeriesId(Long seriesId) {
-        List<Article> articleList = articleService.getArticleListBySeriesId(seriesId);
-        Series series = getSeriesById(seriesId);
-        return seriesConverter.seriesToSeriesOneResponse(series, articleList);
-    }
+  public List<SeriesSubscribeList.Response> getSeriesListOrderBySort(SortType sort) {
+    List<Series> seriesList;
 
-    public List<SeriesSubscribeList.Response> getSeriesList() {
-        List<Series> seriesList = seriesRepository.findSeriesList();
-        return seriesList.stream().map(seriesConverter::seriesListToResponse)
-            .collect(Collectors.toList());
-    }
+    seriesList = switch (sort) {
+      case RECENT -> this.seriesRepository.findSeriesListOrderByCreatedAt();
+      case POPULAR -> this.seriesRepository.findSeriesListOrderByLike();
+    };
 
-    public List<SeriesSubscribeList.Response> getSeriesListOrderBySort(SortType sort) {
-        List<Series> seriesList;
+    return seriesList.stream()
+      .map(this.seriesConverter::seriesListToResponse)
+      .collect(Collectors.toList());
+  }
 
-        seriesList = switch (sort) {
-            case RECENT -> seriesRepository.findSeriesListOrderByCreatedAt();
-            case POPULAR -> seriesRepository.findSeriesListOrderByLike();
-        };
+  @Transactional
+  public SeriesSubscribeEdit.Response editSeries(
+    Long seriesId,
+    Long userId,
+    MultipartFile thumbnail,
+    SeriesSubscribeEdit.Request request
+  ) throws IOException {
+    String imageUrl = this.uploadThumbnailImage(thumbnail, userId);
+    Series series = this.getById(seriesId);
 
-        return seriesList.stream().map(seriesConverter::seriesListToResponse)
-            .collect(Collectors.toList());
-    }
+    series.editSeries(imageUrl, request);
 
-    @Transactional
-    public SeriesSubscribeEdit.Response editSeries(Long seriesId, Long userId,
-        MultipartFile thumbnail,
-        SeriesSubscribeEdit.Request request) throws IOException {
-        String imageUrl = this.uploadThumbnailImage(thumbnail, userId);
+    return new SeriesSubscribeEdit.Response(this.seriesRepository.save(series)
+      .getId());
+  }
 
-        Series series = this.getSeriesById(seriesId);
+  public SeriesSubscribeOne.ResponseUsageEdit getSeriesUsageEdit(Long seriesId) {
+    Series series = this.getById(seriesId);
 
-        series.editSeries(imageUrl, request);
+    return this.seriesConverter.seriesToResponseUsageEdit(series);
+  }
 
-        return new SeriesSubscribeEdit.Response(seriesRepository.save(series).getId());
-    }
+  public String uploadThumbnailImage(
+    MultipartFile image,
+    Long id
+  ) throws IOException {
+    String key = Series.class.getSimpleName()
+      .toLowerCase()
+      + "/" + id.toString()
+      + "/thumbnail/"
+      + UUID.randomUUID() +
+      this.s3Uploader.getExtension(image);
 
-    public SeriesSubscribeOne.ResponseUsageEdit getSeriesUsageEdit(Long seriesId) {
-        Series series = this.getSeriesById(seriesId);
+    return this.s3Uploader.upload(Bucket.IMAGE, image, key, S3Uploader.imageExtensions);
+  }
 
-        return this.seriesConverter.seriesToResponseUsageEdit(series);
-    }
+  public String updateThumbnailImage(
+    MultipartFile image,
+    Long id
+  ) throws IOException {
+    Series series = this.seriesRepository.getById(id);
+    String thumbnailKey = this.uploadThumbnailImage(image, series.getId());
+    series.changeThumbnailKey(thumbnailKey);
 
-    public String uploadThumbnailImage(MultipartFile image, Long id) throws IOException {
-        String key = Series.class.getSimpleName().toLowerCase()
-            + "/" + id.toString()
-            + "/thumbnail/"
-            + UUID.randomUUID() +
-            s3Uploader.getExtension(image);
-
-        return s3Uploader.upload(Bucket.IMAGE, image, key);
-    }
-
-    public String updateThumbnailImage(MultipartFile image, Long id) throws IOException {
-        Series series = this.seriesRepository.getById(id);
-
-        String thumbnailKey = this.uploadThumbnailImage(image, series.getId());
-        // series changeThumbnailKey() 가 필요 합니다.
-        return this.seriesRepository.save(series).getThumbnailKey();
-    }
+    return this.seriesRepository
+      .save(series)
+      .getThumbnailKey();
+  }
 
 }

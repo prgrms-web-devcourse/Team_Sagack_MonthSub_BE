@@ -32,106 +32,113 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/series")
 @Tag(name = "Series")
 public class SeriesController {
+  private final SeriesService seriesService;
+  private final SeriesLikesService seriesLikesService;
 
-    private final SeriesService seriesService;
+  public SeriesController(
+    SeriesService seriesService,
+    SeriesLikesService seriesLikesService
+  ) {
+    this.seriesService = seriesService;
+    this.seriesLikesService = seriesLikesService;
+  }
 
-    private final SeriesLikesService seriesLikesService;
+  @GetMapping
+  @Operation(summary = "시리즈 공고 게시글 리스트 조회")
+  @Tag(name = "[화면]-시리즈")
+  public ApiResponse<List<SeriesSubscribeList.Response>> getSeriesList() {
+    return ApiResponse.ok(HttpMethod.GET, this.seriesService.getSeriesList());
+  }
 
-    public SeriesController(SeriesService seriesService,
-        SeriesLikesService seriesLikesService) {
-        this.seriesService = seriesService;
-        this.seriesLikesService = seriesLikesService;
-    }
+  @PostMapping(consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+  @Operation(summary = "시리즈 공고 게시글 작성")
+  @Tag(name = "[화면]-시리즈")
+  public ApiResponse<SeriesSubscribePost.Response> postSeries(
+    @AuthenticationPrincipal JwtAuthentication authentication,
+    @RequestPart MultipartFile thumbnail,
+    @Valid @RequestPart SeriesSubscribePost.Request request
+  ) throws IOException {
+    return ApiResponse.ok(
+      HttpMethod.POST,
+      this.seriesService.createSeries(authentication.userId, thumbnail, request)
+    );
+  }
 
-    @GetMapping
-    @Operation(summary = "시리즈 공고 게시글 리스트 조회")
-    @Tag(name = "[화면]-시리즈")
-    public ApiResponse<List<SeriesSubscribeList.Response>> getSeriesList() {
-        return ApiResponse.ok(HttpMethod.GET, seriesService.getSeriesList());
-    }
+  @GetMapping("/{id}")
+  @Operation(summary = "시리즈 공고 게시글 단건 조회")
+  @Tag(name = "[화면]-시리즈")
+  public ApiResponse<SeriesSubscribeOne.Response> getSeriesById(
+    @PathVariable Long id
+  ) {
+    return ApiResponse.ok(HttpMethod.GET, this.seriesService.getSeriesBySeriesId(id));
+  }
 
-    @PostMapping(consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
-    @Operation(summary = "시리즈 공고 게시글 작성")
-    @Tag(name = "[화면]-시리즈")
-    public ApiResponse<SeriesSubscribePost.Response> postSeries(
-        @AuthenticationPrincipal JwtAuthentication authentication,
-        @RequestPart MultipartFile thumbnail,
-        @Valid @RequestPart SeriesSubscribePost.Request request) throws IOException {
-        return ApiResponse.ok(
-            HttpMethod.POST, seriesService.createSeries(authentication.userId, thumbnail, request));
-    }
+  @PostMapping("/{id}/likes")
+  @Operation(summary = "시리즈 공고 좋아요 클릭 이벤트")
+  @Tag(name = "[화면]-시리즈")
+  public ApiResponse<SeriesLikesEvent.Response> likeSeries(
+    @AuthenticationPrincipal JwtAuthentication authentication,
+    @PathVariable Long id
+  ) {
+    return ApiResponse.ok(
+      HttpMethod.POST, this.seriesLikesService.likesEvent(authentication.userId, id));
+  }
 
-    @GetMapping("/{id}")
-    @Operation(summary = "시리즈 공고 게시글 단건 조회")
-    @Tag(name = "[화면]-시리즈")
-    public ApiResponse<SeriesSubscribeOne.Response> getSeriesById(
-        @PathVariable Long id) {
-        return ApiResponse.ok(HttpMethod.GET, seriesService.getSeriesBySeriesId(id));
-    }
+  @DeleteMapping("/{id}/likes")
+  @Operation(summary = "시리즈 공고 좋아요 취소 클릭 이벤트")
+  @Tag(name = "[화면]-시리즈")
+  public ApiResponse<SeriesLikesEvent.Response> cancelSeriesLike(
+    @AuthenticationPrincipal JwtAuthentication authentication,
+    @PathVariable Long id
+  ) {
+    return ApiResponse.ok(
+      HttpMethod.POST, this.seriesLikesService.cancelSeriesLike(authentication.userId, id));
+  }
 
-    @PostMapping("/{id}/likes")
-    @Operation(summary = "시리즈 공고 좋아요 클릭 이벤트")
-    @Tag(name = "[화면]-시리즈")
-    public ApiResponse<SeriesLikesEvent.Response> likeSeries(
-        @AuthenticationPrincipal JwtAuthentication authentication,
-        @PathVariable Long id
-    ) {
-        return ApiResponse.ok(
-            HttpMethod.POST, seriesLikesService.likesEvent(authentication.userId, id));
-    }
+  @GetMapping("/edit/{id}")
+  @Operation(summary = "수정 요청시 시리즈 공고 단건 조회")
+  @Tag(name = "[화면]-시리즈")
+  public ApiResponse<SeriesSubscribeOne.ResponseUsageEdit> getSeriesByIdUsageEdit(
+    @AuthenticationPrincipal JwtAuthentication authentication,
+    @PathVariable Long id
+  ) {
+    return ApiResponse.ok(HttpMethod.GET, this.seriesService.getSeriesUsageEdit(id));
+  }
 
-    @DeleteMapping("/{id}/likes")
-    @Operation(summary = "시리즈 공고 좋아요 취소 클릭 이벤트")
-    @Tag(name = "[화면]-시리즈")
-    public ApiResponse<SeriesLikesEvent.Response> cancelSeriesLike(
-        @AuthenticationPrincipal JwtAuthentication authentication,
-        @PathVariable Long id
-    ) {
-        return ApiResponse.ok(
-            HttpMethod.POST, seriesLikesService.cancelSeriesLike(authentication.userId, id));
-    }
+  @PutMapping(path = "/edit/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+  @Operation(summary = "시리즈 공고 게시글 수정")
+  @Tag(name = "[화면]-시리즈")
+  public ApiResponse<SeriesSubscribeEdit.Response> editSeries(
+    @AuthenticationPrincipal JwtAuthentication authentication,
+    @PathVariable Long id,
+    @RequestPart MultipartFile thumbnail,
+    @Valid @RequestPart SeriesSubscribeEdit.Request request
+  ) throws IOException {
+    return ApiResponse.ok(
+      HttpMethod.PUT,
+      this.seriesService.editSeries(id, authentication.userId, thumbnail, request)
+    );
+  }
 
-    @GetMapping("/edit/{id}")
-    @Operation(summary = "수정 요청시 시리즈 공고 단건 조회")
-    @Tag(name = "[화면]-시리즈")
-    public ApiResponse<SeriesSubscribeOne.ResponseUsageEdit> getSeriesByIdUsageEdit(
-        @AuthenticationPrincipal JwtAuthentication authentication,
-        @PathVariable Long id
-    ) {
-        return ApiResponse.ok(HttpMethod.GET, seriesService.getSeriesUsageEdit(id));
-    }
+  @PatchMapping(path = "/{id}/thumbnail", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+  @Operation(summary = "시리즈 썸네일 이미지 업데이트")
+  @Tag(name = "[사진 업로드]")
+  public ApiResponse<String> registerImage(
+    @AuthenticationPrincipal JwtAuthentication authentication,
+    @PathVariable String id,
+    @RequestPart MultipartFile image
+  ) throws IOException {
+    return ApiResponse.ok(
+      HttpMethod.POST, this.seriesService.uploadThumbnailImage(image, authentication.userId));
+  }
 
-    @PutMapping(path = "/edit/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @Operation(summary = "시리즈 공고 게시글 수정")
-    @Tag(name = "[화면]-시리즈")
-    public ApiResponse<SeriesSubscribeEdit.Response> editSeries(
-        @AuthenticationPrincipal JwtAuthentication authentication,
-        @PathVariable Long id,
-        @RequestPart MultipartFile thumbnail,
-        @Valid @RequestPart SeriesSubscribeEdit.Request request) throws IOException {
-        return ApiResponse.ok(
-            HttpMethod.PUT,
-            seriesService.editSeries(id, authentication.userId, thumbnail, request)
-        );
-    }
-
-    @PatchMapping(path = "/{id}/thumbnail", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
-    @Operation(summary = "시리즈 썸네일 이미지 업데이트")
-    @Tag(name = "[사진 업로드]")
-    public ApiResponse<String> registerImage(
-        @AuthenticationPrincipal JwtAuthentication authentication,
-        @PathVariable String id,
-        @RequestPart MultipartFile image) throws IOException {
-        return ApiResponse.ok(
-            HttpMethod.POST, seriesService.uploadThumbnailImage(image, authentication.userId));
-    }
-
-    @GetMapping("/sort")
-    @Operation(summary = "인기순/최신순 시리즈 리스트 조회")
-    @Tag(name = "[화면]-시리즈")
-    public ApiResponse<List<SeriesSubscribeList.Response>> getSeriesListOrderBySort(
-        @RequestParam(value = "sort", required = true) SortType sort) {
-        return ApiResponse.ok(HttpMethod.GET, seriesService.getSeriesListOrderBySort(sort));
-    }
+  @GetMapping("/sort")
+  @Operation(summary = "인기순/최신순 시리즈 리스트 조회")
+  @Tag(name = "[화면]-시리즈")
+  public ApiResponse<List<SeriesSubscribeList.Response>> getSeriesListOrderBySort(
+    @RequestParam(value = "sort", required = true) SortType sort
+  ) {
+    return ApiResponse.ok(HttpMethod.GET, this.seriesService.getSeriesListOrderBySort(sort));
+  }
 
 }

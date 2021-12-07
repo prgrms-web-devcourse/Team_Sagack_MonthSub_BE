@@ -5,31 +5,31 @@ import javax.validation.constraints.NotBlank;
 
 public class SeriesSubscribeEdit {
 
-    @Schema(name = "SeriesSubscribeEdit.Request")
-    public record Request(
+  @Schema(name = "SeriesSubscribeEdit.Request")
+  public record Request(
 
-        Long writerId,
+    Long writerId,
 
-        @NotBlank(message = "제목이 비어있습니다.")
-        String title,
+    @NotBlank(message = "제목이 비어있습니다.")
+    String title,
 
-        @NotBlank(message = "시리즈 소개문장이 비어있습니다.")
-        String introduceSentence,
+    @NotBlank(message = "시리즈 소개문장이 비어있습니다.")
+    String introduceSentence,
 
-        @NotBlank(message = "시리즈 글이 비어있습니다.")
-        String introduceText,
+    @NotBlank(message = "시리즈 글이 비어있습니다.")
+    String introduceText,
 
-        String[] uploadDate,
+    String[] uploadDate,
 
-        @NotBlank(message = "업로드 시간이 비어있습니다.")
-        String uploadTime
-    ) {
-    }
+    @NotBlank(message = "업로드 시간이 비어있습니다.")
+    String uploadTime
+  ) {
+  }
 
-    @Schema(name = "SeriesSubscribeEdit.Response")
-    public record Response(
-        Long seriesId
-    ) {
-    }
+  @Schema(name = "SeriesSubscribeEdit.Response")
+  public record Response(
+    Long seriesId
+  ) {
+  }
 
 }

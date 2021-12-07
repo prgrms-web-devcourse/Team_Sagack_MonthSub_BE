@@ -10,19 +10,19 @@ import org.springframework.stereotype.Component;
 @Setter
 @ConfigurationProperties(prefix = "cloud.aws.s3")
 public class S3 {
-    private String imageBucket;
-    private String videoBucket;
-    private String domain;
+  private String imageBucket;
+  private String videoBucket;
+  private String domain;
 
-    public enum Bucket {
-        IMAGE, VIDEO;
-    }
+  public enum Bucket {
+    IMAGE, VIDEO;
+  }
 
-    public String getBucket(Bucket bucket) {
-        return switch (bucket) {
-            case IMAGE -> this.imageBucket;
-            case VIDEO -> this.videoBucket;
-        };
-    }
+  public String getBucket(Bucket bucket) {
+    return switch (bucket) {
+      case IMAGE -> this.imageBucket;
+      case VIDEO -> this.videoBucket;
+    };
+  }
 }
 

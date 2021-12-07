@@ -25,89 +25,96 @@ import org.springframework.web.multipart.MultipartException;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    private final Logger log = LoggerFactory.getLogger(getClass());
+  private final Logger log = LoggerFactory.getLogger(getClass());
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    protected ApiResponse<ErrorResponse> handleMethodArgumentNotValidException(
-        MethodArgumentNotValidException e) {
-        log.error("handleMethodArgumentNotValidException", e);
-        final ErrorResponse response = ErrorResponse.of(
-            ErrorCodes.INVALID_INPUT_VALUE(), e.getBindingResult());
-        return ApiResponse.fail(HttpStatus.BAD_REQUEST.value(), response.getCode(), response);
-    }
+  @ExceptionHandler(MethodArgumentNotValidException.class)
+  protected ApiResponse<ErrorResponse> handleMethodArgumentNotValidException(
+    MethodArgumentNotValidException e
+  ) {
+    log.error("handleMethodArgumentNotValidException", e);
+    final ErrorResponse response = ErrorResponse.of(
+      ErrorCodes.INVALID_INPUT_VALUE(), e.getBindingResult());
+    return ApiResponse.fail(HttpStatus.BAD_REQUEST.value(), response.getCode(), response);
+  }
 
-    @ExceptionHandler(BindException.class)
-    protected ApiResponse<ErrorResponse> handleBindException(BindException e) {
-        log.error("handleBindException", e);
-        final ErrorResponse response = ErrorResponse.of(
-            ErrorCodes.INVALID_INPUT_VALUE(), e.getBindingResult());
-        return ApiResponse.fail(HttpStatus.BAD_REQUEST.value(), response.getCode(), response);
-    }
+  @ExceptionHandler(BindException.class)
+  protected ApiResponse<ErrorResponse> handleBindException(BindException e) {
+    log.error("handleBindException", e);
+    final ErrorResponse response = ErrorResponse.of(
+      ErrorCodes.INVALID_INPUT_VALUE(), e.getBindingResult());
+    return ApiResponse.fail(HttpStatus.BAD_REQUEST.value(), response.getCode(), response);
+  }
 
-    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    protected ApiResponse<ErrorResponse> handleMethodArgumentTypeMismatchException(
-        MethodArgumentTypeMismatchException e) {
-        log.error("handleMethodArgumentTypeMismatchException", e);
-        final ErrorResponse response = ErrorResponse.of(e);
-        return ApiResponse.fail(HttpStatus.BAD_REQUEST.value(), response.getCode(), response);
-    }
+  @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+  protected ApiResponse<ErrorResponse> handleMethodArgumentTypeMismatchException(
+    MethodArgumentTypeMismatchException e
+  ) {
+    log.error("handleMethodArgumentTypeMismatchException", e);
+    final ErrorResponse response = ErrorResponse.of(e);
+    return ApiResponse.fail(HttpStatus.BAD_REQUEST.value(), response.getCode(), response);
+  }
 
-    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    protected ApiResponse<ErrorResponse> handleHttpRequestMethodNotSupportedException(
-        HttpRequestMethodNotSupportedException e) {
-        log.error("handleHttpRequestMethodNotSupportedException", e);
-        final ErrorResponse response = ErrorResponse.of(ErrorCodes.METHOD_NOT_ALLOWED());
-        return ApiResponse.fail(
-            HttpStatus.METHOD_NOT_ALLOWED.value(), response.getCode(), response);
-    }
+  @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+  protected ApiResponse<ErrorResponse> handleHttpRequestMethodNotSupportedException(
+    HttpRequestMethodNotSupportedException e
+  ) {
+    log.error("handleHttpRequestMethodNotSupportedException", e);
+    final ErrorResponse response = ErrorResponse.of(ErrorCodes.METHOD_NOT_ALLOWED());
+    return ApiResponse.fail(
+      HttpStatus.METHOD_NOT_ALLOWED.value(), response.getCode(), response);
+  }
 
-    @ExceptionHandler(AccessDeniedException.class)
-    protected ApiResponse<ErrorResponse> handleAccessDeniedException(AccessDeniedException e) {
-        log.error("handleAccessDeniedException", e);
-        final ErrorResponse response = ErrorResponse.of(ErrorCodes.HANDLE_ACCESS_DENIED());
-        return ApiResponse.fail(ErrorCode.HANDLE_ACCESS_DENIED.getStatus().value(),
-            response.getCode(), response
-        );
-    }
+  @ExceptionHandler(AccessDeniedException.class)
+  protected ApiResponse<ErrorResponse> handleAccessDeniedException(AccessDeniedException e) {
+    log.error("handleAccessDeniedException", e);
+    final ErrorResponse response = ErrorResponse.of(ErrorCodes.HANDLE_ACCESS_DENIED());
+    return ApiResponse.fail(ErrorCode.HANDLE_ACCESS_DENIED.getStatus()
+        .value(),
+      response.getCode(), response
+    );
+  }
 
-    @ExceptionHandler({
-        IllegalStateException.class,
-        IllegalArgumentException.class,
-        TypeMismatchDataAccessException.class,
-        HttpMessageNotReadableException.class,
-        MissingServletRequestParameterException.class,
-        MultipartException.class
-    })
-    protected ApiResponse<ErrorResponse> handleBadRequestException(InvalidInputException e) {
-        log.error("handleBadRequestException", e);
-        final ErrorResponse response = ErrorResponse.of(ErrorCodes.INVALID_INPUT_VALUE());
-        return ApiResponse.fail(HttpStatus.BAD_REQUEST.value(), response.getCode(), response);
-    }
+  @ExceptionHandler({
+    IllegalStateException.class,
+    IllegalArgumentException.class,
+    TypeMismatchDataAccessException.class,
+    HttpMessageNotReadableException.class,
+    MissingServletRequestParameterException.class,
+    MultipartException.class
+  })
+  protected ApiResponse<ErrorResponse> handleBadRequestException(InvalidInputException e) {
+    log.error("handleBadRequestException", e);
+    final ErrorResponse response = ErrorResponse.of(ErrorCodes.INVALID_INPUT_VALUE());
+    return ApiResponse.fail(HttpStatus.BAD_REQUEST.value(), response.getCode(), response);
+  }
 
-    @ExceptionHandler(BusinessException.class)
-    protected ApiResponse<ErrorResponse> handleBusinessException(final BusinessException e) {
-        log.error("handleBusinessException", e);
-        final ErrorCodes errorCode = e.getErrorCode();
-        final ErrorResponse response = ErrorResponse.of(errorCode, e.getClass());
-        return ApiResponse.fail(
-            errorCode.errorCode().getStatus().value(), response.getCode(), response);
-    }
+  @ExceptionHandler(BusinessException.class)
+  protected ApiResponse<ErrorResponse> handleBusinessException(final BusinessException e) {
+    log.error("handleBusinessException", e);
+    final ErrorCodes errorCode = e.getErrorCode();
+    final ErrorResponse response = ErrorResponse.of(errorCode, e.getClass());
+    return ApiResponse.fail(
+      errorCode.errorCode()
+        .getStatus()
+        .value(), response.getCode(), response);
+  }
 
-    @ExceptionHandler(Exception.class)
-    protected ApiResponse<ErrorResponse> handleException(Exception e) {
-        log.error("handleException", e);
-        final ErrorResponse response = ErrorResponse.of(ErrorCodes.INTERNAL_SERVER_ERROR());
-        return ApiResponse.fail(
-            HttpStatus.INTERNAL_SERVER_ERROR.value(), response.getCode(), response);
-    }
+  @ExceptionHandler(Exception.class)
+  protected ApiResponse<ErrorResponse> handleException(Exception e) {
+    log.error("handleException", e);
+    final ErrorResponse response = ErrorResponse.of(ErrorCodes.INTERNAL_SERVER_ERROR());
+    return ApiResponse.fail(
+      HttpStatus.INTERNAL_SERVER_ERROR.value(), response.getCode(), response);
+  }
 
-    @ExceptionHandler(BadCredentialsException.class)
-    protected ApiResponse<ErrorResponse> handleBadCredentialsException(BadCredentialsException e) {
-        log.error("BadCredentialsException", e);
-        final ErrorResponse response = ErrorResponse.of(ErrorCodes.INVALID_CREDENTIALS_VALUE());
-        return ApiResponse.fail(ErrorCode.INVALID_CREDENTIALS_VALUE.getStatus().value(),
-            response.getCode(), response
-        );
-    }
+  @ExceptionHandler(BadCredentialsException.class)
+  protected ApiResponse<ErrorResponse> handleBadCredentialsException(BadCredentialsException e) {
+    log.error("BadCredentialsException", e);
+    final ErrorResponse response = ErrorResponse.of(ErrorCodes.INVALID_CREDENTIALS_VALUE());
+    return ApiResponse.fail(ErrorCode.INVALID_CREDENTIALS_VALUE.getStatus()
+        .value(),
+      response.getCode(), response
+    );
+  }
 
 }

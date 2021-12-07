@@ -11,26 +11,26 @@ import java.util.List;
 
 public class SeriesSubscribeOne {
 
-    @Schema(name = "SeriesSubscribeOne.Response")
-    public record Response(
-        SeriesObject series,
-        UploadObject upload,
-        SubscribeObject subscribe,
-        Category category,
-        WriterObject writer,
-        List<BriefArticleBySeriesIdResponse> articleList
-    ) {
+  @Schema(name = "SeriesSubscribeOne.Response")
+  public record Response(
+    SeriesObject series,
+    UploadObject upload,
+    SubscribeObject subscribe,
+    Category category,
+    WriterObject writer,
+    List<BriefArticleBySeriesIdResponse> articleList
+  ) {
 
-    }
+  }
 
-    @Schema(name = "SeriesSubscribeOne.ResponseUsageEdit")
-    public record ResponseUsageEdit(
-        SeriesObject series,
-        Category category,
-        UploadObject upload,
-        SubscribeObject subscribe
-    ) {
+  @Schema(name = "SeriesSubscribeOne.ResponseUsageEdit")
+  public record ResponseUsageEdit(
+    SeriesObject series,
+    Category category,
+    UploadObject upload,
+    SubscribeObject subscribe
+  ) {
 
-    }
+  }
 
 }
