@@ -9,6 +9,7 @@ import com.prgrms.monthsub.module.part.user.domain.exception.UserException.Email
 import com.prgrms.monthsub.module.part.user.domain.exception.UserException.NickNameDuplicated;
 import com.prgrms.monthsub.module.part.user.domain.exception.UserException.UserNotExist;
 import com.prgrms.monthsub.module.part.user.domain.exception.UserException.UserNotFound;
+import com.prgrms.monthsub.module.part.user.dto.UserEdit;
 import com.prgrms.monthsub.module.part.user.dto.UserSignUp;
 import java.io.IOException;
 import java.util.Optional;
@@ -57,8 +58,18 @@ public class UserService {
         checkEmail(request.email());
         checkNicName(request.nickName());
         User entity = userRepository.save(userConverter.UserSignUpRequestToEntity(request));
-        return new UserSignUp.Response(userRepository.save(entity).getId());
+        return new UserSignUp.Response(entity.getId());
     }
+
+    @Transactional
+    public UserEdit.Response edit(Long userId, UserEdit.Request request){
+        checkNicName(request.nickName());
+        User user = userRepository.findById(userId).orElseThrow(()->new UserNotExist("userId=" + userId));
+        user.editUser(request.nickName(), request.profileIntroduce());
+        return new UserEdit.Response(userRepository.save(user).getId());
+    }
+
+
 
     public String uploadProfileImage(MultipartFile image, Long userId)
         throws IOException {

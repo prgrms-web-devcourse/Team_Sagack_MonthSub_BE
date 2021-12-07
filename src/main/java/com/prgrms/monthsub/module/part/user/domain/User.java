@@ -86,4 +86,9 @@ public class User extends BaseEntity {
         this.part = part;
     }
 
+    public void editUser(String nickname, String profileIntroduce) {
+        this.nickname = nickname;
+        this.profileIntroduce = profileIntroduce;
+    }
+
 }
