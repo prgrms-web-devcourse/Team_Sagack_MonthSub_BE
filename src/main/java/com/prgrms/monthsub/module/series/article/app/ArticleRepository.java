@@ -11,6 +11,8 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
     @Query("select a from Article as a where a.series.id = :seriesId")
     List<Article> findAllArticleBySeriesId(@Param("seriesId") Long seriesId);
 
+    long countBySeriesId(Long seriesId);
+
 }
 
 

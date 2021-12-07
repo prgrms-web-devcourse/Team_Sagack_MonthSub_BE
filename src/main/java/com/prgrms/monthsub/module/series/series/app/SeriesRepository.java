@@ -9,9 +9,6 @@ import org.springframework.data.repository.query.Param;
 
 public interface SeriesRepository extends JpaRepository<Series, Long> {
 
-    @Query("select s from Series as s join fetch s.writer sw join fetch sw.user swu where s.id = :seriesId")
-    Optional<Series> findSeriesById(@Param("seriesId") Long seriesId);
-
     @Query("select s from Series as s join fetch s.writer sw join fetch sw.user swu")
     List<Series> findSeriesList();
 

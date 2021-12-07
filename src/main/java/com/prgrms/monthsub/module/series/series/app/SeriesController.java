@@ -21,8 +21,6 @@ import java.util.List;
 @Tag(name = "Series")
 public class SeriesController {
 
-    private static final String THUMBNAIL = "thumbnail";
-
     private final SeriesService seriesService;
 
     private final SeriesLikesService seriesLikesService;
