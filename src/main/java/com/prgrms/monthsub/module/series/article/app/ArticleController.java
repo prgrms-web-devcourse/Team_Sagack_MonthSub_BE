@@ -20,11 +20,14 @@ import org.springframework.web.multipart.MultipartFile;
 @Tag(name = "Article")
 public class ArticleController {
 
-    private final ArticleService articleService;
+    private final ArticleAssemble articleAssemble;
 
-    public ArticleController(ArticleService articleService) {this.articleService = articleService;}
+    public ArticleController(
+        ArticleAssemble articleAssemble) {this.articleAssemble = articleAssemble;}
 
-    @PostMapping(path = "/series/{seriesId}/article", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+    @PostMapping(path = "/series/{seriesId}/article", consumes = {
+        MediaType.MULTIPART_FORM_DATA_VALUE
+    })
     @Operation(summary = "아티클 작성")
     @Tag(name = "[화면]-아티클")
     public ApiResponse<ArticlePost.Response> postArticle(
@@ -34,7 +37,7 @@ public class ArticleController {
         @Valid @RequestPart ArticlePost.Request request) throws IOException {
         return ApiResponse.ok(
             HttpMethod.POST,
-            articleService.createArticle(seriesId, thumbnail, request)
+            articleAssemble.createArticle(seriesId, thumbnail, request)
         );
     }
 
