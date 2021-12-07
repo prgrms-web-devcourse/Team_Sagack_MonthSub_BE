@@ -62,13 +62,13 @@ public class UserService {
     }
 
     @Transactional
-    public UserEdit.Response edit(Long userId, UserEdit.Request request){
+    public UserEdit.Response edit(Long userId, UserEdit.Request request) {
         checkNicName(request.nickName());
-        User user = userRepository.findById(userId).orElseThrow(()->new UserNotExist("userId=" + userId));
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new UserNotExist("userId=" + userId));
         user.editUser(request.nickName(), request.profileIntroduce());
         return new UserEdit.Response(userRepository.save(user).getId());
     }
-
 
 
     public String uploadProfileImage(MultipartFile image, Long userId)

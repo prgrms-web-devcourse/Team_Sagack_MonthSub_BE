@@ -6,12 +6,12 @@ public class UserEdit {
 
     @Schema(name = "UserEdit.Request")
     public record Request(
-            String nickName,
-            String profileIntroduce
-    ){}
+        String nickName,
+        String profileIntroduce
+    ) {}
 
     @Schema(name = "UserEdit.Response")
     public record Response(
-            Long userId
+        Long userId
     ) {}
 }
