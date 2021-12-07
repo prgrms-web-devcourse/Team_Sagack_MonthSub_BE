@@ -9,17 +9,19 @@ import org.springframework.data.repository.query.Param;
 
 public interface SeriesRepository extends JpaRepository<Series, Long> {
 
-    @Query("select s from Series as s join fetch s.writer sw join fetch sw.user swu")
-    List<Series> findSeriesList();
+  @Query("select s from Series as s join fetch s.writer sw join fetch sw.user swu")
+  List<Series> findSeriesList();
 
-    @Query("select s from Series as s join fetch s.writer sw join fetch sw.user swu order by s.likes desc")
-    List<Series> findSeriesListOrderByLike();
+  @Query("select s from Series as s join fetch s.writer sw join fetch sw.user swu order by s.likes desc")
+  List<Series> findSeriesListOrderByLike();
 
-    @Query("select s from Series as s join fetch s.writer sw join fetch sw.user swu order by s.createdAt desc")
-    List<Series> findSeriesListOrderByCreatedAt();
+  @Query("select s from Series as s join fetch s.writer sw join fetch sw.user swu order by s.createdAt desc")
+  List<Series> findSeriesListOrderByCreatedAt();
 
-    @Query("select s from Series as s join fetch s.writer sw join fetch sw.user swu where s.id = :seriesId and sw.id = :writerId")
-    Optional<Series> findSeriesByIdAndWriterId(@Param("seriesId") Long seriesId,
-        @Param("writerId") Long writerId);
+  @Query("select s from Series as s join fetch s.writer sw join fetch sw.user swu where s.id = :seriesId and sw.id = :writerId")
+  Optional<Series> findSeriesByIdAndWriterId(
+    @Param("seriesId") Long seriesId,
+    @Param("writerId") Long writerId
+  );
 
 }

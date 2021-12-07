@@ -20,21 +20,22 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 @Table(name = "part")
 public class Part {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", columnDefinition = "BIGINT")
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "id", columnDefinition = "BIGINT")
+  private Long id;
 
-    @Column(name = "name")
-    private String name;
+  @Column(name = "name")
+  private String name;
 
-    @OneToMany(mappedBy = "part")
-    private List<PartPermission> permissions = new ArrayList<>();
+  @OneToMany(mappedBy = "part")
+  private List<PartPermission> permissions = new ArrayList<>();
 
-    public List<GrantedAuthority> getAuthorities() {
-        return permissions.stream()
-            .map(gp -> new SimpleGrantedAuthority(gp.getPermission().getName()))
-            .collect(toList());
-    }
+  public List<GrantedAuthority> getAuthorities() {
+    return permissions.stream()
+      .map(gp -> new SimpleGrantedAuthority(gp.getPermission()
+        .getName()))
+      .collect(toList());
+  }
 
 }

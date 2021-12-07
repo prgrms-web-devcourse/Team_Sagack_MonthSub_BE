@@ -34,102 +34,109 @@ import lombok.NoArgsConstructor;
 @Table(name = "series")
 public class Series extends BaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", columnDefinition = "BIGINT")
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "id", columnDefinition = "BIGINT")
+  private Long id;
 
-    @Column(name = "thumbnail_key", columnDefinition = "TEXT")
-    private String thumbnailKey;
+  @Column(name = "thumbnail_key", columnDefinition = "TEXT")
+  private String thumbnailKey;
 
-    @Column(name = "title", columnDefinition = "VARCHAR(300)", nullable = false)
-    private String title;
+  @Column(name = "title", columnDefinition = "VARCHAR(300)", nullable = false)
+  private String title;
 
-    @Column(name = "introduce_text", columnDefinition = "TEXT", nullable = false)
-    private String introduceText;
+  @Column(name = "introduce_text", columnDefinition = "TEXT", nullable = false)
+  private String introduceText;
 
-    @Column(name = "introduce_sentence", columnDefinition = "VARCHAR(300)", nullable = false)
-    private String introduceSentence;
+  @Column(name = "introduce_sentence", columnDefinition = "VARCHAR(300)", nullable = false)
+  private String introduceSentence;
 
-    @PositiveOrZero
-    @Column(name = "price", columnDefinition = "INT", nullable = false)
-    private int price;
+  @PositiveOrZero
+  @Column(name = "price", columnDefinition = "INT", nullable = false)
+  private int price;
 
-    @Column(name = "subscribe_start_date", updatable = false, nullable = false)
-    private LocalDate subscribeStartDate;
+  @Column(name = "subscribe_start_date", updatable = false, nullable = false)
+  private LocalDate subscribeStartDate;
 
-    @Column(name = "subscribe_end_date", updatable = false, nullable = false)
-    private LocalDate subscribeEndDate;
+  @Column(name = "subscribe_end_date", updatable = false, nullable = false)
+  private LocalDate subscribeEndDate;
 
-    @Column(name = "series_start_date", updatable = false, nullable = false)
-    private LocalDate seriesStartDate;
+  @Column(name = "series_start_date", updatable = false, nullable = false)
+  private LocalDate seriesStartDate;
 
-    @Column(name = "series_end_date", updatable = false, nullable = false)
-    private LocalDate seriesEndDate;
+  @Column(name = "series_end_date", updatable = false, nullable = false)
+  private LocalDate seriesEndDate;
 
-    @PositiveOrZero
-    @Column(name = "article_count", columnDefinition = "INT", nullable = false)
-    private int articleCount;
+  @PositiveOrZero
+  @Column(name = "article_count", columnDefinition = "INT", nullable = false)
+  private int articleCount;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "subscribe_status", columnDefinition = "VARCHAR(50)", nullable = false)
-    private SeriesStatus subscribeStatus;
+  @Enumerated(EnumType.STRING)
+  @Column(name = "subscribe_status", columnDefinition = "VARCHAR(50)", nullable = false)
+  private SeriesStatus subscribeStatus;
 
-    @PositiveOrZero
-    @Column(name = "likes", columnDefinition = "INT")
-    private int likes;
+  @PositiveOrZero
+  @Column(name = "likes", columnDefinition = "INT")
+  private int likes;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "category", columnDefinition = "VARCHAR(50)")
-    private Category category;
+  @Enumerated(EnumType.STRING)
+  @Column(name = "category", columnDefinition = "VARCHAR(50)")
+  private Category category;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "writer_id", referencedColumnName = "id")
-    private Writer writer;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "writer_id", referencedColumnName = "id")
+  private Writer writer;
 
-    @Column(name = "upload_date", columnDefinition = "VARCHAR(50)", nullable = false)
-    private String uploadDate;
+  @Column(name = "upload_date", columnDefinition = "VARCHAR(50)", nullable = false)
+  private String uploadDate;
 
-    @Column(name = "upload_time", nullable = false)
-    private LocalTime uploadTime;
+  @Column(name = "upload_time", nullable = false)
+  private LocalTime uploadTime;
 
-    public void editSeries(String thumbnail, SeriesSubscribeEdit.Request request) {
-        if (thumbnail != null) {
-            this.thumbnailKey = thumbnail;
-        }
-        this.title = request.title();
-        this.introduceSentence = request.introduceSentence();
-        this.introduceText = request.introduceText();
-        this.uploadDate = convertUploadDateListToUploadDateString(request.uploadDate());
-        this.uploadTime = LocalTime.parse(request.uploadTime());
+  public void editSeries(
+    String thumbnail,
+    SeriesSubscribeEdit.Request request
+  ) {
+    if (thumbnail != null) {
+      this.thumbnailKey = thumbnail;
     }
+    this.title = request.title();
+    this.introduceSentence = request.introduceSentence();
+    this.introduceText = request.introduceText();
+    this.uploadDate = convertUploadDateListToUploadDateString(request.uploadDate());
+    this.uploadTime = LocalTime.parse(request.uploadTime());
+  }
 
-    public void changeLikesCount(LikesStatus changeStatus) {
-        this.likes += changeStatus.equals(LikesStatus.Like) ? 1 : -1;
+  public void changeLikesCount(LikesStatus changeStatus) {
+    this.likes += changeStatus.equals(LikesStatus.Like) ? 1 : -1;
+  }
+
+  public void changeThumbnailKey(String thumbnailKey) {
+    this.thumbnailKey = thumbnailKey;
+  }
+
+  public enum Category {
+
+    POEM,
+    NOVEL,
+    INTERVIEW,
+    ESSAY,
+    CRITIQUE,
+    ETC;
+
+    public static Category of(String category) {
+      return Category.valueOf(category.toUpperCase());
     }
+  }
 
-    public enum Category {
+  public enum SeriesStatus {
 
-        POEM,
-        NOVEL,
-        INTERVIEW,
-        ESSAY,
-        CRITIQUE,
-        ETC;
+    SUBSCRIPTION_UNAVAILABLE,
+    SUBSCRIPTION_AVAILABLE;
 
-        public static Category of(String category) {
-            return Category.valueOf(category.toUpperCase());
-        }
+    public static SeriesStatus of(String seriesStatus) {
+      return SeriesStatus.valueOf(seriesStatus.toUpperCase());
     }
-
-    public enum SeriesStatus {
-
-        SUBSCRIPTION_UNAVAILABLE,
-        SUBSCRIPTION_AVAILABLE;
-
-        public static SeriesStatus of(String seriesStatus) {
-            return SeriesStatus.valueOf(seriesStatus.toUpperCase());
-        }
-    }
+  }
 
 }

@@ -23,49 +23,49 @@ import lombok.NoArgsConstructor;
 @Table(name = "expulsion")
 public class Expulsion {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", columnDefinition = "BIGINT")
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "id", columnDefinition = "BIGINT")
+  private Long id;
 
-    @Column(name = "user_id", columnDefinition = "BIGINT")
-    private Long userId;
+  @Column(name = "user_id", columnDefinition = "BIGINT")
+  private Long userId;
 
-    @Column(name = "image_key", columnDefinition = "TEXT", nullable = false)
-    private String imageKey;
+  @Column(name = "image_key", columnDefinition = "TEXT", nullable = false)
+  private String imageKey;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "expulsion_image_status", columnDefinition = "VARCHAR(50)", nullable = false)
-    private ExpulsionImageStatus expulsionImageStatus;
+  @Enumerated(EnumType.STRING)
+  @Column(name = "expulsion_image_status", columnDefinition = "VARCHAR(50)", nullable = false)
+  private ExpulsionImageStatus expulsionImageStatus;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "expulsion_image_name", columnDefinition = "VARCHAR(50)", nullable = false)
-    private ExpulsionImageName expulsionImageName;
+  @Enumerated(EnumType.STRING)
+  @Column(name = "expulsion_image_name", columnDefinition = "VARCHAR(50)", nullable = false)
+  private ExpulsionImageName expulsionImageName;
 
-    @Column(name = "hard_delete_date", columnDefinition = "TIMESTAMP", updatable = false)
-    private LocalDateTime hardDeleteDate;
+  @Column(name = "hard_delete_date", columnDefinition = "TIMESTAMP", updatable = false)
+  private LocalDateTime hardDeleteDate;
 
-    public enum ExpulsionImageName {
+  public enum ExpulsionImageName {
 
-        SERIES_THUMBNAIL,
-        ARTICLE_THUMBNAIL,
-        USER_PROFILE;
+    SERIES_THUMBNAIL,
+    ARTICLE_THUMBNAIL,
+    USER_PROFILE;
 
-        public static ExpulsionImageName of(String expulsionImageName) {
-            return ExpulsionImageName.valueOf(expulsionImageName.toUpperCase());
-        }
+    public static ExpulsionImageName of(String expulsionImageName) {
+      return ExpulsionImageName.valueOf(expulsionImageName.toUpperCase());
+    }
+  }
+
+  public enum ExpulsionImageStatus {
+
+    CREATED,
+    DELETED;
+
+    public static ExpulsionImageStatus of(String imageExpulsionStatus) {
+      return ExpulsionImageStatus.valueOf(imageExpulsionStatus.toUpperCase());
     }
 
-    public enum ExpulsionImageStatus {
-
-        CREATED,
-        DELETED;
-
-        public static ExpulsionImageStatus of(String imageExpulsionStatus) {
-            return ExpulsionImageStatus.valueOf(imageExpulsionStatus.toUpperCase());
-        }
-
-    }
+  }
 
 
 }

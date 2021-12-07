@@ -12,17 +12,17 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "cloud.aws")
 public class AWS {
 
-    private Credentials credentials;
+  private Credentials credentials;
 
-    @Value("${cloud.aws.region.static}")
-    private String region;
+  @Value("${cloud.aws.region.static}")
+  private String region;
 
-    @Getter
-    @Setter
-    public static class Credentials {
-        private String accessKey;
-        private String secretKey;
-    }
+  @Getter
+  @Setter
+  public static class Credentials {
+    private String accessKey;
+    private String secretKey;
+  }
 
 }
 

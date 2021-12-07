@@ -26,33 +26,33 @@ import lombok.NoArgsConstructor;
 @Table(name = "writer_likes")
 public class WriterLikes extends BaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", columnDefinition = "BIGINT")
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "id", columnDefinition = "BIGINT")
+  private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "writer_id", referencedColumnName = "id")
-    private Writer writer;
+  @OneToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "writer_id", referencedColumnName = "id")
+  private Writer writer;
 
-    @Column(name = "user_id", columnDefinition = "BIGINT", nullable = false)
-    private Long userId;
+  @Column(name = "user_id", columnDefinition = "BIGINT", nullable = false)
+  private Long userId;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "likes_status", columnDefinition = "VARCHAR(50)")
-    private LikesStatus likesStatus;
+  @Enumerated(EnumType.STRING)
+  @Column(name = "likes_status", columnDefinition = "VARCHAR(50)")
+  private LikesStatus likesStatus;
 
 
-    public enum LikesStatus {
+  public enum LikesStatus {
 
-        Like,
-        Nothing;
+    Like,
+    Nothing;
 
-        public static LikesStatus of(String likesStatus) {
-            return LikesStatus.valueOf(likesStatus.toUpperCase());
-        }
-
+    public static LikesStatus of(String likesStatus) {
+      return LikesStatus.valueOf(likesStatus.toUpperCase());
     }
+
+  }
 
 
 }

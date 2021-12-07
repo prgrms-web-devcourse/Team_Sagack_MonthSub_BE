@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class HealthController {
 
-    @GetMapping("/health")
-    @Operation(hidden = true)
-    public ApiResponse<String> getCheck() {
-        return ApiResponse.ok(HttpMethod.GET, "Ok");
-    }
+  @GetMapping("/health")
+  @Operation(hidden = true)
+  public ApiResponse<String> getCheck() {
+    return ApiResponse.ok(HttpMethod.GET, "Ok");
+  }
 
 }

@@ -4,12 +4,13 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ExpulsionService {
-    private final ExpulsionRepository expulsionRepository;
+  private final ExpulsionRepository expulsionRepository;
 
-    public ExpulsionService(
-        ExpulsionRepository expulsionRepository) {this.expulsionRepository = expulsionRepository;}
+  public ExpulsionService(
+    ExpulsionRepository expulsionRepository
+  ) {this.expulsionRepository = expulsionRepository;}
 
-    public Expulsion save(Expulsion expulsion){
-        return expulsionRepository.save(expulsion);
-    }
+  public Expulsion save(Expulsion expulsion) {
+    return expulsionRepository.save(expulsion);
+  }
 }

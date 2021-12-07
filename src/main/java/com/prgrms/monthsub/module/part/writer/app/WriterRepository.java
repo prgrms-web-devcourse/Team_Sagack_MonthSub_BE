@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface WriterRepository extends JpaRepository<Writer, Long> {
 
-    Optional<Writer> findByUserId(Long userId);
+  Optional<Writer> findByUserId(Long userId);
 
 }

@@ -6,13 +6,15 @@ import java.util.Arrays;
 
 public class PartException {
 
-    public static class PartNotFound extends BusinessException {
+  public static class PartNotFound extends BusinessException {
 
-        public PartNotFound(String... message) {
-            super(ErrorCodes.ENTITY_NOT_FOUND(Arrays.stream(message).toList().toString()));
-        }
-
+    public PartNotFound(String... message) {
+      super(ErrorCodes.ENTITY_NOT_FOUND(Arrays.stream(message)
+        .toList()
+        .toString()));
     }
+
+  }
 
 
 }

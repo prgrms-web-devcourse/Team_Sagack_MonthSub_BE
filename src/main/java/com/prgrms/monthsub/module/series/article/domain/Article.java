@@ -25,29 +25,29 @@ import lombok.NoArgsConstructor;
 @Table(name = "article")
 public class Article extends BaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", columnDefinition = "BIGINT")
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "id", columnDefinition = "BIGINT")
+  private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "series_id", referencedColumnName = "id")
-    private Series series;
+  @OneToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "series_id", referencedColumnName = "id")
+  private Series series;
 
-    @Column(name = "title", columnDefinition = "VARCHAR(300)", nullable = false)
-    private String title;
+  @Column(name = "title", columnDefinition = "VARCHAR(300)", nullable = false)
+  private String title;
 
-    @Column(name = "content", columnDefinition = "TEXT", nullable = false)
-    private String contents;
+  @Column(name = "content", columnDefinition = "TEXT", nullable = false)
+  private String contents;
 
-    @Column(name = "thumbnail_key", columnDefinition = "TEXT")
-    private String thumbnailKey;
+  @Column(name = "thumbnail_key", columnDefinition = "TEXT")
+  private String thumbnailKey;
 
-    @Column(name = "round", columnDefinition = "INT", nullable = false)
-    private Integer round;
+  @Column(name = "round", columnDefinition = "INT", nullable = false)
+  private int round;
 
-    public void changeThumbnailKey(String thumbnailKey) {
-        this.thumbnailKey = thumbnailKey;
-    }
+  public void changeThumbnailKey(String thumbnailKey) {
+    this.thumbnailKey = thumbnailKey;
+  }
 
 }

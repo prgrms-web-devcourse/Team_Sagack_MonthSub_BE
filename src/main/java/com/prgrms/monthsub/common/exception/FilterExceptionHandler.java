@@ -20,33 +20,41 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @Component
 public class FilterExceptionHandler extends OncePerRequestFilter {
 
-    @Override
-    public void doFilterInternal(HttpServletRequest request,
-        HttpServletResponse response,
-        FilterChain filterChain) throws ServletException, IOException {
-        try {
-            filterChain.doFilter(request, response);
-        } catch (UnAuthorize ex) {
-            setErrorResponse(HttpStatus.UNAUTHORIZED, response, ex);
-        }
+  @Override
+  public void doFilterInternal(
+    HttpServletRequest request,
+    HttpServletResponse response,
+    FilterChain filterChain
+  ) throws ServletException, IOException {
+    try {
+      filterChain.doFilter(request, response);
+    } catch (UnAuthorize ex) {
+      setErrorResponse(HttpStatus.UNAUTHORIZED, response, ex);
     }
+  }
 
-    public void setErrorResponse(HttpStatus status, HttpServletResponse response, Throwable ex) {
-        response.setStatus(status.value());
-        response.setContentType("application/json");
-        final ErrorResponse errorResponse = ErrorResponse.of(ErrorCodes.UN_AUTHORIZED());
-        ApiResponse<ErrorResponse> json = ApiResponse.fail(
-            ErrorCode.UN_AUTHORIZED.getStatus().value(),
-            errorResponse.getCode(), errorResponse
-        );
-        try {
-            ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
-            objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-            String objectToJson = objectMapper.writeValueAsString(json);
-            response.getWriter().write(objectToJson);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+  public void setErrorResponse(
+    HttpStatus status,
+    HttpServletResponse response,
+    Throwable ex
+  ) {
+    response.setStatus(status.value());
+    response.setContentType("application/json");
+    final ErrorResponse errorResponse = ErrorResponse.of(ErrorCodes.UN_AUTHORIZED());
+    ApiResponse<ErrorResponse> json = ApiResponse.fail(
+      ErrorCode.UN_AUTHORIZED.getStatus()
+        .value(),
+      errorResponse.getCode(), errorResponse
+    );
+    try {
+      ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
+      objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+      String objectToJson = objectMapper.writeValueAsString(json);
+      response.getWriter()
+        .write(objectToJson);
+    } catch (IOException e) {
+      e.printStackTrace();
     }
+  }
 
 }

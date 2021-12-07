@@ -15,17 +15,17 @@ import lombok.Getter;
 @Table(name = "part_permission")
 public class PartPermission {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", columnDefinition = "BIGINT")
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "id", columnDefinition = "BIGINT")
+  private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "part_id")
-    private Part part;
+  @ManyToOne
+  @JoinColumn(name = "part_id")
+  private Part part;
 
-    @ManyToOne
-    @JoinColumn(name = "permission_id")
-    private Permission permission;
+  @ManyToOne
+  @JoinColumn(name = "permission_id")
+  private Permission permission;
 
 }

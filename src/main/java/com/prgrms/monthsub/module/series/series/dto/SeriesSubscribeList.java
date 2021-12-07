@@ -8,106 +8,106 @@ import lombok.Builder;
 
 public class SeriesSubscribeList {
 
-    @Schema(name = "SeriesSubscribeList.Response")
-    public record Response(
-        SeriesObject series,
-        SubscribeObject subscribe,
-        Category category,
-        WriterObject writer
-    ) {
+  @Schema(name = "SeriesSubscribeList.Response")
+  public record Response(
+    SeriesObject series,
+    SubscribeObject subscribe,
+    Category category,
+    WriterObject writer
+  ) {
 
-    }
+  }
 
-    @Schema(name = "SeriesSubscribeList.SeriesOneWithUserResponse")
-    public record SeriesOneWithUserResponse(
-        Long userId,
-        String email,
-        String profileImage,
-        String profileIntroduce,
-        String nickname
-    ) {
-    }
+  @Schema(name = "SeriesSubscribeList.SeriesOneWithUserResponse")
+  public record SeriesOneWithUserResponse(
+    Long userId,
+    String email,
+    String profileImage,
+    String profileIntroduce,
+    String nickname
+  ) {
+  }
 
-    @Schema(name = "SeriesSubScribeList.SeriesOneWithWriterResponse")
-    public record SeriesOneWithWriterResponse(
-        Long writerId,
-        int followCount,
-        SeriesOneWithUserResponse user
-    ) {
-    }
+  @Schema(name = "SeriesSubScribeList.SeriesOneWithWriterResponse")
+  public record SeriesOneWithWriterResponse(
+    Long writerId,
+    int followCount,
+    SeriesOneWithUserResponse user
+  ) {
+  }
 
-    @Schema(name = "SeriesSubScribeList.BriefArticleBySeriesIdResponse")
-    public record BriefArticleBySeriesIdResponse(
-        Long articleId,
-        String title,
-        Integer round,
-        LocalDate date
-    ) {
-    }
+  @Schema(name = "SeriesSubScribeList.BriefArticleBySeriesIdResponse")
+  public record BriefArticleBySeriesIdResponse(
+    Long articleId,
+    String title,
+    Integer round,
+    LocalDate date
+  ) {
+  }
 
-    @Builder
-    public static class SeriesObject {
+  @Builder
+  public static class SeriesObject {
 
-        public Long id;
+    public Long id;
 
-        public String thumbnail;
+    public String thumbnail;
 
-        public String title;
+    public String title;
 
-        public String introduceText;
+    public String introduceText;
 
-        public String introduceSentence;
+    public String introduceSentence;
 
-        public int price;
+    public int price;
 
-        public LocalDate startDate;
+    public LocalDate startDate;
 
-        public LocalDate endDate;
+    public LocalDate endDate;
 
-        public int articleCount;
+    public int articleCount;
 
-        public int likes;
+    public int likes;
 
-    }
+  }
 
-    @Builder
-    public static class UploadObject {
+  @Builder
+  public static class UploadObject {
 
-        public String[] date;
+    public String[] date;
 
-        public LocalTime time;
+    public LocalTime time;
 
-    }
+  }
 
-    @Builder
-    public static class SubscribeObject {
+  @Builder
+  public static class SubscribeObject {
 
-        public LocalDate startDate;
+    public LocalDate startDate;
 
-        public LocalDate endDate;
+    public LocalDate endDate;
 
-        public String status;
+    public String status;
 
-    }
+  }
 
-    @Builder
-    public static class WriterObject {
+  @Builder
+  public static class WriterObject {
 
-        public Long id;
+    public Long id;
 
-        public Long userId;
+    public Long userId;
 
-        public int followCount;
+    public int followCount;
 
-        public String email;
+    public String email;
 
-        public String profileImage;
+    public String profileImage;
 
-        public String profileIntroduce;
+    public String profileIntroduce;
 
-        public String nickname;
+    public String nickname;
 
-    }
+  }
 
 }
 

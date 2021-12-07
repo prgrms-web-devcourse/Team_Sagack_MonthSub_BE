@@ -9,22 +9,27 @@ import org.springframework.stereotype.Component;
 @Component
 public class ArticleConverter {
 
-    public Article ArticlePostToEntity(Series series, ArticlePost.Request request, Integer round) {
-        return Article.builder()
-            .title(request.title())
-            .contents(request.contents())
-            .round(round)
-            .series(series)
-            .build();
-    }
+  public Article ArticlePostToEntity(
+    Series series,
+    ArticlePost.Request request,
+    int round
+  ) {
+    return Article.builder()
+      .title(request.title())
+      .contents(request.contents())
+      .round(round)
+      .series(series)
+      .build();
+  }
 
-    public BriefArticleBySeriesIdResponse articleToArticleBySeriesIdResponse(Article article) {
-        return new BriefArticleBySeriesIdResponse(
-            article.getId(),
-            article.getTitle(),
-            article.getRound(),
-            article.getCreatedAt().toLocalDate()
-        );
-    }
+  public BriefArticleBySeriesIdResponse articleToArticleBySeriesIdResponse(Article article) {
+    return new BriefArticleBySeriesIdResponse(
+      article.getId(),
+      article.getTitle(),
+      article.getRound(),
+      article.getCreatedAt()
+        .toLocalDate()
+    );
+  }
 
 }

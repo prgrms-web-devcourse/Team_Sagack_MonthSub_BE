@@ -6,20 +6,18 @@ import java.util.Arrays;
 
 public class AuthenticationException {
 
-    public static class UserNotExist extends BusinessException {
-
-        public UserNotExist(String... message) {
-            super(ErrorCodes.ENTITY_NOT_FOUND(Arrays.stream(message).toList().toString()));
-        }
-
+  public static class UserNotExist extends BusinessException {
+    public UserNotExist(String... message) {
+      super(ErrorCodes.ENTITY_NOT_FOUND(Arrays.stream(message)
+        .toList()
+        .toString()));
     }
+  }
 
-    public static class UnAuthorize extends BusinessException {
-
-        public UnAuthorize(String... message) {
-            super(ErrorCodes.UN_AUTHORIZED());
-        }
-
+  public static class UnAuthorize extends BusinessException {
+    public UnAuthorize(String... message) {
+      super(ErrorCodes.UN_AUTHORIZED());
     }
+  }
 
 }
