@@ -12,7 +12,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,10 +24,9 @@ public class ArticleController {
 
     public ArticleController(ArticleService articleService) {this.articleService = articleService;}
 
-    @PostMapping(consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+    @PostMapping(path = "/series/{seriesId}/article", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
     @Operation(summary = "아티클 작성")
     @Tag(name = "[화면]-아티클")
-    @RequestMapping("/series/{seriesId}/article")
     public ApiResponse<ArticlePost.Response> postArticle(
         @AuthenticationPrincipal JwtAuthentication authentication,
         @PathVariable Long seriesId,
