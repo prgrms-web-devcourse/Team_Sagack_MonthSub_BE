@@ -50,4 +50,11 @@ public class Article extends BaseEntity {
     this.thumbnailKey = thumbnailKey;
   }
 
+  public void changeWriting(
+    String title,
+    String contents
+  ) {
+    this.title = title;
+    this.contents = contents;
+  }
 }

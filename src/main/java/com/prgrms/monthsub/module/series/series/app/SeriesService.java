@@ -134,17 +134,4 @@ public class SeriesService {
     return this.s3Uploader.upload(Bucket.IMAGE, image, key, S3Uploader.imageExtensions);
   }
 
-  public String updateThumbnailImage(
-    MultipartFile image,
-    Long id
-  ) throws IOException {
-    Series series = this.seriesRepository.getById(id);
-    String thumbnailKey = this.uploadThumbnailImage(image, series.getId());
-    series.changeThumbnailKey(thumbnailKey);
-
-    return this.seriesRepository
-      .save(series)
-      .getThumbnailKey();
-  }
-
 }

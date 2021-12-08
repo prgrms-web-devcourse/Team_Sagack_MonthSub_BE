@@ -3,12 +3,10 @@ package com.prgrms.monthsub.module.series.article.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import javax.validation.constraints.NotBlank;
 
-public class ArticlePost {
+public class ArticleEdit {
 
-  @Schema(name = "ArticlePost.Request")
-  public record Request(
-    Long seriesId,
-
+  @Schema(name = "ArticleEdit.TextChangeRequest")
+  public record TextChangeRequest(
     @NotBlank
     String title,
 
@@ -17,8 +15,8 @@ public class ArticlePost {
   ) {
   }
 
-  @Schema(name = "ArticlePost.Response")
-  public record Response(
+  @Schema(name = "ArticleEdit.TextChangeResponse")
+  public record TextChangeResponse(
     Long id
   ) {
   }
