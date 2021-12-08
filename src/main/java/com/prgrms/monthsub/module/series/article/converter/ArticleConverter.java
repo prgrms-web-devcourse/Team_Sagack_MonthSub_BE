@@ -2,6 +2,7 @@ package com.prgrms.monthsub.module.series.article.converter;
 
 import com.prgrms.monthsub.config.S3;
 import com.prgrms.monthsub.module.series.article.domain.Article;
+import com.prgrms.monthsub.module.series.article.dto.ArticleOne;
 import com.prgrms.monthsub.module.series.article.dto.ArticlePost;
 import com.prgrms.monthsub.module.series.series.domain.Series;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeList.BriefArticleBySeriesIdResponse;
@@ -33,6 +34,21 @@ public class ArticleConverter {
       article.getRound(),
       article.getCreatedAt()
         .toLocalDate()
+    );
+  }
+
+  public ArticleOne.Response articleToArticleOneResponse(
+    Article article,
+    Long articleCount
+  ) {
+    return new ArticleOne.Response(
+      article.getTitle(),
+      article.getContents(),
+      this.toThumbnailEndpoint(article.getThumbnailKey()),
+      articleCount.intValue(),
+      article.getCreatedAt()
+        .toLocalDate()
+        .toString()
     );
   }
 
