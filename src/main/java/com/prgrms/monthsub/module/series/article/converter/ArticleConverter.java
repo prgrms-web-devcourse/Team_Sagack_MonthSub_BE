@@ -1,5 +1,6 @@
 package com.prgrms.monthsub.module.series.article.converter;
 
+import com.prgrms.monthsub.config.S3;
 import com.prgrms.monthsub.module.series.article.domain.Article;
 import com.prgrms.monthsub.module.series.article.dto.ArticlePost;
 import com.prgrms.monthsub.module.series.series.domain.Series;
@@ -8,6 +9,10 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ArticleConverter {
+
+  private final S3 s3;
+
+  public ArticleConverter(S3 s3) {this.s3 = s3;}
 
   public Article ArticlePostToEntity(
     Series series,
@@ -30,6 +35,10 @@ public class ArticleConverter {
       article.getCreatedAt()
         .toLocalDate()
     );
+  }
+
+  public String toThumbnailEndpoint(String thumnnailKey) {
+    return this.s3.getDomain() + "/" + thumnnailKey;
   }
 
 }
