@@ -10,6 +10,7 @@ import com.prgrms.monthsub.module.series.article.domain.Article;
 import com.prgrms.monthsub.module.series.series.domain.Series;
 import com.prgrms.monthsub.module.series.series.domain.Series.Category;
 import com.prgrms.monthsub.module.series.series.domain.Series.SeriesStatus;
+import com.prgrms.monthsub.module.series.series.dto.MyChannel;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeList;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeList.SeriesObject;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeList.SeriesOneWithWriterResponse;
@@ -173,4 +174,45 @@ public class SeriesConverter {
     );
   }
 
+    public MyChannel.MyChannelLikeObject seriesToMyChannelLikeObject(Series series) {
+        return MyChannel.MyChannelLikeObject.builder()
+            .id(series.getId())
+            .thumbnail(this.s3.getDomain() + "/" + series.getThumbnailKey())
+            .title(series.getTitle())
+            .introduceSentence(series.getIntroduceSentence())
+            .startDate(series.getSeriesStartDate())
+            .endDate(series.getSeriesEndDate())
+            .likes(series.getLikes())
+            .category(series.getCategory())
+            .build();
+    }
+
+    public MyChannel.MyChannelSubscribeObject seriesToMyChannelSubscribeObject(Series series) {
+        return MyChannel.MyChannelSubscribeObject.builder()
+            .id(series.getId())
+            .thumbnail(this.s3.getDomain() + "/" + series.getThumbnailKey())
+            .title(series.getTitle())
+            .introduceSentence(series.getIntroduceSentence())
+            .startDate(series.getSeriesStartDate())
+            .endDate(series.getSeriesEndDate())
+            .likes(series.getLikes())
+            .category(series.getCategory())
+            .build();
+    }
+
+    public MyChannel.MyChannelSeriesObject seriesToMyChannelSeriesObject(Series series) {
+        return MyChannel.MyChannelSeriesObject.builder()
+            .id(series.getId())
+            .thumbnail(this.s3.getDomain() + "/" + series.getThumbnailKey())
+            .title(series.getTitle())
+            .introduceSentence(series.getIntroduceSentence())
+            .startDate(series.getSeriesStartDate())
+            .endDate(series.getSeriesEndDate())
+            .likes(series.getLikes())
+            .category(series.getCategory())
+            .build();
+    }
+
 }
+
+

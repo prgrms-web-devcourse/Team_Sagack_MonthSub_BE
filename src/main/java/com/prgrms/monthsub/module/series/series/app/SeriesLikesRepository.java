@@ -1,6 +1,7 @@
 package com.prgrms.monthsub.module.series.series.app;
 
 import com.prgrms.monthsub.module.series.series.domain.SeriesLikes;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -13,5 +14,8 @@ public interface SeriesLikesRepository extends JpaRepository<SeriesLikes, Long> 
     @Param("userId") Long userId,
     @Param("seriesId") Long seriesId
   );
+
+    @Query("select sl from SeriesLikes as sl join fetch sl.series sls where sl.userId = :userId")
+    List<SeriesLikes> findAllMySeriesLikeByUserId(@Param("userId") Long userId);
 
 }

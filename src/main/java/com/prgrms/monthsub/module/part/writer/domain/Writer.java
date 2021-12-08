@@ -2,6 +2,7 @@ package com.prgrms.monthsub.module.part.writer.domain;
 
 import com.prgrms.monthsub.common.domain.BaseEntity;
 import com.prgrms.monthsub.module.part.user.domain.User;
+import com.prgrms.monthsub.module.series.series.domain.Series.SeriesStatus;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -11,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.PositiveOrZero;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -26,18 +28,21 @@ import lombok.NoArgsConstructor;
 @Table(name = "writer")
 public class Writer extends BaseEntity {
   public static final int DEFAULT_FOLLOW_COUNT = 0;
-
+  @Transient
+  SeriesStatus subScribeStatus;
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id", columnDefinition = "BIGINT")
   private Long id;
-
   @PositiveOrZero
   @Column(name = "follow_count", columnDefinition = "INT")
   private int followCount;
-
   @OneToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user_id", referencedColumnName = "id")
   private User user;
+
+  public void editSubScribeStatus(SeriesStatus status) {
+    this.subScribeStatus = status;
+  }
 
 }
