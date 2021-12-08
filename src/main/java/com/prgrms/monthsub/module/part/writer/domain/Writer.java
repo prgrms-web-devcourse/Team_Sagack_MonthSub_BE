@@ -15,15 +15,12 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.PositiveOrZero;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 @Entity
 @Table(name = "writer")
 public class Writer extends BaseEntity {
@@ -45,6 +42,17 @@ public class Writer extends BaseEntity {
   @OneToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user_id", referencedColumnName = "id")
   private User user;
+
+  @Builder
+  private Writer(
+    int followCount,
+    User user,
+    SeriesStatus subScribeStatus
+  ) {
+    this.followCount = followCount;
+    this.user = user;
+    this.subScribeStatus = subScribeStatus;
+  }
 
   public void editSubScribeStatus(SeriesStatus status) {
     this.subScribeStatus = status;

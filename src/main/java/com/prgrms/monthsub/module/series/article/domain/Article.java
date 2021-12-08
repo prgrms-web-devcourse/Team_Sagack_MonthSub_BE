@@ -12,15 +12,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 @Entity
 @Table(name = "article")
 public class Article extends BaseEntity {
@@ -45,6 +42,21 @@ public class Article extends BaseEntity {
 
   @Column(name = "round", columnDefinition = "INT", nullable = false)
   private int round;
+
+  @Builder
+  private Article(
+    Series series,
+    String title,
+    String contents,
+    String thumbnailKey,
+    int round
+  ) {
+    this.series = series;
+    this.title = title;
+    this.contents = contents;
+    this.thumbnailKey = thumbnailKey;
+    this.round = round;
+  }
 
   public void changeThumbnailKey(String thumbnailKey) {
     this.thumbnailKey = thumbnailKey;
