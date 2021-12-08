@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ArticleConverter {
-
   private final S3 s3;
 
   public ArticleConverter(S3 s3) {this.s3 = s3;}
@@ -37,8 +36,8 @@ public class ArticleConverter {
     );
   }
 
-  public String toThumbnailEndpoint(String thumnnailKey) {
-    return this.s3.getDomain() + "/" + thumnnailKey;
+  public String toThumbnailEndpoint(String thumbnailKey) {
+    return this.s3.getDomain() + "/" + thumbnailKey;
   }
 
 }

@@ -25,7 +25,6 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/article")
 @Tag(name = "Article")
 public class ArticleController {
-
   private final ArticleAssemble articleAssemble;
 
   public ArticleController(
