@@ -52,7 +52,7 @@ public class ArticleAssemble {
 
     Long articleCount = this.articleService.countBySeriesId(request.seriesId());
 
-    Article article = articleConverter.ArticlePostToEntity(
+    Article article = this.articleConverter.ArticlePostToEntity(
       series,
       request,
       articleCount.intValue() + 1
