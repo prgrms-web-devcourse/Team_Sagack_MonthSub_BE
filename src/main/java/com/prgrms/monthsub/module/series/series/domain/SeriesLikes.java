@@ -34,13 +34,13 @@ public class SeriesLikes extends BaseEntity {
   @Column(name = "user_id", columnDefinition = "BIGINT", nullable = false)
   private Long userId;
 
-  @OneToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "series_id", referencedColumnName = "id")
-  private Series series;
-
   @Enumerated(EnumType.STRING)
   @Column(name = "likes_status", columnDefinition = "VARCHAR(50)")
   private LikesStatus likesStatus;
+
+  @OneToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "series_id", referencedColumnName = "id")
+  private Series series;
 
   public LikesStatus changeLikeStatus() {
     this.likesStatus =

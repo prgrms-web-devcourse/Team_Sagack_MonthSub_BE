@@ -34,7 +34,7 @@ public class User extends BaseEntity {
   private Long id;
 
   @Pattern(regexp = "\\b[\\w\\.-]+@[\\w\\.-]+\\.\\w{2,4}\\b")
-  @Column(name = "email", columnDefinition = "VARCHAR(50)", nullable = false, unique = true)
+  @Column(name = "email", columnDefinition = "VARCHAR(100)", nullable = false, unique = true)
   private String email;
 
   @Column(name = "username", columnDefinition = "VARCHAR(50)", nullable = false)
@@ -43,18 +43,18 @@ public class User extends BaseEntity {
   @Column(name = "password", columnDefinition = "VARCHAR(100)", nullable = false)
   private String password;
 
-  @Column(name = "profile_key", columnDefinition = "VARCHAR(100)")
+  @Column(name = "nickname", columnDefinition = "VARCHAR(50)", unique = true)
+  private String nickname;
+
+  @Column(name = "profile_key", columnDefinition = "TEXT")
   private String profileKey;
 
-  @Column(name = "profile_introduce", columnDefinition = "VARCHAR(50)")
+  @Column(name = "profile_introduce", columnDefinition = "VARCHAR(300)")
   private String profileIntroduce;
 
   @PositiveOrZero
   @Column(name = "point", columnDefinition = "BIGINT")
   private int point;
-
-  @Column(name = "nickname", columnDefinition = "VARCHAR(50)", unique = true)
-  private String nickname;
 
   @ManyToOne
   @JoinColumn(name = "part_id")

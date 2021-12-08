@@ -80,18 +80,18 @@ public class Series extends BaseEntity {
   private int likes;
 
   @Enumerated(EnumType.STRING)
-  @Column(name = "category", columnDefinition = "VARCHAR(50)")
+  @Column(name = "category", columnDefinition = "VARCHAR(50)", nullable = false)
   private Category category;
-
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "writer_id", referencedColumnName = "id")
-  private Writer writer;
 
   @Column(name = "upload_date", columnDefinition = "VARCHAR(50)", nullable = false)
   private String uploadDate;
 
   @Column(name = "upload_time", nullable = false)
   private LocalTime uploadTime;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "writer_id", referencedColumnName = "id", nullable = false)
+  private Writer writer;
 
   public void editSeries(
     String thumbnail,
