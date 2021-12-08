@@ -28,7 +28,8 @@ public class MyChannelController {
   public ApiResponse<MyChannel.Response> getSeriesList(
     @AuthenticationPrincipal JwtAuthentication authentication
   ) {
-    return ApiResponse.ok(HttpMethod.GET, myChannelService.getMyChannel(authentication.userId));
+    return ApiResponse.ok(
+      HttpMethod.GET, this.myChannelService.getMyChannel(authentication.userId));
   }
 
 }

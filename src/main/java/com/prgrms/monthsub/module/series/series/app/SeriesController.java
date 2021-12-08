@@ -95,7 +95,7 @@ public class SeriesController {
       HttpMethod.POST, this.seriesLikesService.cancelSeriesLike(authentication.userId, id));
   }
 
-  @GetMapping("/edit/{id}")
+  @GetMapping("/{id}/edit")
   @Operation(summary = "수정 요청시 시리즈 공고 단건 조회")
   @Tag(name = "[화면]-시리즈")
   public ApiResponse<SeriesSubscribeOne.ResponseUsageEdit> getSeriesByIdUsageEdit(
@@ -105,7 +105,7 @@ public class SeriesController {
     return ApiResponse.ok(HttpMethod.GET, this.seriesService.getSeriesUsageEdit(id));
   }
 
-  @PutMapping(path = "/edit/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+  @PutMapping(path = "/{id}/edit", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   @Operation(summary = "시리즈 공고 게시글 수정")
   @Tag(name = "[화면]-시리즈")
   public ApiResponse<SeriesSubscribeEdit.Response> editSeries(
