@@ -13,15 +13,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 @Entity
 @Table(name = "writer_likes")
 public class WriterLikes extends BaseEntity {
@@ -41,6 +38,17 @@ public class WriterLikes extends BaseEntity {
   @Enumerated(EnumType.STRING)
   @Column(name = "likes_status", columnDefinition = "VARCHAR(50)")
   private LikesStatus likesStatus;
+
+  @Builder
+  private WriterLikes(
+    Writer writer,
+    Long userId,
+    LikesStatus likesStatus
+  ) {
+    this.writer = writer;
+    this.userId = userId;
+    this.likesStatus = likesStatus;
+  }
 
   public enum LikesStatus {
 

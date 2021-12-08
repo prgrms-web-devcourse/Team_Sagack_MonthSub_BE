@@ -12,7 +12,6 @@ import javax.persistence.Table;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.PositiveOrZero;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,7 +20,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 @Entity
 @Table(name = "user")
 public class User extends BaseEntity {
@@ -63,17 +61,17 @@ public class User extends BaseEntity {
   @Builder
   public User(
     String email,
-    String nickname,
-    String password,
-    int point,
     String username,
+    String password,
+    String nickname,
+    int point,
     Part part
   ) {
     this.email = email;
-    this.nickname = nickname;
-    this.password = password;
-    this.point = point;
     this.username = username;
+    this.password = password;
+    this.nickname = nickname;
+    this.point = point;
     this.part = part;
   }
 

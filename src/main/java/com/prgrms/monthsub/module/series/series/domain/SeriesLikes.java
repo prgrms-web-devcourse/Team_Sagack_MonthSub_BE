@@ -13,15 +13,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 @Entity
 @Table(name = "series_likes")
 public class SeriesLikes extends BaseEntity {
@@ -41,6 +38,17 @@ public class SeriesLikes extends BaseEntity {
   @OneToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "series_id", referencedColumnName = "id")
   private Series series;
+
+  @Builder
+  private SeriesLikes(
+    Long userId,
+    LikesStatus likesStatus,
+    Series series
+  ) {
+    this.userId = userId;
+    this.likesStatus = likesStatus;
+    this.series = series;
+  }
 
   public LikesStatus changeLikeStatus() {
     this.likesStatus =

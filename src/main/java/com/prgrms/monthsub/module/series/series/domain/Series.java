@@ -21,15 +21,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.PositiveOrZero;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 @Entity
 @Table(name = "series")
 public class Series extends BaseEntity {
@@ -92,6 +89,43 @@ public class Series extends BaseEntity {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "writer_id", referencedColumnName = "id", nullable = false)
   private Writer writer;
+
+  @Builder
+  private Series(
+    String thumbnailKey,
+    String title,
+    String introduceText,
+    String introduceSentence,
+    int price,
+    LocalDate subscribeStartDate,
+    LocalDate subscribeEndDate,
+    LocalDate seriesStartDate,
+    LocalDate seriesEndDate,
+    int articleCount,
+    SeriesStatus subscribeStatus,
+    int likes,
+    Category category,
+    String uploadDate,
+    LocalTime uploadTime,
+    Writer writer
+  ) {
+    this.thumbnailKey = thumbnailKey;
+    this.title = title;
+    this.introduceText = introduceText;
+    this.introduceSentence = introduceSentence;
+    this.price = price;
+    this.subscribeStartDate = subscribeStartDate;
+    this.subscribeEndDate = subscribeEndDate;
+    this.seriesStartDate = seriesStartDate;
+    this.seriesEndDate = seriesEndDate;
+    this.articleCount = articleCount;
+    this.subscribeStatus = subscribeStatus;
+    this.likes = likes;
+    this.category = category;
+    this.uploadDate = uploadDate;
+    this.uploadTime = uploadTime;
+    this.writer = writer;
+  }
 
   public void editSeries(
     String thumbnail,
