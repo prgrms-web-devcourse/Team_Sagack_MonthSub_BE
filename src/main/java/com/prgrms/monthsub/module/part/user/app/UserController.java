@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.io.IOException;
 import java.util.Optional;
+import javax.validation.Valid;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -44,7 +45,7 @@ public class UserController {
   @PostMapping(path = "/login")
   @Operation(summary = "로그인")
   @Tag(name = "[화면]-로그인")
-  public ApiResponse<UserLogin.Response> login(@RequestBody UserLogin.Request request) {
+  public ApiResponse<UserLogin.Response> login(@Valid @RequestBody UserLogin.Request request) {
     JwtAuthenticationToken authToken = new JwtAuthenticationToken(
       request.email(),
       request.password()
@@ -87,7 +88,7 @@ public class UserController {
   @Tag(name = "[화면]-마이페이지")
   public ApiResponse<UserEdit.Response> edit(
     @AuthenticationPrincipal JwtAuthentication authentication,
-    @RequestBody UserEdit.Request request
+    @Valid @RequestBody UserEdit.Request request
   ) {
     return ApiResponse.ok(
       HttpMethod.PATCH, this.userService.edit(authentication.userId, request));
