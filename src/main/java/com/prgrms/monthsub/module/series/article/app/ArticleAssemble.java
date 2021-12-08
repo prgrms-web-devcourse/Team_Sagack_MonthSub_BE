@@ -5,6 +5,7 @@ import com.prgrms.monthsub.config.S3.Bucket;
 import com.prgrms.monthsub.module.series.article.converter.ArticleConverter;
 import com.prgrms.monthsub.module.series.article.domain.Article;
 import com.prgrms.monthsub.module.series.article.dto.ArticleEdit;
+import com.prgrms.monthsub.module.series.article.dto.ArticleOne;
 import com.prgrms.monthsub.module.series.article.dto.ArticlePost;
 import com.prgrms.monthsub.module.series.series.app.SeriesService;
 import com.prgrms.monthsub.module.series.series.domain.Series;
@@ -51,7 +52,7 @@ public class ArticleAssemble {
 
     Long articleCount = this.articleService.countBySeriesId(request.seriesId());
 
-    Article article = articleConverter.ArticlePostToEntity(
+    Article article = this.articleConverter.ArticlePostToEntity(
       series,
       request,
       articleCount.intValue() + 1
@@ -78,6 +79,14 @@ public class ArticleAssemble {
     article.changeWriting(request.title(), request.contents());
 
     return new ArticleEdit.TextChangeResponse(article.getId());
+  }
+
+  public ArticleOne.Response getArticleOne(
+    Long id
+  ) {
+    Article article = articleService.find(id);
+    Long articleCount = this.articleService.countBySeriesId(id);
+    return articleConverter.articleToArticleOneResponse(article, articleCount);
   }
 
   @Transactional
