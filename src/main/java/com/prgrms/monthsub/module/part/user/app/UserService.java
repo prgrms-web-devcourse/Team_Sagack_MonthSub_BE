@@ -93,10 +93,14 @@ public class UserService {
     Optional<MultipartFile> image,
     Long userId
   ) {
-
+    
     User user = this.findById(userId);
 
     String profileKey = image.map(imageFile -> {
+
+          if (imageFile.getContentType() == null) {
+            return null;
+          }
 
           String key = User.class.getSimpleName()
             .toLowerCase()
