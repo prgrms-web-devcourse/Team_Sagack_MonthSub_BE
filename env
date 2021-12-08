@@ -1,7 +1,9 @@
 #/bin/bash
 
+ENV=/home/ec2-user/app/.env
+
 # Show env vars
-# grep -v '^#' .env
+# grep -v '^#' $ENV
 
 # Export env vars
-export $(grep -v '^#' .env | xargs)
+export $(grep -v '^#' $ENV | xargs)

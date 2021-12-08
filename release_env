@@ -1,7 +1,9 @@
 #/bin/bash
 
+ENV=/home/ec2-user/app/.env
+
 # Show env vars
-grep -o -P '\w+(?=\=)' .env 
+grep -o -P '\w+(?=\=)' $ENV
 
 # Unset env vars
-unset $(grep -o -P '\w+(?=\=)' .env  | xargs)
+unset $(grep -o -P '\w+(?=\=)' $ENV  | xargs)

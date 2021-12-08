@@ -1,11 +1,14 @@
 #!/bin/bash
 
+LOGS_PATH=/home/ec2-user/app/logs
+
+mkdir -p $LOGS_PATH
+
+echo "> 이전 로그 삭제"
+find $LOGS_PATH -type f -name "*.log"
+find $LOGS_PATH -type f -name "*.log" -exec rm {} \;
+
 echo "> Build 파일 복사"
-
-cd /home/ec2-user/app
-
-rm nohup.out
-
 cp /home/ec2-user/app/build/libs/monthSub-0.0.1-SNAPSHOT.jar /home/ec2-user/app/
 
 CURRENT_PID=$(pgrep -fl monthSub | awk '{print $1}')
@@ -30,14 +33,17 @@ echo "> $JAR_NAME 에 실행권한 추가"
 
 sudo chmod +x $JAR_NAME
 
-echo "> $JAR_NAME 실행"
-
-cd /home/ec2-user/app
-
+echo "> 환경 변수 적용"
 source /home/ec2-user/app/env
 
 source /home/ec2-user/.bashrc
 
-nohup java -jar $JAR_NAME -Duser timezone-Asia/Seoul -Dspring.config.location=classpath:/application.yml &
+echo "> $JAR_NAME 실행"
 
-chmod 755 nohup.out
+cd /home/ec2-user/app
+
+NOW=$(date +%FT%H:%M:%S)
+
+echo $NOW
+
+nohup java -jar $JAR_NAME -Duser timezone-Asia/Seoul -Dspring.config.location=classpath:/application.yml -Dspring.output.ansi.enabled=NAVER > logs/$NOW.log &

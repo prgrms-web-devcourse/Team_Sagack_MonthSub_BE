@@ -39,3 +39,6 @@ out/
 /node_modules
 .env
 .envrc
+
+/logs
+nohub.out
