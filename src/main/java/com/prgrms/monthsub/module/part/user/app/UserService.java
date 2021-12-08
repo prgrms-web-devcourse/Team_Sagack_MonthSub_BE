@@ -98,6 +98,10 @@ public class UserService {
 
     String profileKey = image.map(imageFile -> {
 
+          if (imageFile.isEmpty()) {
+            return null;
+          }
+
           String key = User.class.getSimpleName()
             .toLowerCase()
             + "s"
