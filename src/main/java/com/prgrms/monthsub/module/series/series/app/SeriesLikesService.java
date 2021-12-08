@@ -5,6 +5,7 @@ import com.prgrms.monthsub.module.series.series.domain.SeriesLikes;
 import com.prgrms.monthsub.module.series.series.domain.SeriesLikes.LikesStatus;
 import com.prgrms.monthsub.module.series.series.domain.exception.SeriesException.SeriesLikesNotFound;
 import com.prgrms.monthsub.module.series.series.dto.SeriesLikesEvent;
+import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -86,5 +87,11 @@ public class SeriesLikesService {
         }
       )
       .orElseThrow(() -> new SeriesLikesNotFound("userId=" + userId, "seriesId=" + seriesId));
+  }
+
+  @Transactional(readOnly = true)
+  public List<SeriesLikes> findAllMySeriesLikeByUserId(Long userId) {
+    return this.seriesLikesRepository.findAllMySeriesLikeByUserId(userId);
+
   }
 }

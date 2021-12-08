@@ -9,6 +9,7 @@ import com.prgrms.monthsub.module.series.article.app.ArticleService;
 import com.prgrms.monthsub.module.series.article.domain.Article;
 import com.prgrms.monthsub.module.series.series.converter.SeriesConverter;
 import com.prgrms.monthsub.module.series.series.domain.Series;
+import com.prgrms.monthsub.module.series.series.domain.Series.SeriesStatus;
 import com.prgrms.monthsub.module.series.series.domain.exception.SeriesException.SeriesNotFound;
 import com.prgrms.monthsub.module.series.series.domain.type.SortType;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeEdit;
@@ -19,6 +20,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -132,6 +135,34 @@ public class SeriesService {
       this.s3Uploader.getExtension(image);
 
     return this.s3Uploader.upload(Bucket.IMAGE, image, key, S3Uploader.imageExtensions);
+  }
+
+  public String updateThumbnailImage(
+    MultipartFile image,
+    Long id
+  ) throws IOException {
+    Series series = this.seriesRepository.getById(id);
+    String thumbnailKey = this.uploadThumbnailImage(image, series.getId());
+    series.changeThumbnailKey(thumbnailKey);
+
+    return this.seriesRepository
+      .save(series)
+      .getThumbnailKey();
+  }
+
+  public Page<SeriesStatus> checkSeriesStatusByWriterId(
+    Long writerId,
+    SeriesStatus status,
+    Pageable pageable
+  ) {
+    return this.seriesRepository.checkSeriesStatusByWriterId(writerId, status
+      , pageable);
+  }
+
+  public List<Series> findAllByWriterId(
+    Long writerId
+  ) {
+    return this.seriesRepository.findAllByWriterId(writerId);
   }
 
 }

@@ -9,6 +9,7 @@ import com.prgrms.monthsub.module.part.user.domain.Part;
 import com.prgrms.monthsub.module.part.user.domain.User;
 import com.prgrms.monthsub.module.part.writer.domain.Writer;
 import com.prgrms.monthsub.module.part.writer.domain.exception.WriterException.WriterNotFound;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,6 +42,12 @@ public class WriterService implements WriterProvider {
     return this.writerRepository
       .findByUserId(userId)
       .orElseThrow(() -> new WriterNotFound("id=" + userId));
+  }
+
+  @Transactional(readOnly = true)
+  public Optional<Writer> findWriterObjectByUserId(Long userId) {
+    return this.writerRepository
+      .findByUserId(userId);
   }
 
   private Writer getWriterAndChangeUserPart(Long userId) {
