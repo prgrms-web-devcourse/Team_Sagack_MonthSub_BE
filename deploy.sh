@@ -1,6 +1,7 @@
 #!/bin/bash
 
-LOGS_PATH=/home/ec2-user/app/logs
+HOME=/home/ec2-user
+LOGS_PATH=$HOME/app/logs
 
 mkdir -p $LOGS_PATH
 
@@ -9,7 +10,7 @@ find $LOGS_PATH -type f -name "*.log"
 find $LOGS_PATH -type f -name "*.log" -exec rm {} \;
 
 echo "> Build 파일 복사"
-cp /home/ec2-user/app/build/libs/monthSub-0.0.1-SNAPSHOT.jar /home/ec2-user/app/
+cp $HOME/app/build/libs/monthSub-0.0.1-SNAPSHOT.jar $HOME/app/
 
 CURRENT_PID=$(pgrep -fl monthSub | awk '{print $1}')
 
@@ -25,7 +26,7 @@ fi
 
 echo "> 새 애플리케이션 배포"
 
-JAR_NAME=$(ls -tr /home/ec2-user/app/monthSub-0.0.1-SNAPSHOT.jar | tail -n 1)
+JAR_NAME=$(ls -tr $HOME/app/monthSub-0.0.1-SNAPSHOT.jar | tail -n 1)
 
 echo "> JAR Name: $JAR_NAME"
 
@@ -34,13 +35,13 @@ echo "> $JAR_NAME 에 실행권한 추가"
 sudo chmod +x $JAR_NAME
 
 echo "> 환경 변수 적용"
-source /home/ec2-user/app/env
+source $HOME/app/env
 
-source /home/ec2-user/.bashrc
+source $HOME/.bashrc
 
 echo "> $JAR_NAME 실행"
 
-cd /home/ec2-user/app
+cd $HOME/app
 
 NOW=$(date +%FT%H:%M:%S)
 
