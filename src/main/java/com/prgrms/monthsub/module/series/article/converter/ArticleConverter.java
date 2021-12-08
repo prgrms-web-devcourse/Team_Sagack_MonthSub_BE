@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ArticleConverter {
+
   private final S3 s3;
 
   public ArticleConverter(S3 s3) {this.s3 = s3;}

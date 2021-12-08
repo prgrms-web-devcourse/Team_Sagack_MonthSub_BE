@@ -25,6 +25,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Entity
 @Table(name = "user")
 public class User extends BaseEntity {
+
   public static final int POINT = 0;
 
   @Id

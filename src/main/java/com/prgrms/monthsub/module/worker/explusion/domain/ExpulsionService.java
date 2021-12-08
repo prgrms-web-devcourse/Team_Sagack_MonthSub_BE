@@ -13,4 +13,5 @@ public class ExpulsionService {
   public Expulsion save(Expulsion expulsion) {
     return expulsionRepository.save(expulsion);
   }
+
 }

@@ -7,7 +7,6 @@ public class UserLogin {
 
   @Schema(name = "UserLogin.Request")
   public record Request(
-
     @NotBlank(message = "이메일이 비어있습니다.")
     String email,
 

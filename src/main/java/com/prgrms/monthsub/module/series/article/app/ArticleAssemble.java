@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 @Transactional(readOnly = true)
 public class ArticleAssemble {
+
   private final ArticleService articleService;
   private final SeriesService seriesService;
   private final ExpulsionService expulsionService;

@@ -20,7 +20,6 @@ public class SeriesSubscribeOne {
     WriterObject writer,
     List<BriefArticleBySeriesIdResponse> articleList
   ) {
-
   }
 
   @Schema(name = "SeriesSubscribeOne.ResponseUsageEdit")
@@ -30,7 +29,6 @@ public class SeriesSubscribeOne {
     UploadObject upload,
     SubscribeObject subscribe
   ) {
-
   }
 
 }

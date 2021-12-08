@@ -7,7 +7,6 @@ public class SeriesSubscribeEdit {
 
   @Schema(name = "SeriesSubscribeEdit.Request")
   public record Request(
-
     Long writerId,
 
     @NotBlank(message = "제목이 비어있습니다.")

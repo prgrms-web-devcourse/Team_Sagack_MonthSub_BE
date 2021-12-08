@@ -27,11 +27,14 @@ public interface SeriesRepository extends JpaRepository<Series, Long> {
     @Param("writerId") Long writerId
   );
 
-    @Query("select s.subscribeStatus from Series as s where s.writer.id = :writerId and s.subscribeStatus = :seriesStatus")
-    Page<SeriesStatus> checkSeriesStatusByWriterId(@Param("writerId") Long writerId,
-        @Param("seriesStatus") SeriesStatus seriesStatus, Pageable pageable);
+  @Query("select s.subscribeStatus from Series as s where s.writer.id = :writerId and s.subscribeStatus = :seriesStatus")
+  Page<SeriesStatus> checkSeriesStatusByWriterId(
+    @Param("writerId") Long writerId,
+    @Param("seriesStatus") SeriesStatus seriesStatus,
+    Pageable pageable
+  );
 
-    @Query("select s from Series as s join fetch s.writer where s.writer.id = :writerId")
-    List<Series> findAllByWriterId(@Param("writerId") Long writerId);
+  @Query("select s from Series as s join fetch s.writer where s.writer.id = :writerId")
+  List<Series> findAllByWriterId(@Param("writerId") Long writerId);
 
 }

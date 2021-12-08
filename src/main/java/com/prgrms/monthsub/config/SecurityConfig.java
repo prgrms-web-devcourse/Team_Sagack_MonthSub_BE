@@ -25,15 +25,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.context.SecurityContextPersistenceFilter;
 
-
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
   private final Logger log = LoggerFactory.getLogger(getClass());
-
   private final Security security;
-
   private final AuthenticationService authenticationService;
 
   @Autowired

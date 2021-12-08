@@ -13,13 +13,9 @@ import java.util.Map;
 public class Jwt {
 
   private final String issuer;
-
   private final String clientSecret;
-
   private final int expirySeconds;
-
   private final Algorithm algorithm;
-
   private final JWTVerifier jwtVerifier;
 
   public Jwt(
@@ -104,9 +100,7 @@ public class Jwt {
     long exp() {
       return exp != null ? exp.getTime() : -1;
     }
-
   }
-
 
 }
 

@@ -32,6 +32,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/series")
 @Tag(name = "Series")
 public class SeriesController {
+
   private final SeriesService seriesService;
   private final SeriesLikesService seriesLikesService;
 

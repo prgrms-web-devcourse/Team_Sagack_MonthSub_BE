@@ -29,13 +29,9 @@ import org.springframework.web.filter.GenericFilterBean;
 public class JwtAuthenticationFilter extends GenericFilterBean {
 
   private final String BEARER = "Bearer";
-
   private final Logger log = LoggerFactory.getLogger(getClass());
-
   private final AuthenticationService authenticationService;
-
   private final String headerKey;
-
   private final Jwt jwt;
 
   public JwtAuthenticationFilter(
@@ -119,7 +115,6 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
     chain.doFilter(request, response);
   }
 
-
   private String getToken(HttpServletRequest request) {
     String token = request.getHeader(headerKey);
     if (isNotEmpty(token)) {
@@ -150,6 +145,5 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         .map(SimpleGrantedAuthority::new)
         .collect(Collectors.toList());
   }
-
 
 }

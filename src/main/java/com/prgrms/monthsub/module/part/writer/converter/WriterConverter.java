@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 public class WriterConverter {
 
   private final UserConverter userConverter;
-
   private final S3 s3;
 
   public WriterConverter(

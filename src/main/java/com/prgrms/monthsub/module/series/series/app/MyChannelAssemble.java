@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional(readOnly = true)
 public class MyChannelAssemble {
+
   private final UserService userService;
   private final WriterLikesService writerLikesService;
   private final SeriesService seriesService;
@@ -103,7 +104,6 @@ public class MyChannelAssemble {
           , myLikesSeries
           , mySubscribeList);
       });
-
   }
 
 }

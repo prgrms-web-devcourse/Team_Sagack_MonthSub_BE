@@ -24,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 @Transactional(readOnly = true)
 public class UserService {
+
   private final PasswordEncoder passwordEncoder;
   private final UserRepository userRepository;
   private final ExpulsionService expulsionService;
@@ -70,7 +71,7 @@ public class UserService {
   public UserSignUp.Response signUp(UserSignUp.Request request) {
     checkEmail(request.email());
     checkNicName(request.nickName());
-    User entity = this.userRepository.save(userConverter.UserSignUpRequestToEntity(request));
+    User entity = this.userRepository.save(this.userConverter.UserSignUpRequestToEntity(request));
     return new UserSignUp.Response(entity.getId());
   }
 
@@ -93,11 +94,9 @@ public class UserService {
     Optional<MultipartFile> image,
     Long userId
   ) {
-
     User user = this.findById(userId);
 
     String profileKey = image.map(imageFile -> {
-
           if (imageFile.isEmpty()) {
             return null;
           }

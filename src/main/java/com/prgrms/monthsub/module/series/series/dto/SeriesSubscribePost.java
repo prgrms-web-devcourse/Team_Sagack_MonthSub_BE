@@ -8,10 +8,6 @@ public class SeriesSubscribePost {
 
   @Schema(name = "SeriesSubscribePost.Request")
   public record Request(
-
-    @NotBlank(message = "닉네임이 비어있습니다.")
-    String nickname,
-
     @NotBlank(message = "제목이 비어있습니다.")
     String title,
 

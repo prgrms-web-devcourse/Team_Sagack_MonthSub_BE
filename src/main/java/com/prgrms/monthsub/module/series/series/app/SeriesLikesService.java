@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class SeriesLikesService {
+
   private final SeriesLikesRepository seriesLikesRepository;
   private final SeriesService seriesService;
 
@@ -92,6 +93,6 @@ public class SeriesLikesService {
   @Transactional(readOnly = true)
   public List<SeriesLikes> findAllMySeriesLikeByUserId(Long userId) {
     return this.seriesLikesRepository.findAllMySeriesLikeByUserId(userId);
-
   }
+
 }

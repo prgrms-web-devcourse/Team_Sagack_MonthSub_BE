@@ -31,6 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/users")
 @Tag(name = "Users")
 public class UserController {
+
   private final UserService userService;
   private final AuthenticationManager authenticationManager;
 

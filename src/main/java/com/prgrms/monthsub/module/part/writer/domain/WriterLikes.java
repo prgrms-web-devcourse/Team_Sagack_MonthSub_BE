@@ -42,7 +42,6 @@ public class WriterLikes extends BaseEntity {
   @Column(name = "likes_status", columnDefinition = "VARCHAR(50)")
   private LikesStatus likesStatus;
 
-
   public enum LikesStatus {
 
     Like,
@@ -53,6 +52,5 @@ public class WriterLikes extends BaseEntity {
     }
 
   }
-
 
 }

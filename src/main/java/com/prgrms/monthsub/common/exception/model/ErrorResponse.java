@@ -15,6 +15,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ErrorResponse {
+
   private String exception;
   private String message;
   private int status;
@@ -95,11 +96,8 @@ public class ErrorResponse {
   @Getter
   @NoArgsConstructor(access = AccessLevel.PROTECTED)
   public static class FieldError {
-
     private String field;
-
     private String value;
-
     private String reason;
 
     private FieldError(
@@ -133,7 +131,6 @@ public class ErrorResponse {
         ))
         .collect(Collectors.toList());
     }
-
   }
 
 }

@@ -27,13 +27,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class S3Uploader {
-  //  private static final String PROFILE = "profile";
-//  private static final String THUMBNAIL = "thumbnail";
-  private AmazonS3 s3Client;
+
+  public static final List<String> imageExtensions = Arrays.asList("jpeg", "png", "jpg");
+
   private final AWS aws;
   private final S3 s3;
 
   private final Logger log = LoggerFactory.getLogger(getClass());
+  private AmazonS3 s3Client;
 
   public S3Uploader(
     AWS aws,
@@ -42,8 +43,6 @@ public class S3Uploader {
     this.aws = aws;
     this.s3 = s3;
   }
-
-  public static final List<String> imageExtensions = Arrays.asList("jpeg", "png", "jpg");
 
   @PostConstruct
   public void setS3Client() {

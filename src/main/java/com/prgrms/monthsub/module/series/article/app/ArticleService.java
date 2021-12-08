@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional(readOnly = true)
 public class ArticleService {
+
   private final ArticleRepository articleRepository;
 
   public ArticleService(

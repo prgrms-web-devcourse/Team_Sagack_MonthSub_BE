@@ -14,59 +14,68 @@ import org.springframework.stereotype.Component;
 @Component
 public class MyChannelConverter {
 
-    private final UserConverter userConverter;
+  private final UserConverter userConverter;
+  private final WriterConverter writerConverter;
+  private final SeriesConverter seriesConverter;
 
-    private final WriterConverter writerConverter;
+  public MyChannelConverter(
+    UserConverter userConverter,
+    WriterConverter writerConverter,
+    SeriesConverter seriesConverter
+  ) {
+    this.userConverter = userConverter;
+    this.writerConverter = writerConverter;
+    this.seriesConverter = seriesConverter;
+  }
 
-    private final SeriesConverter seriesConverter;
+  public MyChannel.Response myChannelToResponse(
+    User user,
+    Writer writer,
+    List<Writer> followingWriterList,
+    List<Series> seriesLikeList,
+    List<Series> seriesSubscribeList,
+    List<Series> seriesPostList
+  ) {
+    return new MyChannel.Response(
+      userConverter.userToSeriesOneWithUserResponse(user),
+      followingWriterList.size(),
+      followingWriterList.stream()
+        .map(writerConverter::writerToMyChannelFollowWriterObject)
+        .collect(Collectors.toList()),
+      seriesLikeList.stream()
+        .map(seriesConverter::seriesToMyChannelLikeObject)
+        .collect(Collectors.toList()),
+      seriesSubscribeList.stream()
+        .map(seriesConverter::seriesToMyChannelSubscribeObject)
+        .collect(Collectors.toList()),
+      writer.getFollowCount(),
+      seriesPostList.stream()
+        .map(seriesConverter::seriesToMyChannelSeriesObject)
+        .collect(Collectors.toList())
+    );
+  }
 
-    public MyChannelConverter(UserConverter userConverter,
-        WriterConverter writerConverter,
-        SeriesConverter seriesConverter) {
-        this.userConverter = userConverter;
-        this.writerConverter = writerConverter;
-        this.seriesConverter = seriesConverter;
-    }
-
-    public MyChannel.Response myChannelToResponse(User user,
-        Writer writer,
-        List<Writer> followingWriterList,
-        List<Series> seriesLikeList,
-        List<Series> seriesSubscribeList,
-        List<Series> seriesPostList) {
-        return new MyChannel.Response(
-            userConverter.userToSeriesOneWithUserResponse(user),
-            followingWriterList.size(),
-            followingWriterList.stream().map(writerConverter::writerToMyChannelFollowWriterObject)
-                .collect(Collectors.toList()),
-            seriesLikeList.stream().map(seriesConverter::seriesToMyChannelLikeObject)
-                .collect(Collectors.toList()),
-            seriesSubscribeList.stream().map(seriesConverter::seriesToMyChannelSubscribeObject)
-                .collect(Collectors.toList()),
-            writer.getFollowCount(),
-            seriesPostList.stream().map(seriesConverter::seriesToMyChannelSeriesObject)
-                .collect(Collectors.toList())
-        );
-    }
-
-    public MyChannel.Response myChannelToResponseWithoutWriter(User user,
-        List<Writer> followingWriterList,
-        List<Series> seriesLikeList,
-        List<Series> seriesSubscribeList) {
-
-        return new MyChannel.Response(
-            userConverter.userToSeriesOneWithUserResponse(user),
-            followingWriterList.size(),
-            followingWriterList.stream().map(writerConverter::writerToMyChannelFollowWriterObject)
-                .collect(Collectors.toList()),
-            seriesLikeList.stream().map(seriesConverter::seriesToMyChannelLikeObject)
-                .collect(Collectors.toList()),
-            seriesSubscribeList.stream().map(seriesConverter::seriesToMyChannelSubscribeObject)
-                .collect(Collectors.toList()),
-            0,
-            Collections.emptyList()
-        );
-    }
-
+  public MyChannel.Response myChannelToResponseWithoutWriter(
+    User user,
+    List<Writer> followingWriterList,
+    List<Series> seriesLikeList,
+    List<Series> seriesSubscribeList
+  ) {
+    return new MyChannel.Response(
+      userConverter.userToSeriesOneWithUserResponse(user),
+      followingWriterList.size(),
+      followingWriterList.stream()
+        .map(writerConverter::writerToMyChannelFollowWriterObject)
+        .collect(Collectors.toList()),
+      seriesLikeList.stream()
+        .map(seriesConverter::seriesToMyChannelLikeObject)
+        .collect(Collectors.toList()),
+      seriesSubscribeList.stream()
+        .map(seriesConverter::seriesToMyChannelSubscribeObject)
+        .collect(Collectors.toList()),
+      0,
+      Collections.emptyList()
+    );
+  }
 
 }

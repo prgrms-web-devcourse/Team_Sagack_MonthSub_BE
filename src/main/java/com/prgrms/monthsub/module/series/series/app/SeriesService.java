@@ -29,6 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 @Transactional(readOnly = true)
 public class SeriesService {
+
   private final SeriesRepository seriesRepository;
   private final ArticleService articleService;
   private final WriterProvider writerProvider;

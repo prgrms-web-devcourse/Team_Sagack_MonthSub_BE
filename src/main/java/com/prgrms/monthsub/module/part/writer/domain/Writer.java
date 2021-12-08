@@ -27,6 +27,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "writer")
 public class Writer extends BaseEntity {
+
   public static final int DEFAULT_FOLLOW_COUNT = 0;
   @Transient
   SeriesStatus subScribeStatus;

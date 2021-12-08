@@ -14,7 +14,6 @@ import org.springframework.security.core.GrantedAuthority;
 public class JwtAuthenticationProvider implements AuthenticationProvider {
 
   private final Jwt jwt;
-
   private final UserService userService;
 
   public JwtAuthenticationProvider(

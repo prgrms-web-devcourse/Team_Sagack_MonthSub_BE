@@ -15,7 +15,7 @@ public interface SeriesLikesRepository extends JpaRepository<SeriesLikes, Long> 
     @Param("seriesId") Long seriesId
   );
 
-    @Query("select sl from SeriesLikes as sl join fetch sl.series sls where sl.userId = :userId")
-    List<SeriesLikes> findAllMySeriesLikeByUserId(@Param("userId") Long userId);
+  @Query("select sl from SeriesLikes as sl join fetch sl.series sls where sl.userId = :userId")
+  List<SeriesLikes> findAllMySeriesLikeByUserId(@Param("userId") Long userId);
 
 }

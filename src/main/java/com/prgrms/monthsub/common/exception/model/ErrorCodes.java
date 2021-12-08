@@ -93,5 +93,4 @@ public record ErrorCodes(ErrorCode errorCode, String message) {
     }
   }
 
-
 }

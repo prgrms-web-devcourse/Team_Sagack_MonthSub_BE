@@ -18,9 +18,7 @@ import org.springframework.core.env.Environment;
 public class OpenAPIConfig {
 
   private static final String PROD = "prod";
-
   private final Security security;
-
   private final Environment environment;
 
   public OpenAPIConfig(

@@ -57,4 +57,5 @@ public class Article extends BaseEntity {
     this.title = title;
     this.contents = contents;
   }
+
 }

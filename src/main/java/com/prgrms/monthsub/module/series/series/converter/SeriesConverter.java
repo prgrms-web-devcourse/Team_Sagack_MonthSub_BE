@@ -33,9 +33,7 @@ public class SeriesConverter {
   private static final int DEFAULT_LIKES = 0;
 
   private final ArticleConverter articleConverter;
-
   private final WriterConverter writerConverter;
-
   private final S3 s3;
 
   public SeriesConverter(
@@ -174,44 +172,44 @@ public class SeriesConverter {
     );
   }
 
-    public MyChannel.MyChannelLikeObject seriesToMyChannelLikeObject(Series series) {
-        return MyChannel.MyChannelLikeObject.builder()
-            .id(series.getId())
-            .thumbnail(this.s3.getDomain() + "/" + series.getThumbnailKey())
-            .title(series.getTitle())
-            .introduceSentence(series.getIntroduceSentence())
-            .startDate(series.getSeriesStartDate())
-            .endDate(series.getSeriesEndDate())
-            .likes(series.getLikes())
-            .category(series.getCategory())
-            .build();
-    }
+  public MyChannel.MyChannelLikeObject seriesToMyChannelLikeObject(Series series) {
+    return MyChannel.MyChannelLikeObject.builder()
+      .id(series.getId())
+      .thumbnail(this.s3.getDomain() + "/" + series.getThumbnailKey())
+      .title(series.getTitle())
+      .introduceSentence(series.getIntroduceSentence())
+      .startDate(series.getSeriesStartDate())
+      .endDate(series.getSeriesEndDate())
+      .likes(series.getLikes())
+      .category(series.getCategory())
+      .build();
+  }
 
-    public MyChannel.MyChannelSubscribeObject seriesToMyChannelSubscribeObject(Series series) {
-        return MyChannel.MyChannelSubscribeObject.builder()
-            .id(series.getId())
-            .thumbnail(this.s3.getDomain() + "/" + series.getThumbnailKey())
-            .title(series.getTitle())
-            .introduceSentence(series.getIntroduceSentence())
-            .startDate(series.getSeriesStartDate())
-            .endDate(series.getSeriesEndDate())
-            .likes(series.getLikes())
-            .category(series.getCategory())
-            .build();
-    }
+  public MyChannel.MyChannelSubscribeObject seriesToMyChannelSubscribeObject(Series series) {
+    return MyChannel.MyChannelSubscribeObject.builder()
+      .id(series.getId())
+      .thumbnail(this.s3.getDomain() + "/" + series.getThumbnailKey())
+      .title(series.getTitle())
+      .introduceSentence(series.getIntroduceSentence())
+      .startDate(series.getSeriesStartDate())
+      .endDate(series.getSeriesEndDate())
+      .likes(series.getLikes())
+      .category(series.getCategory())
+      .build();
+  }
 
-    public MyChannel.MyChannelSeriesObject seriesToMyChannelSeriesObject(Series series) {
-        return MyChannel.MyChannelSeriesObject.builder()
-            .id(series.getId())
-            .thumbnail(this.s3.getDomain() + "/" + series.getThumbnailKey())
-            .title(series.getTitle())
-            .introduceSentence(series.getIntroduceSentence())
-            .startDate(series.getSeriesStartDate())
-            .endDate(series.getSeriesEndDate())
-            .likes(series.getLikes())
-            .category(series.getCategory())
-            .build();
-    }
+  public MyChannel.MyChannelSeriesObject seriesToMyChannelSeriesObject(Series series) {
+    return MyChannel.MyChannelSeriesObject.builder()
+      .id(series.getId())
+      .thumbnail(this.s3.getDomain() + "/" + series.getThumbnailKey())
+      .title(series.getTitle())
+      .introduceSentence(series.getIntroduceSentence())
+      .startDate(series.getSeriesStartDate())
+      .endDate(series.getSeriesEndDate())
+      .likes(series.getLikes())
+      .category(series.getCategory())
+      .build();
+  }
 
 }
 

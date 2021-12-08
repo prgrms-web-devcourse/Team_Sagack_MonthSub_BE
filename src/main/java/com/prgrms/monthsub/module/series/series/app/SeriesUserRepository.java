@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 public interface SeriesUserRepository extends JpaRepository<SeriesUser, Long> {
 
-    @Query("select su from SeriesUser as su join fetch su.series sus where su.userId = :userId")
-    List<SeriesUser> findAllMySubscribeByUserId(@Param("userId") Long userId);
+  @Query("select su from SeriesUser as su join fetch su.series sus where su.userId = :userId")
+  List<SeriesUser> findAllMySubscribeByUserId(@Param("userId") Long userId);
 
 }
