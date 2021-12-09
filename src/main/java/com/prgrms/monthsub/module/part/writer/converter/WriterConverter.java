@@ -34,7 +34,9 @@ public class WriterConverter {
     Writer writer
   ) {
     return MyChannelFollowWriterObject.builder()
-      .id(writer.getId())
+      .userId(writer.getUser()
+        .getId())
+      .writerId(writer.getId())
       .profileImage(this.s3.getDomain() + "/" + writer.getUser()
         .getProfileKey())
       .seriesStatus(String.valueOf(writer.getSubScribeStatus()))

@@ -106,4 +106,43 @@ public class MyChannelAssemble {
       });
   }
 
+  public MyChannel.OtherResponse getOtherChannel(Long userId) {
+    //1. 유저 객체 가져오기
+    User userEntity = this.userService.findById(userId);
+
+    //2. 내가 팔로잉한 작가 리스트 가져오기
+    List<WriterLikes> writerLikesList = this.writerLikesService.findAllByUserId(
+      userId, LikesStatus.Like);
+
+    //2.5 팔로우한 작가들의 모집현황 status 가져오기
+    for (WriterLikes followingWriter : writerLikesList) {
+      Page<SeriesStatus> status = this.seriesService.checkSeriesStatusByWriterId(
+        followingWriter.getId(), SeriesStatus.SUBSCRIPTION_AVAILABLE
+        , PageRequest.of(0, 1));
+      if (status.getTotalElements() > 0) {
+        followingWriter.getWriter()
+          .editSubScribeStatus(SeriesStatus.SUBSCRIPTION_AVAILABLE);
+      } else {
+        followingWriter.getWriter()
+          .editSubScribeStatus(SeriesStatus.SUBSCRIPTION_UNAVAILABLE);
+      }
+    }
+
+    List<Writer> writerLikes = writerLikesList.stream()
+      .map(WriterLikes::getWriter)
+      .collect(Collectors.toList());
+
+    return this.writerService.findWriterObjectByUserId(userId)
+      .map(writer -> {
+        return myChannelConverter.otherChannelToResponse(
+          userEntity
+          , writer
+          , writerLikes
+          , seriesService.findAllByWriterId(writer.getId()));
+      })
+      .orElseGet(() -> {
+        return myChannelConverter.otherChannelToResponseWithoutWriter(userEntity, writerLikes);
+      });
+  }
+
 }
