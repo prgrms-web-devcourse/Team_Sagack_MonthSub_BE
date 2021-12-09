@@ -48,11 +48,9 @@ public class SeriesConverter {
 
   public Series SeriesSubscribePostResponseToEntity(
     Writer writer,
-    String imageUrl,
     SeriesSubscribePost.Request req
   ) {
     return Series.builder()
-      .thumbnailKey(imageUrl)
       .title(req.title())
       .introduceText(req.introduceText())
       .introduceSentence(req.introduceSentence())

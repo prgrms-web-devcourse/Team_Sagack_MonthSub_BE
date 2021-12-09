@@ -32,14 +32,14 @@ import org.springframework.web.multipart.MultipartFile;
 @Tag(name = "Series")
 public class SeriesController {
 
-  private final SeriesService seriesService;
+  private final SeriesAssemble seriesAssemble;
   private final SeriesLikesService seriesLikesService;
 
   public SeriesController(
-    SeriesService seriesService,
+    SeriesAssemble seriesAssemble,
     SeriesLikesService seriesLikesService
   ) {
-    this.seriesService = seriesService;
+    this.seriesAssemble = seriesAssemble;
     this.seriesLikesService = seriesLikesService;
   }
 
@@ -47,7 +47,7 @@ public class SeriesController {
   @Operation(summary = "시리즈 공고 게시글 리스트 조회")
   @Tag(name = "[화면]-시리즈")
   public ApiResponse<List<SeriesSubscribeList.Response>> getSeriesList() {
-    return ApiResponse.ok(HttpMethod.GET, this.seriesService.getSeriesList());
+    return ApiResponse.ok(HttpMethod.GET, this.seriesAssemble.getSeriesList());
   }
 
   @PostMapping(consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
@@ -60,7 +60,7 @@ public class SeriesController {
   ) {
     return ApiResponse.ok(
       HttpMethod.POST,
-      this.seriesService.createSeries(authentication.userId, thumbnail, request)
+      this.seriesAssemble.createSeries(authentication.userId, thumbnail, request)
     );
   }
 
@@ -70,7 +70,7 @@ public class SeriesController {
   public ApiResponse<SeriesSubscribeOne.Response> getSeriesById(
     @PathVariable Long id
   ) {
-    return ApiResponse.ok(HttpMethod.GET, this.seriesService.getSeriesBySeriesId(id));
+    return ApiResponse.ok(HttpMethod.GET, this.seriesAssemble.getSeriesBySeriesId(id));
   }
 
   @PostMapping("/{id}/likes")
@@ -102,7 +102,7 @@ public class SeriesController {
     @AuthenticationPrincipal JwtAuthentication authentication,
     @PathVariable Long id
   ) {
-    return ApiResponse.ok(HttpMethod.GET, this.seriesService.getSeriesUsageEdit(id));
+    return ApiResponse.ok(HttpMethod.GET, this.seriesAssemble.getSeriesUsageEdit(id));
   }
 
   @PutMapping(path = "/{id}/edit", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -115,7 +115,7 @@ public class SeriesController {
   ) {
     return ApiResponse.ok(
       HttpMethod.PUT,
-      this.seriesService.editSeries(id, request)
+      this.seriesAssemble.editSeries(id, request)
     );
   }
 
@@ -124,11 +124,11 @@ public class SeriesController {
   @Tag(name = "[화면]-시리즈")
   public ApiResponse<String> registerImage(
     @AuthenticationPrincipal JwtAuthentication authentication,
-    @PathVariable String id,
+    @PathVariable Long id,
     @RequestPart MultipartFile image
   ) {
     return ApiResponse.ok(
-      HttpMethod.POST, this.seriesService.uploadThumbnailImage(image, authentication.userId));
+      HttpMethod.POST, this.seriesAssemble.changeThumbnail(image, id, authentication.userId));
   }
 
   @GetMapping("/sort")
@@ -137,7 +137,7 @@ public class SeriesController {
   public ApiResponse<List<SeriesSubscribeList.Response>> getSeriesListOrderBySort(
     @RequestParam(value = "sort", required = true) SortType sort
   ) {
-    return ApiResponse.ok(HttpMethod.GET, this.seriesService.getSeriesListOrderBySort(sort));
+    return ApiResponse.ok(HttpMethod.GET, this.seriesAssemble.getSeriesListOrderBySort(sort));
   }
 
   @GetMapping("/search/title")
@@ -146,7 +146,7 @@ public class SeriesController {
   public ApiResponse<List<SeriesSubscribeList.Response>> getSeriesListSearchTitle(
     @RequestParam(value = "title", required = true) String title
   ) {
-    return ApiResponse.ok(HttpMethod.GET, this.seriesService.getSeriesSearchTitle(title));
+    return ApiResponse.ok(HttpMethod.GET, this.seriesAssemble.getSeriesSearchTitle(title));
   }
 
   @GetMapping("/search/nickname")
@@ -155,7 +155,7 @@ public class SeriesController {
   public ApiResponse<List<SeriesSubscribeList.Response>> getSeriesListSearchNickname(
     @RequestParam(value = "nickname", required = true) String nickname
   ) {
-    return ApiResponse.ok(HttpMethod.GET, this.seriesService.getSeriesSearchNickname(nickname));
+    return ApiResponse.ok(HttpMethod.GET, this.seriesAssemble.getSeriesSearchNickname(nickname));
   }
 
 }
