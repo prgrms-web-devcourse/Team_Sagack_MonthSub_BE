@@ -16,7 +16,9 @@ import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeEdit;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeList;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeOne;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribePost;
-import java.io.IOException;
+import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.ExpulsionImageName;
+import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.ExpulsionImageStatus;
+import com.prgrms.monthsub.module.worker.explusion.domain.ExpulsionService;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -30,6 +32,7 @@ public class SeriesService {
 
   private final SeriesRepository seriesRepository;
   private final ArticleService articleService;
+  private final ExpulsionService expulsionService;
   private final WriterProvider writerProvider;
   private final S3Uploader s3Uploader;
   private final SeriesConverter seriesConverter;
@@ -37,12 +40,14 @@ public class SeriesService {
   public SeriesService(
     SeriesRepository seriesRepository,
     ArticleService articleService,
+    ExpulsionService expulsionService,
     WriterService writerProvider,
     SeriesConverter seriesConverter,
     S3Uploader s3Uploader
   ) {
     this.seriesRepository = seriesRepository;
     this.articleService = articleService;
+    this.expulsionService = expulsionService;
     this.writerProvider = writerProvider;
     this.seriesConverter = seriesConverter;
     this.s3Uploader = s3Uploader;
@@ -59,7 +64,7 @@ public class SeriesService {
     Long userId,
     MultipartFile thumbnail,
     SeriesSubscribePost.Request request
-  ) throws IOException {
+  ) {
     String imageUrl = this.uploadThumbnailImage(thumbnail, userId);
     Writer writer = this.writerProvider.findByUserId(userId);
     Series entity = this.seriesConverter.SeriesSubscribePostResponseToEntity(
@@ -80,9 +85,8 @@ public class SeriesService {
   }
 
   public List<SeriesSubscribeList.Response> getSeriesList() {
-    List<Series> seriesList = this.seriesRepository.findSeriesList();
-
-    return seriesList.stream()
+    return this.seriesRepository.findSeriesList()
+      .stream()
       .map(this.seriesConverter::seriesListToResponse)
       .collect(Collectors.toList());
   }
@@ -103,17 +107,38 @@ public class SeriesService {
   @Transactional
   public SeriesSubscribeEdit.Response editSeries(
     Long seriesId,
-    Long userId,
-    MultipartFile thumbnail,
     SeriesSubscribeEdit.Request request
-  ) throws IOException {
-    String imageUrl = this.uploadThumbnailImage(thumbnail, userId);
+  ) {
     Series series = this.getById(seriesId);
-
-    series.editSeries(imageUrl, request);
+    series.editSeries(request);
 
     return new SeriesSubscribeEdit.Response(this.seriesRepository.save(series)
       .getId());
+  }
+
+  @Transactional
+  public String changeThumbnail(
+    MultipartFile thumbnail,
+    Long seriesId,
+    Long userId
+  ) {
+    Series series = getById(seriesId);
+
+    String originalThumbnailKey = series.getThumbnailKey();
+
+    String thumbnailKey = this.uploadThumbnailImage(
+      thumbnail,
+      seriesId
+    );
+
+    expulsionService.save(
+      userId, originalThumbnailKey, ExpulsionImageStatus.CREATED,
+      ExpulsionImageName.SERIES_THUMBNAIL
+    );
+
+    series.changeThumbnailKey(thumbnailKey);
+
+    return this.seriesConverter.toThumbnailEndpoint(thumbnailKey);
   }
 
   public SeriesSubscribeOne.ResponseUsageEdit getSeriesUsageEdit(Long seriesId) {
@@ -125,7 +150,7 @@ public class SeriesService {
   public String uploadThumbnailImage(
     MultipartFile image,
     Long id
-  ) throws IOException {
+  ) {
     String key = Series.class.getSimpleName()
       .toLowerCase()
       + "/" + id.toString()
@@ -134,19 +159,6 @@ public class SeriesService {
       this.s3Uploader.getExtension(image);
 
     return this.s3Uploader.upload(Bucket.IMAGE, image, key, S3Uploader.imageExtensions);
-  }
-
-  public String updateThumbnailImage(
-    MultipartFile image,
-    Long id
-  ) throws IOException {
-    Series series = this.seriesRepository.getById(id);
-    String thumbnailKey = this.uploadThumbnailImage(image, series.getId());
-    series.changeThumbnailKey(thumbnailKey);
-
-    return this.seriesRepository
-      .save(series)
-      .getThumbnailKey();
   }
 
   public boolean checkSeriesStatusByWriterId(

@@ -9,11 +9,9 @@ import com.prgrms.monthsub.module.part.user.domain.exception.UserException.NickN
 import com.prgrms.monthsub.module.part.user.domain.exception.UserException.UserNotFound;
 import com.prgrms.monthsub.module.part.user.dto.UserEdit;
 import com.prgrms.monthsub.module.part.user.dto.UserSignUp;
-import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion;
 import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.ExpulsionImageName;
 import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.ExpulsionImageStatus;
 import com.prgrms.monthsub.module.worker.explusion.domain.ExpulsionService;
-import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -122,22 +120,18 @@ public class UserService {
     String originalProfileKey = user.getProfileKey();
 
     if (originalProfileKey != null) {
-      Expulsion expulsion = Expulsion.builder()
-        .userId(user.getId())
-        .imageKey(originalProfileKey)
-        .expulsionImageStatus(ExpulsionImageStatus.CREATED)
-        .expulsionImageName(ExpulsionImageName.USER_PROFILE)
-        .hardDeleteDate(LocalDateTime.now())
-        .build();
-      this.expulsionService.save(expulsion);
+      expulsionService.save(
+        user.getId(), originalProfileKey, ExpulsionImageStatus.CREATED,
+        ExpulsionImageName.USER_PROFILE
+      );
     }
 
     user.changeProfileKey(profileKey);
+
     return this.userConverter.UserProfile(
       Optional.ofNullable(user.getProfileKey())
     );
   }
-
 
   private void checkEmail(String email) {
     this.userRepository

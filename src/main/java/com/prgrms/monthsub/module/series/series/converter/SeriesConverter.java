@@ -72,35 +72,35 @@ public class SeriesConverter {
   }
 
   public SeriesSubscribeOne.Response seriesToSeriesOneResponse(
-    Series seriesEntity,
+    Series series,
     List<Article> articleList
   ) {
     SeriesOneWithWriterResponse writerResponse = writerConverter.writerToSeriesOneWithWriterResponse(
-      seriesEntity.getWriter());
+      series.getWriter());
     return new Response(
       SeriesObject.builder()
-        .id(seriesEntity.getId())
-        .thumbnail(this.s3.getDomain() + "/" + seriesEntity.getThumbnailKey())
-        .title(seriesEntity.getTitle())
-        .introduceText(seriesEntity.getIntroduceText())
-        .introduceSentence(seriesEntity.getIntroduceSentence())
-        .price(seriesEntity.getPrice())
-        .startDate(seriesEntity.getSeriesStartDate())
-        .endDate(seriesEntity.getSeriesEndDate())
-        .articleCount(seriesEntity.getArticleCount())
-        .likes(seriesEntity.getLikes())
+        .id(series.getId())
+        .thumbnail(this.toThumbnailEndpoint(series.getThumbnailKey()))
+        .title(series.getTitle())
+        .introduceText(series.getIntroduceText())
+        .introduceSentence(series.getIntroduceSentence())
+        .price(series.getPrice())
+        .startDate(series.getSeriesStartDate())
+        .endDate(series.getSeriesEndDate())
+        .articleCount(series.getArticleCount())
+        .likes(series.getLikes())
         .build(),
       UploadObject.builder()
-        .date(seriesEntity.getUploadDate()
+        .date(series.getUploadDate()
           .split("\\$"))
-        .time(seriesEntity.getUploadTime())
+        .time(series.getUploadTime())
         .build(),
       SubscribeObject.builder()
-        .startDate(seriesEntity.getSubscribeStartDate())
-        .endDate(seriesEntity.getSubscribeEndDate())
-        .status(String.valueOf(seriesEntity.getSubscribeStatus()))
+        .startDate(series.getSubscribeStartDate())
+        .endDate(series.getSubscribeEndDate())
+        .status(String.valueOf(series.getSubscribeStatus()))
         .build(),
-      seriesEntity.getCategory(),
+      series.getCategory(),
       WriterObject.builder()
         .id(writerResponse.writerId())
         .userId(writerResponse.user()
@@ -121,26 +121,26 @@ public class SeriesConverter {
     );
   }
 
-  public SeriesSubscribeList.Response seriesListToResponse(Series seriesEntity) {
+  public SeriesSubscribeList.Response seriesListToResponse(Series series) {
     SeriesOneWithWriterResponse writerResponse = writerConverter.writerToSeriesOneWithWriterResponse(
-      seriesEntity.getWriter());
+      series.getWriter());
     return new SeriesSubscribeList.Response(
       SeriesObject.builder()
-        .id(seriesEntity.getId())
-        .thumbnail(this.s3.getDomain() + "/" + seriesEntity.getThumbnailKey())
-        .title(seriesEntity.getTitle())
-        .introduceSentence(seriesEntity.getIntroduceSentence())
-        .startDate(seriesEntity.getSeriesStartDate())
-        .endDate(seriesEntity.getSeriesEndDate())
-        .articleCount(seriesEntity.getArticleCount())
-        .likes(seriesEntity.getLikes())
+        .id(series.getId())
+        .thumbnail(this.toThumbnailEndpoint(series.getThumbnailKey()))
+        .title(series.getTitle())
+        .introduceSentence(series.getIntroduceSentence())
+        .startDate(series.getSeriesStartDate())
+        .endDate(series.getSeriesEndDate())
+        .articleCount(series.getArticleCount())
+        .likes(series.getLikes())
         .build(),
       SubscribeObject.builder()
-        .startDate(seriesEntity.getSubscribeStartDate())
-        .endDate(seriesEntity.getSubscribeEndDate())
-        .status(String.valueOf(seriesEntity.getSubscribeStatus()))
+        .startDate(series.getSubscribeStartDate())
+        .endDate(series.getSubscribeEndDate())
+        .status(String.valueOf(series.getSubscribeStatus()))
         .build(),
-      seriesEntity.getCategory(),
+      series.getCategory(),
       WriterObject.builder()
         .id(writerResponse.writerId())
         .nickname(writerResponse.user()
@@ -155,7 +155,7 @@ public class SeriesConverter {
         .id(series.getId())
         .title(series.getTitle())
         .introduceSentence(series.getIntroduceSentence())
-        .thumbnail(this.s3.getDomain() + "/" + series.getThumbnailKey())
+        .thumbnail(this.toThumbnailEndpoint(series.getThumbnailKey()))
         .price(series.getPrice())
         .build(),
       series.getCategory(),
@@ -175,7 +175,7 @@ public class SeriesConverter {
   public MyChannel.MyChannelLikeObject seriesToMyChannelLikeObject(Series series) {
     return MyChannel.MyChannelLikeObject.builder()
       .id(series.getId())
-      .thumbnail(this.s3.getDomain() + "/" + series.getThumbnailKey())
+      .thumbnail(this.toThumbnailEndpoint(series.getThumbnailKey()))
       .title(series.getTitle())
       .introduceSentence(series.getIntroduceSentence())
       .startDate(series.getSeriesStartDate())
@@ -188,7 +188,7 @@ public class SeriesConverter {
   public MyChannel.MyChannelSubscribeObject seriesToMyChannelSubscribeObject(Series series) {
     return MyChannel.MyChannelSubscribeObject.builder()
       .id(series.getId())
-      .thumbnail(this.s3.getDomain() + "/" + series.getThumbnailKey())
+      .thumbnail(this.toThumbnailEndpoint(series.getThumbnailKey()))
       .title(series.getTitle())
       .introduceSentence(series.getIntroduceSentence())
       .startDate(series.getSeriesStartDate())
@@ -201,7 +201,7 @@ public class SeriesConverter {
   public MyChannel.MyChannelSeriesObject seriesToMyChannelSeriesObject(Series series) {
     return MyChannel.MyChannelSeriesObject.builder()
       .id(series.getId())
-      .thumbnail(this.s3.getDomain() + "/" + series.getThumbnailKey())
+      .thumbnail(this.toThumbnailEndpoint(series.getThumbnailKey()))
       .title(series.getTitle())
       .introduceSentence(series.getIntroduceSentence())
       .startDate(series.getSeriesStartDate())
@@ -209,6 +209,10 @@ public class SeriesConverter {
       .likes(series.getLikes())
       .category(series.getCategory())
       .build();
+  }
+
+  public String toThumbnailEndpoint(String thumbnailKey) {
+    return this.s3.getDomain() + "/" + thumbnailKey;
   }
 
 }

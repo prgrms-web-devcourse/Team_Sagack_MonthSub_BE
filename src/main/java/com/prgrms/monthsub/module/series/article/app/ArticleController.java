@@ -85,7 +85,7 @@ public class ArticleController {
     @PathVariable Long id,
     @RequestPart MultipartFile image,
     @Valid @RequestPart Long seriesId
-  ) throws IOException {
+  ) {
     return ApiResponse.ok(
       HttpMethod.PATCH,
       this.articleAssemble.changeThumbnail(image, seriesId, id, authentication.userId)

@@ -10,7 +10,6 @@ import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeOne;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribePost;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.io.IOException;
 import java.util.List;
 import javax.validation.Valid;
 import org.springframework.http.HttpMethod;
@@ -58,7 +57,7 @@ public class SeriesController {
     @AuthenticationPrincipal JwtAuthentication authentication,
     @RequestPart MultipartFile thumbnail,
     @Valid @RequestPart SeriesSubscribePost.Request request
-  ) throws IOException {
+  ) {
     return ApiResponse.ok(
       HttpMethod.POST,
       this.seriesService.createSeries(authentication.userId, thumbnail, request)
@@ -112,12 +111,11 @@ public class SeriesController {
   public ApiResponse<SeriesSubscribeEdit.Response> editSeries(
     @AuthenticationPrincipal JwtAuthentication authentication,
     @PathVariable Long id,
-    @RequestPart MultipartFile thumbnail,
     @Valid @RequestPart SeriesSubscribeEdit.Request request
-  ) throws IOException {
+  ) {
     return ApiResponse.ok(
       HttpMethod.PUT,
-      this.seriesService.editSeries(id, authentication.userId, thumbnail, request)
+      this.seriesService.editSeries(id, request)
     );
   }
 
@@ -128,7 +126,7 @@ public class SeriesController {
     @AuthenticationPrincipal JwtAuthentication authentication,
     @PathVariable String id,
     @RequestPart MultipartFile image
-  ) throws IOException {
+  ) {
     return ApiResponse.ok(
       HttpMethod.POST, this.seriesService.uploadThumbnailImage(image, authentication.userId));
   }

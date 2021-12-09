@@ -128,12 +128,8 @@ public class Series extends BaseEntity {
   }
 
   public void editSeries(
-    String thumbnail,
     SeriesSubscribeEdit.Request request
   ) {
-    if (thumbnail != null) {
-      this.thumbnailKey = thumbnail;
-    }
     this.title = request.title();
     this.introduceSentence = request.introduceSentence();
     this.introduceText = request.introduceText();

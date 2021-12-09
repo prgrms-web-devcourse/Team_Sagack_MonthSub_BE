@@ -9,12 +9,10 @@ import com.prgrms.monthsub.module.series.article.dto.ArticleOne;
 import com.prgrms.monthsub.module.series.article.dto.ArticlePost;
 import com.prgrms.monthsub.module.series.series.app.SeriesService;
 import com.prgrms.monthsub.module.series.series.domain.Series;
-import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion;
 import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.ExpulsionImageName;
 import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.ExpulsionImageStatus;
 import com.prgrms.monthsub.module.worker.explusion.domain.ExpulsionService;
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -107,14 +105,10 @@ public class ArticleAssemble {
       articleId
     );
 
-    Expulsion expulsion = Expulsion.builder()
-      .userId(userId)
-      .imageKey(originalThumbnailKey)
-      .expulsionImageStatus(ExpulsionImageStatus.CREATED)
-      .expulsionImageName(ExpulsionImageName.ARTICLE_THUMBNAIL)
-      .hardDeleteDate(LocalDateTime.now())
-      .build();
-    this.expulsionService.save(expulsion);
+    expulsionService.save(
+      userId, originalThumbnailKey, ExpulsionImageStatus.CREATED,
+      ExpulsionImageName.ARTICLE_THUMBNAIL
+    );
 
     article.changeThumbnailKey(thumbnailKey);
 
