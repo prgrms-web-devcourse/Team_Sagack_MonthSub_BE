@@ -64,9 +64,10 @@ security:
     - /assets/**
     - /h2-console/**
     - /v3/api-docs/**
-    - /swagger-monthub.html
-    - /swagger-ui/index.html
+    - /swagger-monthsub.html
+    - /swagger-ui/**
     # endpoint
+    - /health
     - /users/login
     - /series
     - /series/sort
