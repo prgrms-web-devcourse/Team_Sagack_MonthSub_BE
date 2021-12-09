@@ -140,4 +140,22 @@ public class SeriesController {
     return ApiResponse.ok(HttpMethod.GET, this.seriesService.getSeriesListOrderBySort(sort));
   }
 
+  @GetMapping("/search/title")
+  @Operation(summary = "시리즈제목으로 리스트 조회")
+  @Tag(name = "[화면]-시리즈")
+  public ApiResponse<List<SeriesSubscribeList.Response>> getSeriesListSearchTitle(
+    @RequestParam(value = "title", required = true) String title
+  ) {
+    return ApiResponse.ok(HttpMethod.GET, this.seriesService.getSeriesSearchTitle(title));
+  }
+
+  @GetMapping("/search/nickname")
+  @Operation(summary = "작가 닉네임으로 리스트 조회")
+  @Tag(name = "[화면]-시리즈")
+  public ApiResponse<List<SeriesSubscribeList.Response>> getSeriesListSearchNickname(
+    @RequestParam(value = "nickname", required = true) String nickname
+  ) {
+    return ApiResponse.ok(HttpMethod.GET, this.seriesService.getSeriesSearchNickname(nickname));
+  }
+
 }

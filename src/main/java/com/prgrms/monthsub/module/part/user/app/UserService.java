@@ -2,6 +2,7 @@ package com.prgrms.monthsub.module.part.user.app;
 
 import com.prgrms.monthsub.common.utils.S3Uploader;
 import com.prgrms.monthsub.config.S3.Bucket;
+import com.prgrms.monthsub.module.part.user.app.provider.UserProvider;
 import com.prgrms.monthsub.module.part.user.converter.UserConverter;
 import com.prgrms.monthsub.module.part.user.domain.User;
 import com.prgrms.monthsub.module.part.user.domain.exception.UserException.EmailDuplicated;
@@ -21,7 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @Transactional(readOnly = true)
-public class UserService {
+public class UserService implements UserProvider {
 
   private final PasswordEncoder passwordEncoder;
   private final UserRepository userRepository;
@@ -41,6 +42,13 @@ public class UserService {
     this.s3Uploader = s3Uploader;
     this.userConverter = userConverter;
     this.expulsionService = expulsionService;
+  }
+
+  @Transactional
+  @Override
+  public Optional<User> findByNickname(String nickname) {
+    return this.userRepository
+      .findByNickname(nickname);
   }
 
   public User findById(Long userId) {

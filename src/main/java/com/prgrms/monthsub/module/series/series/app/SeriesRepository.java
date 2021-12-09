@@ -5,7 +5,6 @@ import com.prgrms.monthsub.module.series.series.domain.Series.SeriesStatus;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
 public interface SeriesRepository extends JpaRepository<Series, Long> {
 
@@ -23,7 +22,8 @@ public interface SeriesRepository extends JpaRepository<Series, Long> {
     SeriesStatus subscribeStatus
   );
 
-  @Query("select s from Series as s join fetch s.writer where s.writer.id = :writerId")
-  List<Series> findAllByWriterId(@Param("writerId") Long writerId);
+  List<Series> findByTitleContainingIgnoreCase(String title);
+
+  List<Series> findAllByWriterId(Long writerId);
 
 }
