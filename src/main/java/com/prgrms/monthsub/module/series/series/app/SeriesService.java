@@ -22,6 +22,8 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -89,17 +91,16 @@ public class SeriesService {
       .collect(Collectors.toList());
   }
 
-  public List<SeriesSubscribeList.Response> getSeriesListOrderBySort(SortType sort) {
-    List<Series> seriesList;
 
-    seriesList = switch (sort) {
-      case RECENT -> this.seriesRepository.findSeriesListOrderByCreatedAt();
-      case POPULAR -> this.seriesRepository.findSeriesListOrderByLike();
-    };
-
-    return seriesList.stream()
-      .map(this.seriesConverter::seriesListToResponse)
-      .collect(Collectors.toList());
+    public List<SeriesSubscribeList.Response> getSeriesListSort(SortType sort) {
+    return(
+            switch (sort) {
+              case RECENT -> this.seriesRepository.findSeriesListOrderById();
+              case POPULAR -> this.seriesRepository.findSeriesListOrderByLike();
+            })
+        .stream()
+        .map(this.seriesConverter::seriesListToResponse)
+        .collect(Collectors.toList());
   }
 
   @Transactional

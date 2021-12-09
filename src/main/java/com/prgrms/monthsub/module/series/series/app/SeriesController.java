@@ -139,7 +139,7 @@ public class SeriesController {
   public ApiResponse<List<SeriesSubscribeList.Response>> getSeriesListOrderBySort(
     @RequestParam(value = "sort", required = true) SortType sort
   ) {
-    return ApiResponse.ok(HttpMethod.GET, this.seriesService.getSeriesListOrderBySort(sort));
+    return ApiResponse.ok(HttpMethod.GET, this.seriesService.getSeriesListSort(sort));
   }
 
 }
