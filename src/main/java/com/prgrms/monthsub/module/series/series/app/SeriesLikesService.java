@@ -92,7 +92,7 @@ public class SeriesLikesService {
 
   @Transactional(readOnly = true)
   public List<SeriesLikes> findAllMySeriesLikeByUserId(Long userId) {
-    return this.seriesLikesRepository.findAllMySeriesLikeByUserId(userId);
+    return this.seriesLikesRepository.findAllByUserId(userId);
   }
 
 }

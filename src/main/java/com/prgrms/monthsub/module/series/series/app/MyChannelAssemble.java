@@ -5,7 +5,6 @@ import com.prgrms.monthsub.module.part.user.domain.User;
 import com.prgrms.monthsub.module.part.writer.app.WriterLikesService;
 import com.prgrms.monthsub.module.part.writer.app.WriterService;
 import com.prgrms.monthsub.module.part.writer.domain.Writer;
-import com.prgrms.monthsub.module.part.writer.domain.WriterLikes;
 import com.prgrms.monthsub.module.part.writer.domain.WriterLikes.LikesStatus;
 import com.prgrms.monthsub.module.series.series.converter.MyChannelConverter;
 import com.prgrms.monthsub.module.series.series.domain.Series;
@@ -107,24 +106,23 @@ public class MyChannelAssemble {
     User userEntity = this.userService.findById(userId);
 
     //2. 내가 팔로잉한 작가 리스트 가져오기
-    List<WriterLikes> writerLikesList = this.writerLikesService.findAllByUserId(
-      userId, LikesStatus.Like);
-
-    //2.5 팔로우한 작가들의 모집현황 status 가져오기
-    for (WriterLikes followingWriter : writerLikesList) {
-      boolean check = this.seriesService.checkSeriesStatusByWriterId(
-        followingWriter.getId(), SeriesStatus.SUBSCRIPTION_AVAILABLE);
-      if (check) {
-        followingWriter.getWriter()
-          .editSubScribeStatus(SeriesStatus.SUBSCRIPTION_AVAILABLE);
-      } else {
-        followingWriter.getWriter()
-          .editSubScribeStatus(SeriesStatus.SUBSCRIPTION_UNAVAILABLE);
-      }
-    }
-
-    List<Writer> writerLikes = writerLikesList.stream()
-      .map(WriterLikes::getWriter)
+    List<Writer> writerLikesList = this.writerLikesService
+      .findAllByUserIdAndAndLikesStatus(userId, LikesStatus.Like)
+      .stream()
+      .map(writerLikes -> {
+          if (this.seriesService.checkSeriesStatusByWriterId(
+            writerLikes.getId(),
+            SeriesStatus.SUBSCRIPTION_AVAILABLE
+          )) {
+            writerLikes.getWriter()
+              .editSubScribeStatus(SeriesStatus.SUBSCRIPTION_AVAILABLE);
+          } else {
+            writerLikes.getWriter()
+              .editSubScribeStatus(SeriesStatus.SUBSCRIPTION_UNAVAILABLE);
+          }
+          return writerLikes.getWriter();
+        }
+      )
       .collect(Collectors.toList());
 
     return this.writerService.findWriterObjectByUserId(userId)
@@ -132,11 +130,11 @@ public class MyChannelAssemble {
         return myChannelConverter.otherChannelToResponse(
           userEntity
           , writer
-          , writerLikes
+          , writerLikesList
           , seriesService.findAllByWriterId(writer.getId()));
       })
       .orElseGet(() -> {
-        return myChannelConverter.otherChannelToResponseWithoutWriter(userEntity, writerLikes);
+        return myChannelConverter.otherChannelToResponseWithoutWriter(userEntity, writerLikesList);
       });
   }
 
