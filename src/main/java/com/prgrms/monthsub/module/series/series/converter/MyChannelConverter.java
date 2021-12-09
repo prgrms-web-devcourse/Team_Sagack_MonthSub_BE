@@ -6,6 +6,7 @@ import com.prgrms.monthsub.module.part.writer.converter.WriterConverter;
 import com.prgrms.monthsub.module.part.writer.domain.Writer;
 import com.prgrms.monthsub.module.series.series.domain.Series;
 import com.prgrms.monthsub.module.series.series.dto.MyChannel;
+import com.prgrms.monthsub.module.series.series.dto.MyChannel.OtherResponse;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -72,6 +73,40 @@ public class MyChannelConverter {
         .collect(Collectors.toList()),
       seriesSubscribeList.stream()
         .map(seriesConverter::seriesToMyChannelSubscribeObject)
+        .collect(Collectors.toList()),
+      0,
+      Collections.emptyList()
+    );
+  }
+
+  public MyChannel.OtherResponse otherChannelToResponse(
+    User user,
+    Writer writer,
+    List<Writer> followingWriterList,
+    List<Series> seriesPostList
+  ) {
+    return new OtherResponse(
+      userConverter.userToSeriesOneWithUserResponse(user),
+      followingWriterList.size(),
+      followingWriterList.stream()
+        .map(writerConverter::writerToMyChannelFollowWriterObject)
+        .collect(Collectors.toList()),
+      writer.getFollowCount(),
+      seriesPostList.stream()
+        .map(seriesConverter::seriesToMyChannelSeriesObject)
+        .collect(Collectors.toList())
+    );
+  }
+
+  public MyChannel.OtherResponse otherChannelToResponseWithoutWriter(
+    User user,
+    List<Writer> followingWriterList
+  ) {
+    return new MyChannel.OtherResponse(
+      userConverter.userToSeriesOneWithUserResponse(user),
+      followingWriterList.size(),
+      followingWriterList.stream()
+        .map(writerConverter::writerToMyChannelFollowWriterObject)
         .collect(Collectors.toList()),
       0,
       Collections.emptyList()

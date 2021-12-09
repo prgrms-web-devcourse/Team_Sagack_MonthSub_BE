@@ -15,8 +15,6 @@ import com.prgrms.monthsub.module.series.series.domain.SeriesUser;
 import com.prgrms.monthsub.module.series.series.dto.MyChannel;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -56,25 +54,23 @@ public class MyChannelAssemble {
     User userEntity = this.userService.findById(userId);
 
     //2. 내가 팔로잉한 작가 리스트 가져오기
-    List<WriterLikes> writerLikesList = this.writerLikesService.findAllByUserId(
-      userId, LikesStatus.Like);
-
-    //2.5 팔로우한 작가들의 모집현황 status 가져오기
-    for (WriterLikes followingWriter : writerLikesList) {
-      Page<SeriesStatus> status = this.seriesService.checkSeriesStatusByWriterId(
-        followingWriter.getId(), SeriesStatus.SUBSCRIPTION_AVAILABLE
-        , PageRequest.of(0, 1));
-      if (status.getTotalElements() > 0) {
-        followingWriter.getWriter()
-          .editSubScribeStatus(SeriesStatus.SUBSCRIPTION_AVAILABLE);
-      } else {
-        followingWriter.getWriter()
-          .editSubScribeStatus(SeriesStatus.SUBSCRIPTION_UNAVAILABLE);
-      }
-    }
-
-    List<Writer> writerLikes = writerLikesList.stream()
-      .map(WriterLikes::getWriter)
+    List<Writer> writerLikesList = this.writerLikesService
+      .findAllByUserIdAndAndLikesStatus(userId, LikesStatus.Like)
+      .stream()
+      .map(writerLikes -> {
+          if (this.seriesService.checkSeriesStatusByWriterId(
+            writerLikes.getId(),
+            SeriesStatus.SUBSCRIPTION_AVAILABLE
+          )) {
+            writerLikes.getWriter()
+              .editSubScribeStatus(SeriesStatus.SUBSCRIPTION_AVAILABLE);
+          } else {
+            writerLikes.getWriter()
+              .editSubScribeStatus(SeriesStatus.SUBSCRIPTION_UNAVAILABLE);
+          }
+          return writerLikes.getWriter();
+        }
+      )
       .collect(Collectors.toList());
 
     //3. 내가 좋아요한 시리즈 리스트 가져오기
@@ -93,16 +89,54 @@ public class MyChannelAssemble {
     return this.writerService.findWriterObjectByUserId(userId)
       .map(e -> {
         return myChannelConverter.myChannelToResponse(userEntity, e
-          , writerLikes
+          , writerLikesList
           , myLikesSeries
           , mySubscribeList
           , seriesService.findAllByWriterId(e.getId()));
       })
       .orElseGet(() -> {
         return myChannelConverter.myChannelToResponseWithoutWriter(userEntity
-          , writerLikes
+          , writerLikesList
           , myLikesSeries
           , mySubscribeList);
+      });
+  }
+
+  public MyChannel.OtherResponse getOtherChannel(Long userId) {
+    //1. 유저 객체 가져오기
+    User userEntity = this.userService.findById(userId);
+
+    //2. 내가 팔로잉한 작가 리스트 가져오기
+    List<WriterLikes> writerLikesList = this.writerLikesService.findAllByUserId(
+      userId, LikesStatus.Like);
+
+    //2.5 팔로우한 작가들의 모집현황 status 가져오기
+    for (WriterLikes followingWriter : writerLikesList) {
+      boolean check = this.seriesService.checkSeriesStatusByWriterId(
+        followingWriter.getId(), SeriesStatus.SUBSCRIPTION_AVAILABLE);
+      if (check) {
+        followingWriter.getWriter()
+          .editSubScribeStatus(SeriesStatus.SUBSCRIPTION_AVAILABLE);
+      } else {
+        followingWriter.getWriter()
+          .editSubScribeStatus(SeriesStatus.SUBSCRIPTION_UNAVAILABLE);
+      }
+    }
+
+    List<Writer> writerLikes = writerLikesList.stream()
+      .map(WriterLikes::getWriter)
+      .collect(Collectors.toList());
+
+    return this.writerService.findWriterObjectByUserId(userId)
+      .map(writer -> {
+        return myChannelConverter.otherChannelToResponse(
+          userEntity
+          , writer
+          , writerLikes
+          , seriesService.findAllByWriterId(writer.getId()));
+      })
+      .orElseGet(() -> {
+        return myChannelConverter.otherChannelToResponseWithoutWriter(userEntity, writerLikes);
       });
   }
 

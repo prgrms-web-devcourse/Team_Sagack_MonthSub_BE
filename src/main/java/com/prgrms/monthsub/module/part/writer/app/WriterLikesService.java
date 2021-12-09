@@ -24,4 +24,11 @@ public class WriterLikesService {
       .findAllByUserId(userId, likesStatus);
   }
 
+  public List<WriterLikes> findAllByUserIdAndAndLikesStatus(
+    Long userId,
+    LikesStatus likesStatus
+  ) {
+    return this.writerLikesRepository.findAllByUserIdAndLikesStatus(userId, likesStatus);
+  }
+
 }

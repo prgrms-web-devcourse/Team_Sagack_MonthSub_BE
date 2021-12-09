@@ -22,10 +22,21 @@ public class MyChannel {
   ) {
   }
 
+  @Schema(name = "MyChannel.OtherResponse")
+  public record OtherResponse(
+    SeriesOneWithUserResponse user,
+    int followIngCount,
+    List<MyChannelFollowWriterObject> followWriterList,
+    int followCount,
+    List<MyChannelSeriesObject> seriesPostList
+  ) {
+  }
+
   @Builder
   @Getter
   public static class MyChannelFollowWriterObject {
-    Long id;
+    Long userId;
+    Long writerId;
     String profileImage;
     String seriesStatus;
   }
