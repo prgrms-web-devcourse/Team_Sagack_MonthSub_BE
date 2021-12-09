@@ -68,8 +68,9 @@ security:
     # endpoint
     - /health
     - /users/login
-    - /series
+    - /users/signup
     - /series/sort
+    - /series/{id}
 
 logging:
   level:
