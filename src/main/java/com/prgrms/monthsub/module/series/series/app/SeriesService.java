@@ -20,8 +20,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -151,13 +149,11 @@ public class SeriesService {
       .getThumbnailKey();
   }
 
-  public Page<SeriesStatus> checkSeriesStatusByWriterId(
+  public boolean checkSeriesStatusByWriterId(
     Long writerId,
-    SeriesStatus status,
-    Pageable pageable
+    SeriesStatus status
   ) {
-    return this.seriesRepository.checkSeriesStatusByWriterId(writerId, status
-      , pageable);
+    return this.seriesRepository.existsAllByWriterIdAndSubscribeStatus(writerId, status);
   }
 
   public List<Series> findAllByWriterId(

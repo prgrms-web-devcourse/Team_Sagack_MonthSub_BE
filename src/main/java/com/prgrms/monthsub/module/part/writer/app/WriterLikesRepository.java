@@ -15,4 +15,9 @@ public interface WriterLikesRepository extends JpaRepository<WriterLikes, Long> 
     @Param("likesStatus") LikesStatus likesStatus
   );
 
+  List<WriterLikes> findAllByUserIdAndLikesStatus(
+    Long userId,
+    LikesStatus likesStatus
+  );
+
 }

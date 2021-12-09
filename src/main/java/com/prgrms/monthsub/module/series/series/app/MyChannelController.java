@@ -33,7 +33,7 @@ public class MyChannelController {
       HttpMethod.GET, this.channelAssemble.getMyChannel(authentication.userId));
   }
 
-  @GetMapping("/{userId}/other")
+  @GetMapping("/users/{userId}/other")
   @Operation(summary = "다른 유저 채널 조회")
   @Tag(name = "[화면]-다른 유저 채널")
   public ApiResponse<MyChannel.OtherResponse> getOtherChannel(
