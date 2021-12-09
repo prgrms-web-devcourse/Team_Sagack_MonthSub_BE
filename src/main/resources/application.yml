@@ -5,13 +5,13 @@ spring:
     username: ${DB_USER}
     password: ${DB_PASSWORD}
   flyway:
-    enabled: true
-    baseline-on-migrate: true
-    locations: classpath:db/seed
+    enabled: false
+#    baseline-on-migrate: true
+#    locations: classpath:db/seed
   jpa:
     open-in-view: false
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
       naming.physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
     database-platform: org.hibernate.dialect.MySQL8Dialect
   servlet:
