@@ -46,8 +46,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Override
   public void configure(WebSecurity web) {
-    web.ignoring()
-      .antMatchers("/assets/**", "/h2-console/**");
+    web
+
+      .ignoring()
+      .antMatchers(
+        this.security
+          .getAllows()
+          .toArray(String[]::new)
+      );
   }
 
   @Bean
@@ -112,7 +118,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
       .antMatchers("/users/me")
       .hasAnyRole("USER")
       .anyRequest()
-      .permitAll()
+      .fullyAuthenticated()
       .and()
       .csrf()
       .disable()
@@ -133,8 +139,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
       .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
       .and()
       .addFilterAfter(jwtAuthenticationFilter(), SecurityContextPersistenceFilter.class)
-      .addFilterBefore(exceptionHandlerFilter, jwtAuthenticationFilter().getClass())
-    ;
+      .addFilterBefore(exceptionHandlerFilter, jwtAuthenticationFilter().getClass());
   }
 
 }

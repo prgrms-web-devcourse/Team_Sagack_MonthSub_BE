@@ -58,9 +58,18 @@ security:
     origin:
       - http://localhost:3000
       - http://127.0.0.1:3000
-#      프론트 배포 도메인
-#      - https://monthsub.netlify.app
-
+  #      프론트 배포 도메인
+  #      - https://monthsub.netlify.app
+  allows:
+    - /assets/**
+    - /h2-console/**
+    - /v3/api-docs/**
+    - /swagger-monthub.html
+    - /swagger-ui/index.html
+    # endpoint
+    - /users/login
+    - /series
+    - /series/sort
 
 logging:
   level:
