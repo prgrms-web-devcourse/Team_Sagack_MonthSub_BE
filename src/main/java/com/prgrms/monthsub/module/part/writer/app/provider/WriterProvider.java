@@ -1,4 +1,4 @@
-package com.prgrms.monthsub.module.part.user.app.inferface;
+package com.prgrms.monthsub.module.part.writer.app.provider;
 
 import com.prgrms.monthsub.module.part.writer.domain.Writer;
 
