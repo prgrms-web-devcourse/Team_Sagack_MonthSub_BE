@@ -2,8 +2,10 @@ package com.prgrms.monthsub.module.series.series.app;
 
 import com.prgrms.monthsub.common.utils.S3Uploader;
 import com.prgrms.monthsub.config.S3.Bucket;
-import com.prgrms.monthsub.module.part.user.app.inferface.WriterProvider;
+import com.prgrms.monthsub.module.part.user.app.UserService;
+import com.prgrms.monthsub.module.part.user.app.provider.UserProvider;
 import com.prgrms.monthsub.module.part.writer.app.WriterService;
+import com.prgrms.monthsub.module.part.writer.app.provider.WriterProvider;
 import com.prgrms.monthsub.module.part.writer.domain.Writer;
 import com.prgrms.monthsub.module.series.article.app.ArticleService;
 import com.prgrms.monthsub.module.series.article.domain.Article;
@@ -19,6 +21,7 @@ import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribePost;
 import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.ExpulsionImageName;
 import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.ExpulsionImageStatus;
 import com.prgrms.monthsub.module.worker.explusion.domain.ExpulsionService;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -36,6 +39,7 @@ public class SeriesService {
   private final ArticleService articleService;
   private final ExpulsionService expulsionService;
   private final WriterProvider writerProvider;
+  private final UserProvider userProvider;
   private final S3Uploader s3Uploader;
   private final SeriesConverter seriesConverter;
 
@@ -44,6 +48,7 @@ public class SeriesService {
     ArticleService articleService,
     ExpulsionService expulsionService,
     WriterService writerProvider,
+    UserService userProvider,
     SeriesConverter seriesConverter,
     S3Uploader s3Uploader
   ) {
@@ -51,6 +56,7 @@ public class SeriesService {
     this.articleService = articleService;
     this.expulsionService = expulsionService;
     this.writerProvider = writerProvider;
+    this.userProvider = userProvider;
     this.seriesConverter = seriesConverter;
     this.s3Uploader = s3Uploader;
   }
@@ -94,6 +100,25 @@ public class SeriesService {
       }).stream()
       .map(this.seriesConverter::seriesListToResponse)
       .collect(Collectors.toList());
+  }
+
+  public List<SeriesSubscribeList.Response> getSeriesSearchTitle(String title) {
+    return this.seriesRepository.findByTitleContainingIgnoreCase(title)
+      .stream()
+      .map(this.seriesConverter::seriesListToResponse)
+      .collect(Collectors.toList());
+  }
+
+  public List<SeriesSubscribeList.Response> getSeriesSearchNickname(String nickname) {
+    return userProvider.findByNickname(nickname)
+      .map(user -> {
+        Writer writer = this.writerProvider.findByUserId(user.getId());
+        return this.seriesRepository.findAllByWriterId(writer.getId())
+          .stream()
+          .map(this.seriesConverter::seriesListToResponse)
+          .collect(Collectors.toList());
+      })
+      .orElseGet(Collections::emptyList);
   }
 
   @Transactional

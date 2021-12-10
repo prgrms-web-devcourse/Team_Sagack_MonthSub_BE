@@ -4,9 +4,9 @@ import static com.prgrms.monthsub.module.part.writer.domain.Writer.DEFAULT_FOLLO
 
 import com.prgrms.monthsub.module.part.user.app.PartService;
 import com.prgrms.monthsub.module.part.user.app.UserService;
-import com.prgrms.monthsub.module.part.user.app.inferface.WriterProvider;
 import com.prgrms.monthsub.module.part.user.domain.Part;
 import com.prgrms.monthsub.module.part.user.domain.User;
+import com.prgrms.monthsub.module.part.writer.app.provider.WriterProvider;
 import com.prgrms.monthsub.module.part.writer.domain.Writer;
 import com.prgrms.monthsub.module.part.writer.domain.exception.WriterException.WriterNotFound;
 import java.util.Optional;
