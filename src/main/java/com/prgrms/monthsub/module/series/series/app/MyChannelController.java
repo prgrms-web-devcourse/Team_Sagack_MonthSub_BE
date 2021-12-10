@@ -43,4 +43,5 @@ public class MyChannelController {
     return ApiResponse.ok(
       HttpMethod.GET, this.channelAssemble.getOtherChannel(userId));
   }
+
 }

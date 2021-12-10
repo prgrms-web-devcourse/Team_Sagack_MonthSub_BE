@@ -29,10 +29,12 @@ public class UserConverter {
   }
 
   public SeriesOneWithUserResponse userToSeriesOneWithUserResponse(User user) {
+    String profileImage =
+      user.getProfileKey() == null ? null : this.s3.getDomain() + "/" + user.getProfileKey();
     return new SeriesOneWithUserResponse(
       user.getId(),
       user.getEmail(),
-      this.s3.getDomain() + "/" + user.getProfileKey(),
+      profileImage,
       user.getProfileIntroduce(),
       user.getNickname()
     );
@@ -41,7 +43,7 @@ public class UserConverter {
   public String UserProfile(Optional<String> profileKey) {
     return profileKey
       .map(imageKey -> this.s3.getDomain() + "/" + imageKey)
-      .orElse("");
+      .orElse(null);
   }
 
   public User UserSignUpRequestToEntity(UserSignUp.Request request) {

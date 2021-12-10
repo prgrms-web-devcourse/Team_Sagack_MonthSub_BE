@@ -16,14 +16,6 @@ public class WriterLikesService {
     this.writerLikesRepository = writerLikesRepository;
   }
 
-  public List<WriterLikes> findAllByUserId(
-    Long userId,
-    LikesStatus likesStatus
-  ) {
-    return this.writerLikesRepository
-      .findAllByUserId(userId, likesStatus);
-  }
-
   public List<WriterLikes> findAllByUserIdAndAndLikesStatus(
     Long userId,
     LikesStatus likesStatus

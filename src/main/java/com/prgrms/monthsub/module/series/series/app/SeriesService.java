@@ -22,6 +22,8 @@ import com.prgrms.monthsub.module.worker.explusion.domain.ExpulsionService;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -84,22 +86,12 @@ public class SeriesService {
     return this.seriesConverter.seriesToSeriesOneResponse(series, articleList);
   }
 
-  public List<SeriesSubscribeList.Response> getSeriesList() {
-    return this.seriesRepository.findSeriesList()
-      .stream()
-      .map(this.seriesConverter::seriesListToResponse)
-      .collect(Collectors.toList());
-  }
-
-  public List<SeriesSubscribeList.Response> getSeriesListOrderBySort(SortType sort) {
-    List<Series> seriesList;
-
-    seriesList = switch (sort) {
-      case RECENT -> this.seriesRepository.findSeriesListOrderByCreatedAt();
-      case POPULAR -> this.seriesRepository.findSeriesListOrderByLike();
-    };
-
-    return seriesList.stream()
+  public List<SeriesSubscribeList.Response> getSeriesListSort(SortType sort) {
+    return (
+      switch (sort) {
+        case RECENT -> this.seriesRepository.findAll(Sort.by(Direction.DESC, "id"));
+        case POPULAR -> this.seriesRepository.findAll(Sort.by(Direction.DESC, "likes"));
+      }).stream()
       .map(this.seriesConverter::seriesListToResponse)
       .collect(Collectors.toList());
   }

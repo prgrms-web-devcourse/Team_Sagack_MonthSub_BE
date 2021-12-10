@@ -43,13 +43,6 @@ public class SeriesController {
     this.seriesLikesService = seriesLikesService;
   }
 
-  @GetMapping
-  @Operation(summary = "시리즈 공고 게시글 리스트 조회")
-  @Tag(name = "[화면]-시리즈")
-  public ApiResponse<List<SeriesSubscribeList.Response>> getSeriesList() {
-    return ApiResponse.ok(HttpMethod.GET, this.seriesService.getSeriesList());
-  }
-
   @PostMapping(consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
   @Operation(summary = "시리즈 공고 게시글 작성")
   @Tag(name = "[화면]-시리즈")
@@ -137,7 +130,7 @@ public class SeriesController {
   public ApiResponse<List<SeriesSubscribeList.Response>> getSeriesListOrderBySort(
     @RequestParam(value = "sort", required = true) SortType sort
   ) {
-    return ApiResponse.ok(HttpMethod.GET, this.seriesService.getSeriesListOrderBySort(sort));
+    return ApiResponse.ok(HttpMethod.GET, this.seriesService.getSeriesListSort(sort));
   }
 
 }

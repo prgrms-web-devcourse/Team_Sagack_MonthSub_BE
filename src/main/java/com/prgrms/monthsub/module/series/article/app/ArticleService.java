@@ -30,7 +30,7 @@ public class ArticleService {
   }
 
   public List<Article> getArticleListBySeriesId(Long seriesId) {
-    return this.articleRepository.findAllArticleBySeriesId(seriesId);
+    return this.articleRepository.findAllBySeriesId(seriesId);
   }
 
   public Long countBySeriesId(Long seriesId) {

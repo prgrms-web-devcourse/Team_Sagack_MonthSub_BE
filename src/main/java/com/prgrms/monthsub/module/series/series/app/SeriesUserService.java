@@ -16,7 +16,7 @@ public class SeriesUserService {
   }
 
   public List<SeriesUser> findAllMySubscribeByUserId(Long userId) {
-    return this.seriesUserRepository.findAllMySubscribeByUserId(userId);
+    return this.seriesUserRepository.findAllByUserId(userId);
   }
 
 }
