@@ -9,7 +9,7 @@ public class UserMe {
     Long userId,
     String email,
     String userName,
-    String nicName,
+    String nickName,
     String profileKey,
     String profileIntroduce,
     String group
