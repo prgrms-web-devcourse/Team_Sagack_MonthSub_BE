@@ -12,7 +12,6 @@ import com.prgrms.monthsub.module.series.series.domain.Series;
 import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.ExpulsionImageName;
 import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.ExpulsionImageStatus;
 import com.prgrms.monthsub.module.worker.explusion.domain.ExpulsionService;
-import java.io.IOException;
 import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,7 +45,7 @@ public class ArticleAssemble {
   public ArticlePost.Response createArticle(
     MultipartFile thumbnail,
     ArticlePost.Request request
-  ) throws IOException {
+  ) {
     Series series = this.seriesService.getById(request.seriesId());
 
     Long articleCount = this.articleService.countBySeriesId(request.seriesId());
