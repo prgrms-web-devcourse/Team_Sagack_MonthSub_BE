@@ -51,12 +51,6 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
     FilterChain chain
   )
     throws IOException, ServletException {
-    /**
-     * HTTP 요청 헤더에 JWT 토큰이 있는지 확인
-     * JWT 토큰이 있다면, 주어진 토큰을 디코딩하고,
-     * username, roles 데이터를 추출하고, UsernamePasswordAuthenticationToken 생성
-     * 그리고 이렇게 만들어진 UsernamePasswordAuthenticationToken 참조를 SecurityContext 넣어줌
-     */
     HttpServletRequest request = (HttpServletRequest) req;
     HttpServletResponse response = (HttpServletResponse) res;
 
@@ -93,6 +87,8 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
               new JwtAuthentication(token, user.getId(), username), null,
               authorities
             );
+            log.info("userId: {}", user.getId());
+
             authentication.setDetails(
               new WebAuthenticationDetailsSource().buildDetails(request));
             SecurityContextHolder.getContext()
