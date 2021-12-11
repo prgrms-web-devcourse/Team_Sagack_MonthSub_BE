@@ -1,6 +1,5 @@
 package com.prgrms.monthsub.module.part.user.app;
 
-import com.prgrms.monthsub.common.exception.model.ApiResponse;
 import com.prgrms.monthsub.common.jwt.JwtAuthentication;
 import com.prgrms.monthsub.common.jwt.JwtAuthenticationToken;
 import com.prgrms.monthsub.module.part.user.converter.UserConverter;
@@ -11,10 +10,8 @@ import com.prgrms.monthsub.module.part.user.dto.UserMe;
 import com.prgrms.monthsub.module.part.user.dto.UserSignUp;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.io.IOException;
 import java.util.Optional;
 import javax.validation.Valid;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
@@ -50,7 +47,7 @@ public class UserController {
   @PostMapping(path = "/login")
   @Operation(summary = "로그인")
   @Tag(name = "[화면]-로그인")
-  public ApiResponse<UserLogin.Response> login(@Valid @RequestBody UserLogin.Request request) {
+  public UserLogin.Response login(@Valid @RequestBody UserLogin.Request request) {
     JwtAuthenticationToken authToken = new JwtAuthenticationToken(
       request.email(),
       request.password()
@@ -60,13 +57,10 @@ public class UserController {
 
     User user = (User) resultToken.getDetails();
 
-    return ApiResponse.ok(
-      HttpMethod.POST,
-      new UserLogin.Response(
-        user.getId(), authentication.token, authentication.username,
-        user.getPart()
-          .getName()
-      )
+    return new UserLogin.Response(
+      user.getId(), authentication.token, authentication.username,
+      user.getPart()
+        .getName()
     );
   }
 
@@ -83,32 +77,28 @@ public class UserController {
   @PatchMapping(path = "/me")
   @Operation(summary = "내 정보 수정")
   @Tag(name = "[화면]-마이페이지")
-  public ApiResponse<UserEdit.Response> edit(
+  public UserEdit.Response edit(
     @AuthenticationPrincipal JwtAuthentication authentication,
     @Valid @RequestBody UserEdit.Request request
   ) {
-    return ApiResponse.ok(
-      HttpMethod.PATCH, this.userService.edit(authentication.userId, request));
+    return this.userService.edit(authentication.userId, request);
   }
 
   @PostMapping(path = "/signup")
   @Operation(summary = "회원가입")
   @Tag(name = "[화면]-회원가입")
-  public ApiResponse<UserSignUp.Response> signUp(@RequestBody UserSignUp.Request request) {
-    return ApiResponse.ok(HttpMethod.POST, this.userService.signUp(request));
+  public UserSignUp.Response signUp(@RequestBody UserSignUp.Request request) {
+    return this.userService.signUp(request);
   }
 
   @PostMapping(path = "/profile", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
   @Operation(summary = "유저 프로필 이미지 업로드")
   @Tag(name = "[화면]-마이페이지")
-  public ApiResponse<String> registerImage(
+  public String registerImage(
     @AuthenticationPrincipal JwtAuthentication authentication,
     @RequestPart(required = false) MultipartFile image
-  ) throws IOException {
-    return ApiResponse.ok(
-      HttpMethod.POST,
-      this.userService.uploadProfileImage(Optional.ofNullable(image), authentication.userId)
-    );
+  ) {
+    return this.userService.uploadProfileImage(Optional.ofNullable(image), authentication.userId);
   }
 
 }
