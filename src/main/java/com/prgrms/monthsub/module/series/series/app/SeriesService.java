@@ -1,5 +1,6 @@
 package com.prgrms.monthsub.module.series.series.app;
 
+import com.prgrms.monthsub.module.series.series.domain.ArticleUploadDate;
 import com.prgrms.monthsub.module.series.series.domain.Series;
 import com.prgrms.monthsub.module.series.series.domain.Series.SeriesStatus;
 import com.prgrms.monthsub.module.series.series.domain.exception.SeriesException.SeriesNotFound;
@@ -13,11 +14,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class SeriesService {
 
   private final SeriesRepository seriesRepository;
+  private final ArticleUploadDateRepository articleUploadDateRepository;
 
   public SeriesService(
-    SeriesRepository seriesRepository
+    SeriesRepository seriesRepository,
+    ArticleUploadDateRepository articleUploadDateRepository
   ) {
     this.seriesRepository = seriesRepository;
+    this.articleUploadDateRepository = articleUploadDateRepository;
   }
 
   public Series getById(Long id) {
@@ -30,6 +34,15 @@ public class SeriesService {
   public Long save(Series series) {
     return this.seriesRepository.save(series)
       .getId();
+  }
+
+  @Transactional
+  public void articleUploadDateSave(ArticleUploadDate articleUploadDate) {
+    this.articleUploadDateRepository.save(articleUploadDate);
+  }
+
+  public List<ArticleUploadDate> getArticleUploadDate(Long seriesId) {
+    return this.articleUploadDateRepository.findAllBySeriesId(seriesId);
   }
 
   public boolean checkSeriesStatusByWriterId(
