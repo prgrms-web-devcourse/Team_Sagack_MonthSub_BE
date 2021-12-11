@@ -1,7 +1,5 @@
 package com.prgrms.monthsub.module.series.series.domain;
 
-import static com.prgrms.monthsub.common.utils.TimeUtil.convertUploadDateListToUploadDateString;
-
 import com.prgrms.monthsub.common.domain.BaseEntity;
 import com.prgrms.monthsub.module.part.writer.domain.Writer;
 import com.prgrms.monthsub.module.series.series.domain.SeriesLikes.LikesStatus;
@@ -80,9 +78,6 @@ public class Series extends BaseEntity {
   @Column(name = "category", columnDefinition = "VARCHAR(50)", nullable = false)
   private Category category;
 
-  @Column(name = "upload_date", columnDefinition = "VARCHAR(50)", nullable = false)
-  private String uploadDate;
-
   @Column(name = "upload_time", nullable = false)
   private LocalTime uploadTime;
 
@@ -105,7 +100,6 @@ public class Series extends BaseEntity {
     SeriesStatus subscribeStatus,
     int likes,
     Category category,
-    String uploadDate,
     LocalTime uploadTime,
     Writer writer
   ) {
@@ -122,7 +116,6 @@ public class Series extends BaseEntity {
     this.subscribeStatus = subscribeStatus;
     this.likes = likes;
     this.category = category;
-    this.uploadDate = uploadDate;
     this.uploadTime = uploadTime;
     this.writer = writer;
   }
@@ -133,7 +126,6 @@ public class Series extends BaseEntity {
     this.title = request.title();
     this.introduceSentence = request.introduceSentence();
     this.introduceText = request.introduceText();
-    this.uploadDate = convertUploadDateListToUploadDateString(request.uploadDate());
     this.uploadTime = LocalTime.parse(request.uploadTime());
   }
 

@@ -1,12 +1,11 @@
 package com.prgrms.monthsub.module.series.series.converter;
 
-import static com.prgrms.monthsub.common.utils.TimeUtil.convertUploadDateListToUploadDateString;
-
 import com.prgrms.monthsub.common.s3.config.S3;
 import com.prgrms.monthsub.module.part.writer.converter.WriterConverter;
 import com.prgrms.monthsub.module.part.writer.domain.Writer;
 import com.prgrms.monthsub.module.series.article.converter.ArticleConverter;
 import com.prgrms.monthsub.module.series.article.domain.Article;
+import com.prgrms.monthsub.module.series.series.domain.ArticleUploadDate;
 import com.prgrms.monthsub.module.series.series.domain.Series;
 import com.prgrms.monthsub.module.series.series.domain.Series.Category;
 import com.prgrms.monthsub.module.series.series.domain.Series.SeriesStatus;
@@ -62,7 +61,6 @@ public class SeriesConverter {
       .articleCount(req.articleCount())
       .subscribeStatus(SeriesStatus.SUBSCRIPTION_AVAILABLE)
       .likes(DEFAULT_LIKES)
-      .uploadDate(convertUploadDateListToUploadDateString(req.uploadDate()))
       .category(Category.of(req.category()))
       .uploadTime(LocalTime.parse(req.uploadTime()))
       .writer(writer)
@@ -71,8 +69,10 @@ public class SeriesConverter {
 
   public SeriesSubscribeOne.Response seriesToSeriesOneResponse(
     Series series,
-    List<Article> articleList
+    List<Article> articleList,
+    List<ArticleUploadDate> uploadDateList
   ) {
+
     SeriesOneWithWriterResponse writerResponse = writerConverter.writerToSeriesOneWithWriterResponse(
       series.getWriter());
     return new Response(
@@ -89,8 +89,15 @@ public class SeriesConverter {
         .likes(series.getLikes())
         .build(),
       UploadObject.builder()
-        .date(series.getUploadDate()
-          .split("\\$"))
+        .date(uploadDateList.stream()
+          .map(
+            uploadDate -> {
+              return uploadDate.getUploadDate()
+                .toString()
+                .toLowerCase();
+            }
+          )
+          .toArray(String[]::new))
         .time(series.getUploadTime())
         .build(),
       SubscribeObject.builder()
@@ -147,7 +154,10 @@ public class SeriesConverter {
     );
   }
 
-  public SeriesSubscribeOne.ResponseUsageEdit seriesToResponseUsageEdit(Series series) {
+  public SeriesSubscribeOne.ResponseUsageEdit seriesToResponseUsageEdit(
+    Series series,
+    List<ArticleUploadDate> uploadDateList
+  ) {
     return new ResponseUsageEdit(
       SeriesObject.builder()
         .id(series.getId())
@@ -158,8 +168,15 @@ public class SeriesConverter {
         .build(),
       series.getCategory(),
       UploadObject.builder()
-        .date(series.getUploadDate()
-          .split("\\$"))
+        .date(uploadDateList.stream()
+          .map(
+            uploadDate -> {
+              return uploadDate.getUploadDate()
+                .toString()
+                .toLowerCase();
+            }
+          )
+          .toArray(String[]::new))
         .time(series.getUploadTime())
         .build(),
       SubscribeObject.builder()

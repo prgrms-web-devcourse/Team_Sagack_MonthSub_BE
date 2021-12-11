@@ -7,7 +7,9 @@ import com.prgrms.monthsub.module.part.writer.app.provider.WriterProvider;
 import com.prgrms.monthsub.module.part.writer.domain.Writer;
 import com.prgrms.monthsub.module.series.article.app.ArticleService;
 import com.prgrms.monthsub.module.series.article.domain.Article;
+import com.prgrms.monthsub.module.series.series.converter.ArticleUploadDateConverter;
 import com.prgrms.monthsub.module.series.series.converter.SeriesConverter;
+import com.prgrms.monthsub.module.series.series.domain.ArticleUploadDate;
 import com.prgrms.monthsub.module.series.series.domain.Series;
 import com.prgrms.monthsub.module.series.series.domain.type.SortType;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeEdit;
@@ -17,6 +19,7 @@ import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribePost;
 import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.ExpulsionImageName;
 import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.ExpulsionImageStatus;
 import com.prgrms.monthsub.module.worker.explusion.domain.ExpulsionService;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -38,6 +41,7 @@ public class SeriesAssemble {
   private final UserProvider userProvider;
   private final S3Client s3Client;
   private final SeriesConverter seriesConverter;
+  private final ArticleUploadDateConverter articleUploadDateConverter;
 
   public SeriesAssemble(
     SeriesService seriesService,
@@ -46,7 +50,8 @@ public class SeriesAssemble {
     WriterProvider writerProvider,
     UserProvider userProvider,
     S3Client s3Client,
-    SeriesConverter seriesConverter
+    SeriesConverter seriesConverter,
+    ArticleUploadDateConverter articleUploadDateConverter
   ) {
     this.seriesService = seriesService;
     this.articleService = articleService;
@@ -55,6 +60,7 @@ public class SeriesAssemble {
     this.userProvider = userProvider;
     this.s3Client = s3Client;
     this.seriesConverter = seriesConverter;
+    this.articleUploadDateConverter = articleUploadDateConverter;
   }
 
   @Transactional
@@ -69,6 +75,13 @@ public class SeriesAssemble {
       request
     );
     Long seriesId = this.seriesService.save(series);
+
+    Arrays.stream(request.uploadDate())
+      .forEach(uploadDate -> this.seriesService.articleUploadDateSave(
+        this.articleUploadDateConverter.ArticleUploadDateRequestToEntity(
+          seriesId, uploadDate))
+      );
+
     String thumbnailKey = this.uploadThumbnailImage(thumbnail, seriesId);
     series.changeThumbnailKey(thumbnailKey);
 
@@ -90,8 +103,9 @@ public class SeriesAssemble {
   public SeriesSubscribeOne.Response getSeriesBySeriesId(Long seriesId) {
     List<Article> articleList = this.articleService.getArticleListBySeriesId(seriesId);
     Series series = this.seriesService.getById(seriesId);
+    List<ArticleUploadDate> uploadDateList = this.seriesService.getArticleUploadDate(seriesId);
 
-    return this.seriesConverter.seriesToSeriesOneResponse(series, articleList);
+    return this.seriesConverter.seriesToSeriesOneResponse(series, articleList, uploadDateList);
   }
 
   public List<SeriesSubscribeList.Response> getSeriesListSort(SortType sort) {
@@ -106,8 +120,9 @@ public class SeriesAssemble {
 
   public SeriesSubscribeOne.ResponseUsageEdit getSeriesUsageEdit(Long seriesId) {
     Series series = this.seriesService.getById(seriesId);
+    List<ArticleUploadDate> uploadDateList = this.seriesService.getArticleUploadDate(seriesId);
 
-    return this.seriesConverter.seriesToResponseUsageEdit(series);
+    return this.seriesConverter.seriesToResponseUsageEdit(series, uploadDateList);
   }
 
   public List<SeriesSubscribeList.Response> getSeriesSearchTitle(String title) {
