@@ -73,11 +73,11 @@ public class UserController {
   @GetMapping(path = "/me")
   @Operation(summary = "내 정보 확인")
   @Tag(name = "[화면]-마이페이지")
-  public ApiResponse<UserMe.Response> me(
+  public UserMe.Response me(
     @AuthenticationPrincipal JwtAuthentication authentication
   ) {
     User user = this.userService.findById(authentication.userId);
-    return ApiResponse.ok(HttpMethod.GET, this.userConverter.EntityToUserMeResponse(user));
+    return this.userConverter.EntityToUserMeResponse(user);
   }
 
   @PatchMapping(path = "/me")
