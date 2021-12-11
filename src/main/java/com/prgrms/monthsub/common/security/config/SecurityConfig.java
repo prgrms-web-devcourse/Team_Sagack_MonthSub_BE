@@ -1,9 +1,9 @@
-package com.prgrms.monthsub.config;
+package com.prgrms.monthsub.common.security.config;
 
 import com.prgrms.monthsub.common.exception.FilterExceptionHandler;
-import com.prgrms.monthsub.common.jwt.Jwt;
-import com.prgrms.monthsub.common.jwt.JwtAuthenticationFilter;
-import com.prgrms.monthsub.common.jwt.JwtAuthenticationProvider;
+import com.prgrms.monthsub.common.security.jwt.Jwt;
+import com.prgrms.monthsub.common.security.jwt.JwtAuthenticationFilter;
+import com.prgrms.monthsub.common.security.jwt.JwtAuthenticationProvider;
 import com.prgrms.monthsub.module.part.user.app.AuthenticationService;
 import com.prgrms.monthsub.module.part.user.app.UserService;
 import java.util.Arrays;

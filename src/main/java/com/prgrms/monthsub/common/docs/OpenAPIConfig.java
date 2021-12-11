@@ -1,4 +1,4 @@
-package com.prgrms.monthsub.config;
+package com.prgrms.monthsub.common.docs;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.Paths;
@@ -18,14 +18,11 @@ import org.springframework.core.env.Environment;
 public class OpenAPIConfig {
 
   private static final String PROD = "prod";
-  private final Security security;
   private final Environment environment;
 
   public OpenAPIConfig(
-    Security security,
     Environment environment
   ) {
-    this.security = security;
     this.environment = environment;
   }
 
@@ -50,8 +47,7 @@ public class OpenAPIConfig {
                   .scheme("bearer")
                   .bearerFormat("JWT")
                   .in(SecurityScheme.In.HEADER)
-                  .name(security.getJwt()
-                    .getHeader())
+                  .name("Authorization")
               )
           )
           .addSecurityItem(

@@ -1,7 +1,7 @@
 package com.prgrms.monthsub.module.series.series.app;
 
-import com.prgrms.monthsub.common.utils.S3Uploader;
-import com.prgrms.monthsub.config.S3.Bucket;
+import com.prgrms.monthsub.common.s3.S3Client;
+import com.prgrms.monthsub.common.s3.config.S3.Bucket;
 import com.prgrms.monthsub.module.part.user.app.provider.UserProvider;
 import com.prgrms.monthsub.module.part.writer.app.provider.WriterProvider;
 import com.prgrms.monthsub.module.part.writer.domain.Writer;
@@ -36,7 +36,7 @@ public class SeriesAssemble {
   private final ExpulsionService expulsionService;
   private final WriterProvider writerProvider;
   private final UserProvider userProvider;
-  private final S3Uploader s3Uploader;
+  private final S3Client s3Client;
   private final SeriesConverter seriesConverter;
 
   public SeriesAssemble(
@@ -45,7 +45,7 @@ public class SeriesAssemble {
     ExpulsionService expulsionService,
     WriterProvider writerProvider,
     UserProvider userProvider,
-    S3Uploader s3Uploader,
+    S3Client s3Client,
     SeriesConverter seriesConverter
   ) {
     this.seriesService = seriesService;
@@ -53,7 +53,7 @@ public class SeriesAssemble {
     this.expulsionService = expulsionService;
     this.writerProvider = writerProvider;
     this.userProvider = userProvider;
-    this.s3Uploader = s3Uploader;
+    this.s3Client = s3Client;
     this.seriesConverter = seriesConverter;
   }
 
@@ -163,9 +163,9 @@ public class SeriesAssemble {
       + "/" + id.toString()
       + "/thumbnail/"
       + UUID.randomUUID() +
-      this.s3Uploader.getExtension(image);
+      this.s3Client.getExtension(image);
 
-    return this.s3Uploader.upload(Bucket.IMAGE, image, key, S3Uploader.imageExtensions);
+    return this.s3Client.upload(Bucket.IMAGE, image, key, S3Client.imageExtensions);
   }
 
 }

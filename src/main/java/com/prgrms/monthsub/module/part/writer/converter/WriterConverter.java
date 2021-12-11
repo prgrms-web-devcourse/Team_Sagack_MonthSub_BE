@@ -1,6 +1,6 @@
 package com.prgrms.monthsub.module.part.writer.converter;
 
-import com.prgrms.monthsub.config.S3;
+import com.prgrms.monthsub.common.s3.config.S3;
 import com.prgrms.monthsub.module.part.user.converter.UserConverter;
 import com.prgrms.monthsub.module.part.writer.domain.Writer;
 import com.prgrms.monthsub.module.series.series.dto.MyChannel;

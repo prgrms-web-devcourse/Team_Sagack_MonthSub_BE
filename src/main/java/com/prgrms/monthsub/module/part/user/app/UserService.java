@@ -1,7 +1,7 @@
 package com.prgrms.monthsub.module.part.user.app;
 
-import com.prgrms.monthsub.common.utils.S3Uploader;
-import com.prgrms.monthsub.config.S3.Bucket;
+import com.prgrms.monthsub.common.s3.S3Client;
+import com.prgrms.monthsub.common.s3.config.S3.Bucket;
 import com.prgrms.monthsub.module.part.user.app.provider.UserProvider;
 import com.prgrms.monthsub.module.part.user.converter.UserConverter;
 import com.prgrms.monthsub.module.part.user.domain.User;
@@ -27,19 +27,19 @@ public class UserService implements UserProvider {
   private final PasswordEncoder passwordEncoder;
   private final UserRepository userRepository;
   private final ExpulsionService expulsionService;
-  private final S3Uploader s3Uploader;
+  private final S3Client s3Client;
   private final UserConverter userConverter;
 
   public UserService(
     PasswordEncoder passwordEncoder,
     UserRepository userRepository,
-    S3Uploader s3Uploader,
+    S3Client s3Client,
     UserConverter userConverter,
     ExpulsionService expulsionService
   ) {
     this.passwordEncoder = passwordEncoder;
     this.userRepository = userRepository;
-    this.s3Uploader = s3Uploader;
+    this.s3Client = s3Client;
     this.userConverter = userConverter;
     this.expulsionService = expulsionService;
   }
@@ -113,13 +113,13 @@ public class UserService implements UserProvider {
             + "/" + userId.toString()
             + "/profile/"
             + UUID.randomUUID()
-            + this.s3Uploader.getExtension(imageFile);
+            + this.s3Client.getExtension(imageFile);
 
-          return this.s3Uploader.upload(
+          return this.s3Client.upload(
             Bucket.IMAGE,
             imageFile,
             key,
-            S3Uploader.imageExtensions
+            S3Client.imageExtensions
           );
         }
       )

@@ -1,6 +1,6 @@
 package com.prgrms.monthsub.module.series.series.app;
 
-import com.prgrms.monthsub.common.jwt.JwtAuthentication;
+import com.prgrms.monthsub.common.security.jwt.JwtAuthentication;
 import com.prgrms.monthsub.module.series.series.dto.MyChannel;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

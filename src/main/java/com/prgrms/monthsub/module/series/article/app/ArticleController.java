@@ -1,6 +1,6 @@
 package com.prgrms.monthsub.module.series.article.app;
 
-import com.prgrms.monthsub.common.jwt.JwtAuthentication;
+import com.prgrms.monthsub.common.security.jwt.JwtAuthentication;
 import com.prgrms.monthsub.module.series.article.dto.ArticleEdit;
 import com.prgrms.monthsub.module.series.article.dto.ArticleOne;
 import com.prgrms.monthsub.module.series.article.dto.ArticlePost;

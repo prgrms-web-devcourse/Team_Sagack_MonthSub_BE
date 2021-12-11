@@ -1,4 +1,4 @@
-package com.prgrms.monthsub.common.jwt;
+package com.prgrms.monthsub.common.security.jwt;
 
 import java.util.Collection;
 import org.springframework.security.authentication.AbstractAuthenticationToken;

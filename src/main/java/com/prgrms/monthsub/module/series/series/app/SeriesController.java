@@ -1,6 +1,6 @@
 package com.prgrms.monthsub.module.series.series.app;
 
-import com.prgrms.monthsub.common.jwt.JwtAuthentication;
+import com.prgrms.monthsub.common.security.jwt.JwtAuthentication;
 import com.prgrms.monthsub.module.series.series.domain.type.SortType;
 import com.prgrms.monthsub.module.series.series.dto.SeriesLikesEvent;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeEdit;

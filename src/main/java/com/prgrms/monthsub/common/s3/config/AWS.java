@@ -1,4 +1,4 @@
-package com.prgrms.monthsub.config;
+package com.prgrms.monthsub.common.s3.config;
 
 import lombok.Getter;
 import lombok.Setter;
