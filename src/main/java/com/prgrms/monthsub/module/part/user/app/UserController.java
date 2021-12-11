@@ -2,6 +2,7 @@ package com.prgrms.monthsub.module.part.user.app;
 
 import com.prgrms.monthsub.common.security.jwt.JwtAuthentication;
 import com.prgrms.monthsub.common.security.jwt.JwtAuthenticationToken;
+import com.prgrms.monthsub.module.part.user.converter.UserConverter;
 import com.prgrms.monthsub.module.part.user.domain.User;
 import com.prgrms.monthsub.module.part.user.dto.UserEdit;
 import com.prgrms.monthsub.module.part.user.dto.UserLogin;
@@ -31,13 +32,16 @@ public class UserController {
 
   private final UserService userService;
   private final AuthenticationManager authenticationManager;
+  private final UserConverter userConverter;
 
   public UserController(
     UserService userService,
-    AuthenticationManager authenticationManager
+    AuthenticationManager authenticationManager,
+    UserConverter userConverter
   ) {
     this.userService = userService;
     this.authenticationManager = authenticationManager;
+    this.userConverter = userConverter;
   }
 
   @PostMapping(path = "/login")
@@ -67,13 +71,7 @@ public class UserController {
     @AuthenticationPrincipal JwtAuthentication authentication
   ) {
     User user = this.userService.findById(authentication.userId);
-
-    return new UserMe.Response(
-      user.getId(), user.getEmail(), user.getUsername(), user.getNickname(),
-      user.getProfileKey(),
-      user.getProfileIntroduce(), user.getPart()
-      .getName()
-    );
+    return this.userConverter.EntityToUserMeResponse(user);
   }
 
   @PatchMapping(path = "/me")
