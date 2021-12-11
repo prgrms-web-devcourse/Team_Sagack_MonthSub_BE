@@ -56,7 +56,7 @@ security:
     header: authorization
     issuer: monthsub
     client-secret: ${JWT_CLIENT_SECRET}
-    expiry-seconds: 3600
+    expiry-seconds: 86400
   cors:
     origin:
       - http://localhost:3000
