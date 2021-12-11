@@ -1,7 +1,7 @@
 package com.prgrms.monthsub.module.series.article.app;
 
-import com.prgrms.monthsub.common.utils.S3Uploader;
-import com.prgrms.monthsub.config.S3.Bucket;
+import com.prgrms.monthsub.common.s3.S3Client;
+import com.prgrms.monthsub.common.s3.config.S3.Bucket;
 import com.prgrms.monthsub.module.series.article.converter.ArticleConverter;
 import com.prgrms.monthsub.module.series.article.domain.Article;
 import com.prgrms.monthsub.module.series.article.dto.ArticleEdit;
@@ -25,20 +25,20 @@ public class ArticleAssemble {
   private final SeriesService seriesService;
   private final ExpulsionService expulsionService;
   private final ArticleConverter articleConverter;
-  private final S3Uploader s3Uploader;
+  private final S3Client s3Client;
 
   public ArticleAssemble(
     ArticleService articleService,
     SeriesService seriesService,
     ExpulsionService expulsionService,
     ArticleConverter articleConverter,
-    S3Uploader s3Uploader
+    S3Client s3Client
   ) {
     this.articleService = articleService;
     this.seriesService = seriesService;
     this.expulsionService = expulsionService;
     this.articleConverter = articleConverter;
-    this.s3Uploader = s3Uploader;
+    this.s3Client = s3Client;
   }
 
   @Transactional
@@ -127,9 +127,9 @@ public class ArticleAssemble {
       + "/" + articleId.toString()
       + "/thumbnail/"
       + UUID.randomUUID() +
-      this.s3Uploader.getExtension(image);
+      this.s3Client.getExtension(image);
 
-    return this.s3Uploader.upload(Bucket.IMAGE, image, key, S3Uploader.imageExtensions);
+    return this.s3Client.upload(Bucket.IMAGE, image, key, S3Client.imageExtensions);
   }
 
 }

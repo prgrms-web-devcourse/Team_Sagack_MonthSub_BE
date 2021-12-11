@@ -1,6 +1,6 @@
 package com.prgrms.monthsub.module.series.article.converter;
 
-import com.prgrms.monthsub.config.S3;
+import com.prgrms.monthsub.common.s3.config.S3;
 import com.prgrms.monthsub.module.series.article.domain.Article;
 import com.prgrms.monthsub.module.series.article.dto.ArticleOne;
 import com.prgrms.monthsub.module.series.article.dto.ArticlePost;

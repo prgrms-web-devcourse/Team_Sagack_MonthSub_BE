@@ -1,4 +1,4 @@
-package com.prgrms.monthsub.common.jwt;
+package com.prgrms.monthsub.common.security.jwt;
 
 import static org.apache.commons.lang3.ClassUtils.isAssignable;
 
