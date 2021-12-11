@@ -2,7 +2,7 @@ package com.prgrms.monthsub.module.part.user.converter;
 
 import static com.prgrms.monthsub.module.part.user.domain.User.POINT;
 
-import com.prgrms.monthsub.config.S3;
+import com.prgrms.monthsub.common.s3.config.S3;
 import com.prgrms.monthsub.module.part.user.app.PartService;
 import com.prgrms.monthsub.module.part.user.domain.User;
 import com.prgrms.monthsub.module.part.user.dto.UserSignUp;

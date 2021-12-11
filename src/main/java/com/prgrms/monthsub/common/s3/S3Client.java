@@ -1,4 +1,4 @@
-package com.prgrms.monthsub.common.utils;
+package com.prgrms.monthsub.common.s3;
 
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
@@ -12,9 +12,9 @@ import com.amazonaws.util.IOUtils;
 import com.prgrms.monthsub.common.exception.global.S3UploaderException.ImageExtensionNotMatch;
 import com.prgrms.monthsub.common.exception.global.S3UploaderException.ReadyToUploadError;
 import com.prgrms.monthsub.common.exception.global.S3UploaderException.UploadError;
-import com.prgrms.monthsub.config.AWS;
-import com.prgrms.monthsub.config.S3;
-import com.prgrms.monthsub.config.S3.Bucket;
+import com.prgrms.monthsub.common.s3.config.AWS;
+import com.prgrms.monthsub.common.s3.config.S3;
+import com.prgrms.monthsub.common.s3.config.S3.Bucket;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -26,7 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
-public class S3Uploader {
+public class S3Client {
 
   public static final List<String> imageExtensions = Arrays.asList("jpeg", "png", "jpg");
 
@@ -36,7 +36,7 @@ public class S3Uploader {
   private final Logger log = LoggerFactory.getLogger(getClass());
   private AmazonS3 s3Client;
 
-  public S3Uploader(
+  public S3Client(
     AWS aws,
     S3 s3
   ) {
@@ -46,7 +46,6 @@ public class S3Uploader {
 
   @PostConstruct
   public void setS3Client() {
-
     AWSCredentials credentials = new BasicAWSCredentials(
       aws.getCredentials()
         .getAccessKey(), aws.getCredentials()

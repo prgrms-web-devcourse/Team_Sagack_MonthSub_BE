@@ -1,7 +1,7 @@
 package com.prgrms.monthsub.module.part.user.app;
 
-import com.prgrms.monthsub.common.jwt.JwtAuthentication;
-import com.prgrms.monthsub.common.jwt.JwtAuthenticationToken;
+import com.prgrms.monthsub.common.security.jwt.JwtAuthentication;
+import com.prgrms.monthsub.common.security.jwt.JwtAuthenticationToken;
 import com.prgrms.monthsub.module.part.user.domain.User;
 import com.prgrms.monthsub.module.part.user.dto.UserEdit;
 import com.prgrms.monthsub.module.part.user.dto.UserLogin;

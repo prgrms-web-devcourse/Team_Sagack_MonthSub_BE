@@ -2,7 +2,7 @@ package com.prgrms.monthsub.module.series.series.converter;
 
 import static com.prgrms.monthsub.common.utils.TimeUtil.convertUploadDateListToUploadDateString;
 
-import com.prgrms.monthsub.config.S3;
+import com.prgrms.monthsub.common.s3.config.S3;
 import com.prgrms.monthsub.module.part.writer.converter.WriterConverter;
 import com.prgrms.monthsub.module.part.writer.domain.Writer;
 import com.prgrms.monthsub.module.series.article.converter.ArticleConverter;

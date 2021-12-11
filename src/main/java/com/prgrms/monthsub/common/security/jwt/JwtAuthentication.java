@@ -1,4 +1,4 @@
-package com.prgrms.monthsub.common.jwt;
+package com.prgrms.monthsub.common.security.jwt;
 
 public class JwtAuthentication {
 

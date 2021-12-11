@@ -1,4 +1,4 @@
-package com.prgrms.monthsub.config;
+package com.prgrms.monthsub.common.security.config;
 
 import java.util.List;
 import lombok.Getter;
