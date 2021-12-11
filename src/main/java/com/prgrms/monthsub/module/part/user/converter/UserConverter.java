@@ -5,6 +5,8 @@ import static com.prgrms.monthsub.module.part.user.domain.User.POINT;
 import com.prgrms.monthsub.config.S3;
 import com.prgrms.monthsub.module.part.user.app.PartService;
 import com.prgrms.monthsub.module.part.user.domain.User;
+import com.prgrms.monthsub.module.part.user.dto.UserMe;
+import com.prgrms.monthsub.module.part.user.dto.UserMe.Response;
 import com.prgrms.monthsub.module.part.user.dto.UserSignUp;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeList.SeriesOneWithUserResponse;
 import java.util.Optional;
@@ -37,6 +39,21 @@ public class UserConverter {
       profileImage,
       user.getProfileIntroduce(),
       user.getNickname()
+    );
+  }
+
+  public UserMe.Response EntityToUserMeResponse(User user) {
+    String profileImage =
+      user.getProfileKey() == null ? null : this.s3.getDomain() + "/" + user.getProfileKey();
+    return new Response(
+      user.getId(),
+      user.getEmail(),
+      user.getUsername(),
+      user.getNickname(),
+      profileImage,
+      user.getProfileIntroduce(),
+      user.getPart()
+        .getName()
     );
   }
 
