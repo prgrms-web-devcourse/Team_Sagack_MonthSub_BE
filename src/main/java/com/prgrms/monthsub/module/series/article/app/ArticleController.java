@@ -70,10 +70,10 @@ public class ArticleController {
   public String registerImage(
     @AuthenticationPrincipal JwtAuthentication authentication,
     @PathVariable Long id,
-    @RequestPart MultipartFile image,
+    @RequestPart MultipartFile thumbnail,
     @Valid @RequestPart Long seriesId
   ) {
-    return this.articleAssemble.changeThumbnail(image, seriesId, id, authentication.userId);
+    return this.articleAssemble.changeThumbnail(thumbnail, seriesId, id, authentication.userId);
   }
 
 }

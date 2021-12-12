@@ -108,9 +108,9 @@ public class SeriesController {
   public String registerImage(
     @AuthenticationPrincipal JwtAuthentication authentication,
     @PathVariable Long id,
-    @RequestPart MultipartFile image
+    @RequestPart MultipartFile thumbnail
   ) {
-    return this.seriesAssemble.changeThumbnail(image, id, authentication.userId);
+    return this.seriesAssemble.changeThumbnail(thumbnail, id, authentication.userId);
   }
 
   @GetMapping("/sort")
