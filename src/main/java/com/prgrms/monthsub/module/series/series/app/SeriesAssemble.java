@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
@@ -99,7 +100,6 @@ public class SeriesAssemble {
     return new SeriesSubscribeEdit.Response(this.seriesService.save(series));
   }
 
-
   public SeriesSubscribeOne.Response getSeriesBySeriesId(Long seriesId) {
     List<Article> articleList = this.articleService.getArticleListBySeriesId(seriesId);
     Series series = this.seriesService.getById(seriesId);
@@ -111,9 +111,29 @@ public class SeriesAssemble {
   public List<SeriesSubscribeList.Response> getSeriesListSort(SortType sort) {
     return (
       switch (sort) {
-        case RECENT -> this.seriesService.findAll(Sort.by(Direction.DESC, "id"));
+        case RECENT -> this.seriesService.findAll(Sort.by(Direction.DESC, "createdAt", "id"));
         case POPULAR -> this.seriesService.findAll(Sort.by(Direction.DESC, "likes"));
-      }).stream()
+      })
+      .stream()
+      .map(this.seriesConverter::seriesListToResponse)
+      .collect(Collectors.toList());
+  }
+
+  public List<SeriesSubscribeList.Response> getSeriesList(
+    Long lastSeriesId,
+    Integer size
+  ) {
+    PageRequest cursorPageable = PageRequest.of(
+      0,
+      size,
+      Sort.by(Direction.DESC, "createdAt", "id")
+    );
+
+    return (
+      (lastSeriesId == null) ? this.seriesService.findAll(cursorPageable)
+        : this.seriesService.getSeries(lastSeriesId, cursorPageable)
+    )
+      .stream()
       .map(this.seriesConverter::seriesListToResponse)
       .collect(Collectors.toList());
   }

@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import javax.validation.Valid;
+import javax.validation.constraints.Positive;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -129,6 +130,16 @@ public class SeriesController {
     @RequestParam(value = "nickname", required = true) String nickname
   ) {
     return this.seriesAssemble.getSeriesSearchNickname(nickname);
+  }
+
+  @GetMapping
+  @Operation(summary = "최신순 시리즈 리스트 조회(무한 스크롤)")
+  @Tag(name = "[화면]-시리즈")
+  public List<SeriesSubscribeList.Response> getSeriesList(
+    @RequestParam(required = false) Long lastSeriesId,
+    @RequestParam @Positive Integer size
+  ) {
+    return this.seriesAssemble.getSeriesList(lastSeriesId, size);
   }
 
   @GetMapping("/sort")
