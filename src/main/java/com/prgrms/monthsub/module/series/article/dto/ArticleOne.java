@@ -10,7 +10,10 @@ public class ArticleOne {
     String contents,
     String thumbnailKey,
     int round,
-    String createdAt
+    String createdAt,
+    String nickname,
+    String profileKey,
+    String profileIntroduce
   ) {
   }
 

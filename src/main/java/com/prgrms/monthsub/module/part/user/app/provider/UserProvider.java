@@ -7,4 +7,6 @@ public interface UserProvider {
 
   Optional<User> findByNickname(String nickName);
 
+  User findById(Long id);
+
 }

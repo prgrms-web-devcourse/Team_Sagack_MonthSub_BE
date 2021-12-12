@@ -44,13 +44,13 @@ public class UserService implements UserProvider {
     this.expulsionService = expulsionService;
   }
 
-  @Transactional
   @Override
   public Optional<User> findByNickname(String nickname) {
     return this.userRepository
       .findByNickname(nickname);
   }
 
+  @Override
   public User findById(Long userId) {
     return this.userRepository
       .findById(userId)
@@ -93,7 +93,6 @@ public class UserService implements UserProvider {
     return new UserEdit.Response(this.userRepository.save(user)
       .getId());
   }
-
 
   @Transactional
   public String uploadProfileImage(

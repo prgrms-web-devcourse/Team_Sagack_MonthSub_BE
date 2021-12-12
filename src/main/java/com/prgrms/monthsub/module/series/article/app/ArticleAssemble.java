@@ -2,6 +2,8 @@ package com.prgrms.monthsub.module.series.article.app;
 
 import com.prgrms.monthsub.common.s3.S3Client;
 import com.prgrms.monthsub.common.s3.config.S3.Bucket;
+import com.prgrms.monthsub.module.part.user.app.provider.UserProvider;
+import com.prgrms.monthsub.module.part.user.domain.User;
 import com.prgrms.monthsub.module.series.article.converter.ArticleConverter;
 import com.prgrms.monthsub.module.series.article.domain.Article;
 import com.prgrms.monthsub.module.series.article.dto.ArticleEdit;
@@ -24,6 +26,7 @@ public class ArticleAssemble {
   private final ArticleService articleService;
   private final SeriesService seriesService;
   private final ExpulsionService expulsionService;
+  private final UserProvider userProvider;
   private final ArticleConverter articleConverter;
   private final S3Client s3Client;
 
@@ -31,12 +34,14 @@ public class ArticleAssemble {
     ArticleService articleService,
     SeriesService seriesService,
     ExpulsionService expulsionService,
+    UserProvider userProvider,
     ArticleConverter articleConverter,
     S3Client s3Client
   ) {
     this.articleService = articleService;
     this.seriesService = seriesService;
     this.expulsionService = expulsionService;
+    this.userProvider = userProvider;
     this.articleConverter = articleConverter;
     this.s3Client = s3Client;
   }
@@ -80,11 +85,14 @@ public class ArticleAssemble {
   }
 
   public ArticleOne.Response getArticleOne(
-    Long id
+    Long id,
+    Long userId
   ) {
     Article article = articleService.find(id);
     Long articleCount = this.articleService.countBySeriesId(id);
-    return articleConverter.articleToArticleOneResponse(article, articleCount);
+    User user = userProvider.findById(id);
+
+    return articleConverter.articleToArticleOneResponse(article, articleCount, user);
   }
 
   @Transactional
