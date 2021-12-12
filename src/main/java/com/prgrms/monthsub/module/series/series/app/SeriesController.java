@@ -91,7 +91,7 @@ public class SeriesController {
     return this.seriesAssemble.getSeriesUsageEdit(id);
   }
 
-  @PutMapping(path = "/{id}/edit", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+  @PutMapping(path = "/{id}/edit")
   @Operation(summary = "시리즈 공고 게시글 수정")
   @Tag(name = "[화면]-시리즈")
   public SeriesSubscribeEdit.Response editSeries(
