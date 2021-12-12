@@ -1,14 +1,18 @@
 package com.prgrms.monthsub.common.s3;
 
+import com.amazonaws.SdkClientException;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.DeleteObjectsRequest;
+import com.amazonaws.services.s3.model.DeleteObjectsRequest.KeyVersion;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.util.IOUtils;
+import com.prgrms.monthsub.common.exception.global.S3UploaderException.DeleteError;
 import com.prgrms.monthsub.common.exception.global.S3UploaderException.ImageExtensionNotMatch;
 import com.prgrms.monthsub.common.exception.global.S3UploaderException.ReadyToUploadError;
 import com.prgrms.monthsub.common.exception.global.S3UploaderException.UploadError;
@@ -19,6 +23,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -89,6 +94,29 @@ public class S3Client {
     this.fileExtensionCheck(file, extensions);
 
     return this.upload(bucket, file, key);
+  }
+
+  public void deleteKeys(
+    Bucket bucket,
+    List<String> keys
+  ) {
+    try {
+      List<KeyVersion> deleteKeys = keys.stream()
+        .map(KeyVersion::new)
+        .collect(Collectors.toList());
+
+      s3Client.deleteObjects(
+        new DeleteObjectsRequest(this.s3.getBucket(bucket))
+          .withKeys(deleteKeys)
+          .withQuiet(false)
+      );
+    } catch (SdkClientException e) {
+      String message = "S3 file delete failed";
+
+      log.error(message);
+      e.printStackTrace();
+      throw new DeleteError(message);
+    }
   }
 
   private String upload(
