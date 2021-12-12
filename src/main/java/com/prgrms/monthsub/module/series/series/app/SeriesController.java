@@ -113,17 +113,8 @@ public class SeriesController {
     return this.seriesAssemble.changeThumbnail(file, id, authentication.userId);
   }
 
-  @GetMapping("/sort")
-  @Operation(summary = "인기순/최신순 시리즈 리스트 조회")
-  @Tag(name = "[화면]-시리즈")
-  public List<SeriesSubscribeList.Response> getSeriesListOrderBySort(
-    @RequestParam(value = "sort", required = true) SortType sort
-  ) {
-    return this.seriesAssemble.getSeriesListSort(sort);
-  }
-
   @GetMapping("/search/title")
-  @Operation(summary = "시리즈제목으로 리스트 조회")
+  @Operation(summary = "시리즈 제목으로 리스트 조회(검색)")
   @Tag(name = "[화면]-시리즈")
   public List<SeriesSubscribeList.Response> getSeriesListSearchTitle(
     @RequestParam(value = "title", required = true) String title
@@ -132,12 +123,22 @@ public class SeriesController {
   }
 
   @GetMapping("/search/nickname")
-  @Operation(summary = "작가 닉네임으로 리스트 조회")
+  @Operation(summary = "작가 닉네임으로 리스트 조회(검색)")
   @Tag(name = "[화면]-시리즈")
   public List<SeriesSubscribeList.Response> getSeriesListSearchNickname(
     @RequestParam(value = "nickname", required = true) String nickname
   ) {
     return this.seriesAssemble.getSeriesSearchNickname(nickname);
+  }
+
+  @GetMapping("/sort")
+  //@Operation(summary = "인기순/최신순 시리즈 리스트 조회")
+  @Operation(hidden = true)
+  @Tag(name = "[화면]-시리즈")
+  public List<SeriesSubscribeList.Response> getSeriesListOrderBySort(
+    @RequestParam(value = "sort", required = true) SortType sort
+  ) {
+    return this.seriesAssemble.getSeriesListSort(sort);
   }
 
 }
