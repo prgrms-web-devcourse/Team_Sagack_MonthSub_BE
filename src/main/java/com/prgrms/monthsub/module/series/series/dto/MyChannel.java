@@ -37,19 +37,26 @@ public class MyChannel {
   public static class MyChannelFollowWriterObject {
     Long userId;
     Long writerId;
+    String nickname;
     String profileImage;
-    String seriesStatus;
+    String subscribeStatus;
   }
 
   @Builder
   @Getter
   public static class MyChannelLikeObject {
-    public Long id;
+    public Long userId;
+    public Long writerId;
+    public Long seriesId;
+    public String nickname;
     public String thumbnail;
     public String title;
     public String introduceSentence;
-    public LocalDate startDate;
-    public LocalDate endDate;
+    public LocalDate seriesStartDate;
+    public LocalDate seriesEndDate;
+    public String subscribeStatus;
+    public LocalDate subscribeStartDate;
+    public LocalDate subscribeEndDate;
     public int likes;
     Series.Category category;
   }
@@ -57,12 +64,18 @@ public class MyChannel {
   @Builder
   @Getter
   public static class MyChannelSubscribeObject {
-    public Long id;
+    public Long userId;
+    public Long writerId;
+    public Long seriesId;
+    public String nickname;
     public String thumbnail;
     public String title;
     public String introduceSentence;
-    public LocalDate startDate;
-    public LocalDate endDate;
+    public LocalDate seriesStartDate;
+    public LocalDate seriesEndDate;
+    public String subscribeStatus;
+    public LocalDate subscribeStartDate;
+    public LocalDate subscribeEndDate;
     public int likes;
     Series.Category category;
   }
@@ -70,12 +83,18 @@ public class MyChannel {
   @Builder
   @Getter
   public static class MyChannelSeriesObject {
-    public Long id;
+    public Long userId;
+    public Long writerId;
+    public Long seriesId;
+    public String nickname;
     public String thumbnail;
     public String title;
     public String introduceSentence;
-    public LocalDate startDate;
-    public LocalDate endDate;
+    public LocalDate seriesStartDate;
+    public LocalDate seriesEndDate;
+    public String subscribeStatus;
+    public LocalDate subscribeStartDate;
+    public LocalDate subscribeEndDate;
     public int likes;
     Series.Category category;
   }

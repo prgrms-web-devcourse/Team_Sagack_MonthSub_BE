@@ -37,9 +37,11 @@ public class WriterConverter {
       .userId(writer.getUser()
         .getId())
       .writerId(writer.getId())
+      .nickname(writer.getUser()
+        .getNickname())
       .profileImage(this.s3.getDomain() + "/" + writer.getUser()
         .getProfileKey())
-      .seriesStatus(String.valueOf(writer.getSubScribeStatus()))
+      .subscribeStatus(String.valueOf(writer.getSubScribeStatus()))
       .build();
   }
 
