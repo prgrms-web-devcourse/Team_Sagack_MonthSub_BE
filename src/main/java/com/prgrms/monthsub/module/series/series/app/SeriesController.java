@@ -46,10 +46,10 @@ public class SeriesController {
   @Tag(name = "[화면]-시리즈")
   public SeriesSubscribePost.Response postSeries(
     @AuthenticationPrincipal JwtAuthentication authentication,
-    @RequestPart MultipartFile thumbnail,
+    @RequestPart MultipartFile file,
     @Valid @RequestPart SeriesSubscribePost.Request request
   ) {
-    return this.seriesAssemble.createSeries(authentication.userId, thumbnail, request);
+    return this.seriesAssemble.createSeries(authentication.userId, file, request);
   }
 
   @GetMapping("/{id}")
@@ -108,9 +108,9 @@ public class SeriesController {
   public String registerImage(
     @AuthenticationPrincipal JwtAuthentication authentication,
     @PathVariable Long id,
-    @RequestPart MultipartFile thumbnail
+    @RequestPart MultipartFile file
   ) {
-    return this.seriesAssemble.changeThumbnail(thumbnail, id, authentication.userId);
+    return this.seriesAssemble.changeThumbnail(file, id, authentication.userId);
   }
 
   @GetMapping("/sort")

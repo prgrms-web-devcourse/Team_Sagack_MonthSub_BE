@@ -96,9 +96,9 @@ public class UserController {
   @Tag(name = "[화면]-마이페이지")
   public String registerImage(
     @AuthenticationPrincipal JwtAuthentication authentication,
-    @RequestPart(required = false) MultipartFile image
+    @RequestPart(required = false) MultipartFile file
   ) {
-    return this.userService.uploadProfileImage(Optional.ofNullable(image), authentication.userId);
+    return this.userService.uploadProfileImage(Optional.ofNullable(file), authentication.userId);
   }
 
 }

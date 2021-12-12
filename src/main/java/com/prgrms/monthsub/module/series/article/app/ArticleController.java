@@ -37,10 +37,10 @@ public class ArticleController {
   @Tag(name = "[화면]-아티클")
   public ArticlePost.Response postArticle(
     @AuthenticationPrincipal JwtAuthentication authentication,
-    @RequestPart MultipartFile thumbnail,
+    @RequestPart MultipartFile file,
     @Valid @RequestPart ArticlePost.Request request
   ) {
-    return this.articleAssemble.createArticle(thumbnail, request);
+    return this.articleAssemble.createArticle(file, request);
   }
 
   @PutMapping(path = "/{id}")
@@ -70,10 +70,12 @@ public class ArticleController {
   public String registerImage(
     @AuthenticationPrincipal JwtAuthentication authentication,
     @PathVariable Long id,
-    @RequestPart MultipartFile thumbnail,
-    @Valid @RequestPart Long seriesId
+    @RequestPart MultipartFile file,
+    @Valid @RequestPart ArticleEdit.imageChangeResponse request
   ) {
-    return this.articleAssemble.changeThumbnail(thumbnail, seriesId, id, authentication.userId);
+    return this.articleAssemble.changeThumbnail(
+      file, request.seriesId(), id, authentication.userId);
   }
 
 }
+
