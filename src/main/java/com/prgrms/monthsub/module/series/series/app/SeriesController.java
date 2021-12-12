@@ -15,10 +15,10 @@ import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -46,10 +46,10 @@ public class SeriesController {
   @Tag(name = "[화면]-시리즈")
   public SeriesSubscribePost.Response postSeries(
     @AuthenticationPrincipal JwtAuthentication authentication,
-    @RequestPart MultipartFile thumbnail,
+    @RequestPart MultipartFile file,
     @Valid @RequestPart SeriesSubscribePost.Request request
   ) {
-    return this.seriesAssemble.createSeries(authentication.userId, thumbnail, request);
+    return this.seriesAssemble.createSeries(authentication.userId, file, request);
   }
 
   @GetMapping("/{id}")
@@ -91,39 +91,30 @@ public class SeriesController {
     return this.seriesAssemble.getSeriesUsageEdit(id);
   }
 
-  @PutMapping(path = "/{id}/edit", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+  @PutMapping(path = "/{id}/edit")
   @Operation(summary = "시리즈 공고 게시글 수정")
   @Tag(name = "[화면]-시리즈")
   public SeriesSubscribeEdit.Response editSeries(
     @AuthenticationPrincipal JwtAuthentication authentication,
     @PathVariable Long id,
-    @Valid @RequestPart SeriesSubscribeEdit.Request request
+    @Valid @RequestBody SeriesSubscribeEdit.Request request
   ) {
     return this.seriesAssemble.editSeries(id, request);
   }
 
-  @PatchMapping(path = "/{id}/thumbnail", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+  @PutMapping(path = "/{id}/thumbnail", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
   @Operation(summary = "시리즈 썸네일 이미지 업데이트")
   @Tag(name = "[화면]-시리즈")
   public String registerImage(
     @AuthenticationPrincipal JwtAuthentication authentication,
     @PathVariable Long id,
-    @RequestPart MultipartFile image
+    @RequestPart MultipartFile file
   ) {
-    return this.seriesAssemble.changeThumbnail(image, id, authentication.userId);
-  }
-
-  @GetMapping("/sort")
-  @Operation(summary = "인기순/최신순 시리즈 리스트 조회")
-  @Tag(name = "[화면]-시리즈")
-  public List<SeriesSubscribeList.Response> getSeriesListOrderBySort(
-    @RequestParam(value = "sort", required = true) SortType sort
-  ) {
-    return this.seriesAssemble.getSeriesListSort(sort);
+    return this.seriesAssemble.changeThumbnail(file, id, authentication.userId);
   }
 
   @GetMapping("/search/title")
-  @Operation(summary = "시리즈제목으로 리스트 조회")
+  @Operation(summary = "시리즈 제목으로 리스트 조회(검색)")
   @Tag(name = "[화면]-시리즈")
   public List<SeriesSubscribeList.Response> getSeriesListSearchTitle(
     @RequestParam(value = "title", required = true) String title
@@ -132,12 +123,22 @@ public class SeriesController {
   }
 
   @GetMapping("/search/nickname")
-  @Operation(summary = "작가 닉네임으로 리스트 조회")
+  @Operation(summary = "작가 닉네임으로 리스트 조회(검색)")
   @Tag(name = "[화면]-시리즈")
   public List<SeriesSubscribeList.Response> getSeriesListSearchNickname(
     @RequestParam(value = "nickname", required = true) String nickname
   ) {
     return this.seriesAssemble.getSeriesSearchNickname(nickname);
+  }
+
+  @GetMapping("/sort")
+  //@Operation(summary = "인기순/최신순 시리즈 리스트 조회")
+  @Operation(hidden = true)
+  @Tag(name = "[화면]-시리즈")
+  public List<SeriesSubscribeList.Response> getSeriesListOrderBySort(
+    @RequestParam(value = "sort", required = true) SortType sort
+  ) {
+    return this.seriesAssemble.getSeriesListSort(sort);
   }
 
 }

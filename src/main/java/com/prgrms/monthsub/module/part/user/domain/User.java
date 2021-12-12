@@ -24,7 +24,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Table(name = "user")
 public class User extends BaseEntity {
 
-  public static final int POINT = 0;
+  public static final int POINT = 10000;
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

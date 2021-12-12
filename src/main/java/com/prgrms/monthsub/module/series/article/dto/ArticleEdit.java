@@ -21,4 +21,10 @@ public class ArticleEdit {
   ) {
   }
 
+  @Schema(name = "ArticleEdit.imageChangeResponse")
+  public record imageChangeResponse(
+    Long seriesId
+  ) {
+  }
+
 }
