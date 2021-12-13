@@ -10,15 +10,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 @Entity
 @Table(name = "expulsion")
 public class Expulsion {
@@ -58,6 +55,32 @@ public class Expulsion {
 
   @Column(name = "hard_delete_date", columnDefinition = "TIMESTAMP")
   private LocalDateTime hardDeleteDate;
+
+  @Builder
+  private Expulsion(
+    Long domainId,
+    Long userId,
+    String fileKey,
+    Status status,
+    DomainType domainType,
+    FileCategory fileCategory,
+    FileType fileType
+  ) {
+    this.domainId = domainId;
+    this.userId = userId;
+    this.fileKey = fileKey;
+    this.status = status;
+    this.domainType = domainType;
+    this.fileCategory = fileCategory;
+    this.fileType = fileType;
+    this.softDeleteDate = LocalDateTime.now();
+  }
+
+  public Expulsion hardDelete() {
+    this.hardDeleteDate = LocalDateTime.now();
+    this.status = Status.DELETED;
+    return this;
+  }
 
   public enum Status {
     CREATED,

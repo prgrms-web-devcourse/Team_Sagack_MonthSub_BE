@@ -10,7 +10,9 @@ import com.prgrms.monthsub.module.part.user.domain.exception.UserException.NickN
 import com.prgrms.monthsub.module.part.user.domain.exception.UserException.UserNotFound;
 import com.prgrms.monthsub.module.part.user.dto.UserEdit;
 import com.prgrms.monthsub.module.part.user.dto.UserSignUp;
+import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.DomainType;
 import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.FileCategory;
+import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.FileType;
 import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.Status;
 import com.prgrms.monthsub.module.worker.explusion.domain.ExpulsionService;
 import java.util.Optional;
@@ -117,8 +119,7 @@ public class UserService implements UserProvider {
           return this.s3Client.upload(
             Bucket.IMAGE,
             imageFile,
-            key,
-            S3Client.imageExtensions
+            key
           );
         }
       )
@@ -128,8 +129,13 @@ public class UserService implements UserProvider {
 
     if (originalProfileKey != null) {
       expulsionService.save(
-        user.getId(), originalProfileKey, Status.CREATED,
-        FileCategory.USER_PROFILE
+        user.getId(),
+        user.getId(),
+        originalProfileKey,
+        Status.CREATED,
+        DomainType.USER,
+        FileCategory.USER_PROFILE,
+        FileType.IMAGE
       );
     }
 

@@ -33,7 +33,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public class S3Client {
 
-  public static final List<String> imageExtensions = Arrays.asList("jpeg", "png", "jpg");
+  private static final List<String> imageExtensions = Arrays.asList("jpeg", "png", "jpg");
 
   private final AWS aws;
   private final S3 s3;
@@ -85,17 +85,6 @@ public class S3Client {
     }
   }
 
-  public String upload(
-    Bucket bucket,
-    MultipartFile file,
-    String key,
-    List<String> extensions
-  ) {
-    this.fileExtensionCheck(file, extensions);
-
-    return this.upload(bucket, file, key);
-  }
-
   public void deleteKeys(
     Bucket bucket,
     List<String> keys
@@ -119,11 +108,16 @@ public class S3Client {
     }
   }
 
-  private String upload(
+  public String upload(
     Bucket bucket,
     MultipartFile file,
     String key
   ) {
+    switch (bucket) {
+      case IMAGE -> this.validImageFile(file);
+      case VIDEO -> this.validVideoFile(file);
+    }
+
     ObjectMetadata objectMetadata = new ObjectMetadata();
     byte[] bytes;
     try {
@@ -156,6 +150,23 @@ public class S3Client {
     }
 
     return key;
+  }
+
+  private void validImageFile(MultipartFile file) {
+    String[] fileInfo = Objects.requireNonNull(file.getContentType())
+      .split("/");
+
+    boolean isImage = Arrays
+      .stream(fileInfo)
+      .anyMatch(imageExtensions::contains);
+
+    if (!isImage) {
+      throw new ImageExtensionNotMatch();
+    }
+  }
+
+  private void validVideoFile(MultipartFile file) {
+
   }
 
 }
