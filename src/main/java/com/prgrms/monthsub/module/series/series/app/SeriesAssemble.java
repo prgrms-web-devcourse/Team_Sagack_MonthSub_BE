@@ -16,8 +16,8 @@ import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeEdit;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeList;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeOne;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribePost;
-import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.ExpulsionImageName;
-import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.ExpulsionImageStatus;
+import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.FileCategory;
+import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.Status;
 import com.prgrms.monthsub.module.worker.explusion.domain.ExpulsionService;
 import java.util.Arrays;
 import java.util.Collections;
@@ -180,8 +180,8 @@ public class SeriesAssemble {
     );
 
     expulsionService.save(
-      userId, originalThumbnailKey, ExpulsionImageStatus.CREATED,
-      ExpulsionImageName.SERIES_THUMBNAIL
+      userId, originalThumbnailKey, Status.CREATED,
+      FileCategory.SERIES_THUMBNAIL
     );
 
     series.changeThumbnailKey(thumbnailKey);
