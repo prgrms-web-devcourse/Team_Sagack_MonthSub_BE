@@ -10,12 +10,12 @@ public class PaymentForm {
 
   @Schema(name = "PaymentWindow.Response")
   public record Response(
-    Series series
+    PaymentSeries series
   ) {
   }
 
   @Builder
-  public static class Series {
+  public static class PaymentSeries {
     public String email;
     public String nickname;
     public String title;

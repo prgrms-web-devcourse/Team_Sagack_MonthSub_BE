@@ -1,7 +1,7 @@
 package com.prgrms.monthsub.module.payment.converter;
 
 import com.prgrms.monthsub.common.s3.config.S3;
-import com.prgrms.monthsub.module.payment.dto.PaymentForm;
+import com.prgrms.monthsub.module.payment.dto.PaymentForm.PaymentSeries;
 import com.prgrms.monthsub.module.payment.dto.PaymentForm.Response;
 import com.prgrms.monthsub.module.series.series.domain.ArticleUploadDate;
 import com.prgrms.monthsub.module.series.series.domain.Series;
@@ -19,7 +19,7 @@ public class PaymentConverter {
     List<ArticleUploadDate> uploadDateList
   ) {
     return new Response(
-      PaymentForm.Series.builder()
+      PaymentSeries.builder()
         .email(series.getWriter()
           .getUser()
           .getEmail())
