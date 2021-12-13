@@ -23,4 +23,10 @@ public class S3UploaderException {
     }
   }
 
+  public static class DeleteError extends BusinessException {
+    public DeleteError(String message) {
+      super(ErrorCodes.FILE_ERROR(message));
+    }
+  }
+
 }
