@@ -9,7 +9,6 @@ import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeOne;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribePost;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import org.springframework.http.MediaType;
@@ -117,7 +116,7 @@ public class SeriesController {
   @GetMapping("/search/title")
   @Operation(summary = "시리즈 제목으로 리스트 조회(검색)")
   @Tag(name = "[화면]-시리즈")
-  public List<SeriesSubscribeList.Response> getSeriesListSearchTitle(
+  public SeriesSubscribeList.Response getSeriesListSearchTitle(
     @RequestParam(value = "title", required = true) String title
   ) {
     return this.seriesAssemble.getSeriesSearchTitle(title);
@@ -126,16 +125,16 @@ public class SeriesController {
   @GetMapping("/search/nickname")
   @Operation(summary = "작가 닉네임으로 리스트 조회(검색)")
   @Tag(name = "[화면]-시리즈")
-  public List<SeriesSubscribeList.Response> getSeriesListSearchNickname(
+  public SeriesSubscribeList.Response getSeriesListSearchNickname(
     @RequestParam(value = "nickname", required = true) String nickname
   ) {
     return this.seriesAssemble.getSeriesSearchNickname(nickname);
   }
 
-  @GetMapping
+  @GetMapping("/all")
   @Operation(summary = "최신순 시리즈 리스트 조회(무한 스크롤)")
   @Tag(name = "[화면]-시리즈")
-  public List<SeriesSubscribeList.Response> getSeriesList(
+  public SeriesSubscribeList.Response getSeriesList(
     @RequestParam(required = false) Long lastSeriesId,
     @RequestParam @Positive Integer size
   ) {
@@ -146,7 +145,7 @@ public class SeriesController {
   //@Operation(summary = "인기순/최신순 시리즈 리스트 조회")
   @Operation(hidden = true)
   @Tag(name = "[화면]-시리즈")
-  public List<SeriesSubscribeList.Response> getSeriesListOrderBySort(
+  public SeriesSubscribeList.Response getSeriesListOrderBySort(
     @RequestParam(value = "sort", required = true) SortType sort
   ) {
     return this.seriesAssemble.getSeriesListSort(sort);
