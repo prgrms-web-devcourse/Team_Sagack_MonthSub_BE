@@ -126,32 +126,30 @@ public class SeriesConverter {
     );
   }
 
-  public SeriesSubscribeList.Response seriesListToResponse(Series series) {
-    SeriesOneWithWriterResponse writerResponse = writerConverter.writerToSeriesOneWithWriterResponse(
-      series.getWriter());
-    return new SeriesSubscribeList.Response(
-      SeriesObject.builder()
-        .id(series.getId())
-        .thumbnail(this.toThumbnailEndpoint(series.getThumbnailKey()))
-        .title(series.getTitle())
-        .introduceSentence(series.getIntroduceSentence())
-        .startDate(series.getSeriesStartDate())
-        .endDate(series.getSeriesEndDate())
-        .articleCount(series.getArticleCount())
-        .likes(series.getLikes())
-        .build(),
-      SubscribeObject.builder()
-        .startDate(series.getSubscribeStartDate())
-        .endDate(series.getSubscribeEndDate())
-        .status(String.valueOf(series.getSubscribeStatus()))
-        .build(),
-      series.getCategory(),
-      WriterObject.builder()
-        .id(writerResponse.writerId())
-        .nickname(writerResponse.user()
-          .nickname())
-        .build()
-    );
+  public SeriesSubscribeList.SeriesListObject seriesListToResponse(Series series) {
+//    SeriesOneWithWriterResponse writerResponse = writerConverter.writerToSeriesOneWithWriterResponse(
+//      series.getWriter());
+    return SeriesSubscribeList.SeriesListObject.builder()
+      .userId(series.getWriter()
+        .getUser()
+        .getId())
+      .writerId(series.getWriter()
+        .getId())
+      .nickname(series.getWriter()
+        .getUser()
+        .getNickname())
+      .seriesId(series.getId())
+      .thumbnail(this.toThumbnailEndpoint(series.getThumbnailKey()))
+      .title(series.getTitle())
+      .subscribeStatus(String.valueOf(series.getSubscribeStatus()))
+      .introduceSentence(series.getIntroduceSentence())
+      .seriesStartDate(series.getSeriesStartDate())
+      .seriesEndDate(series.getSeriesEndDate())
+      .subscribeStartDate(series.getSeriesStartDate())
+      .subscribeEndDate(series.getSubscribeEndDate())
+      .likes(series.getLikes())
+      .category(series.getCategory())
+      .build();
   }
 
   public SeriesSubscribeOne.ResponseUsageEdit seriesToResponseUsageEdit(
