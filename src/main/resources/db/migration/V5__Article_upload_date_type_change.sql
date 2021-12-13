@@ -1,0 +1,1 @@
+ALTER table article_upload_date modify date varchar(50);
