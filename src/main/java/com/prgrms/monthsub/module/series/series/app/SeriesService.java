@@ -76,6 +76,13 @@ public class SeriesService implements SeriesProvider {
       .getContent();
   }
 
+  public List<Series> findBySubscribeStatus(
+    SeriesStatus status,
+    Pageable pageable
+  ) {
+    return this.seriesRepository.findBySubscribeStatus(status, pageable);
+  }
+
   public List<Series> getSeries(
     Long id,
     Pageable pageable

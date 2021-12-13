@@ -127,8 +127,6 @@ public class SeriesConverter {
   }
 
   public SeriesSubscribeList.SeriesListObject seriesListToResponse(Series series) {
-//    SeriesOneWithWriterResponse writerResponse = writerConverter.writerToSeriesOneWithWriterResponse(
-//      series.getWriter());
     return SeriesSubscribeList.SeriesListObject.builder()
       .userId(series.getWriter()
         .getUser()

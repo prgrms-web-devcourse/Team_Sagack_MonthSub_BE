@@ -3,6 +3,7 @@ package com.prgrms.monthsub.module.part.writer.converter;
 import com.prgrms.monthsub.common.s3.config.S3;
 import com.prgrms.monthsub.module.part.user.converter.UserConverter;
 import com.prgrms.monthsub.module.part.writer.domain.Writer;
+import com.prgrms.monthsub.module.series.series.dto.MainPage;
 import com.prgrms.monthsub.module.series.series.dto.MyChannel;
 import com.prgrms.monthsub.module.series.series.dto.MyChannel.MyChannelFollowWriterObject;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeList.SeriesOneWithWriterResponse;
@@ -34,6 +35,19 @@ public class WriterConverter {
     Writer writer
   ) {
     return MyChannelFollowWriterObject.builder()
+      .userId(writer.getUser()
+        .getId())
+      .writerId(writer.getId())
+      .nickname(writer.getUser()
+        .getNickname())
+      .profileImage(this.s3.getDomain() + "/" + writer.getUser()
+        .getProfileKey())
+      .subscribeStatus(String.valueOf(writer.getSubScribeStatus()))
+      .build();
+  }
+
+  public MainPage.MainPageFollowWriterObject writerToMainPageFollowWriterObject(Writer writer) {
+    return MainPage.MainPageFollowWriterObject.builder()
       .userId(writer.getUser()
         .getId())
       .writerId(writer.getId())

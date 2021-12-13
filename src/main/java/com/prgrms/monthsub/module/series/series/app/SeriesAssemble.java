@@ -14,6 +14,7 @@ import com.prgrms.monthsub.module.series.series.domain.Series;
 import com.prgrms.monthsub.module.series.series.domain.type.SortType;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeEdit;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeList;
+import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeList.Response;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeOne;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribePost;
 import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.FileCategory;
@@ -43,6 +44,7 @@ public class SeriesAssemble {
   private final S3Client s3Client;
   private final SeriesConverter seriesConverter;
   private final ArticleUploadDateConverter articleUploadDateConverter;
+  private final SeriesUserService seriesUserService;
 
   public SeriesAssemble(
     SeriesService seriesService,
@@ -52,7 +54,8 @@ public class SeriesAssemble {
     UserProvider userProvider,
     S3Client s3Client,
     SeriesConverter seriesConverter,
-    ArticleUploadDateConverter articleUploadDateConverter
+    ArticleUploadDateConverter articleUploadDateConverter,
+    SeriesUserService seriesUserService
   ) {
     this.seriesService = seriesService;
     this.articleService = articleService;
@@ -62,6 +65,7 @@ public class SeriesAssemble {
     this.s3Client = s3Client;
     this.seriesConverter = seriesConverter;
     this.articleUploadDateConverter = articleUploadDateConverter;
+    this.seriesUserService = seriesUserService;
   }
 
   @Transactional
@@ -162,6 +166,13 @@ public class SeriesAssemble {
           .collect(Collectors.toList()));
       })
       .orElseGet(() -> {return new SeriesSubscribeList.Response(Collections.emptyList());});
+  }
+
+  public SeriesSubscribeList.Response getSeriesSubscribeList(Long userId) {
+    return new Response(this.seriesUserService.findAllMySubscribeByUserId(userId)
+      .stream()
+      .map(seriesUser -> seriesConverter.seriesListToResponse(seriesUser.getSeries()))
+      .collect(Collectors.toList()));
   }
 
   @Transactional
