@@ -1,5 +1,6 @@
 package com.prgrms.monthsub.module.series.series.app;
 
+import com.prgrms.monthsub.module.series.series.app.Provider.SeriesProvider;
 import com.prgrms.monthsub.module.series.series.domain.ArticleUploadDate;
 import com.prgrms.monthsub.module.series.series.domain.Series;
 import com.prgrms.monthsub.module.series.series.domain.Series.SeriesStatus;
@@ -12,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional(readOnly = true)
-public class SeriesService {
+public class SeriesService implements SeriesProvider {
 
   private final SeriesRepository seriesRepository;
   private final ArticleUploadDateRepository articleUploadDateRepository;
@@ -25,6 +26,7 @@ public class SeriesService {
     this.articleUploadDateRepository = articleUploadDateRepository;
   }
 
+  @Override
   public Series getById(Long id) {
     return this.seriesRepository
       .findById(id)
@@ -42,6 +44,7 @@ public class SeriesService {
     this.articleUploadDateRepository.save(articleUploadDate);
   }
 
+  @Override
   public List<ArticleUploadDate> getArticleUploadDate(Long seriesId) {
     return this.articleUploadDateRepository.findAllBySeriesId(seriesId);
   }
@@ -71,6 +74,13 @@ public class SeriesService {
     return this.seriesRepository
       .findAll(pageable)
       .getContent();
+  }
+
+  public List<Series> findBySubscribeStatus(
+    SeriesStatus status,
+    Pageable pageable
+  ) {
+    return this.seriesRepository.findBySubscribeStatus(status, pageable);
   }
 
   public List<Series> getSeries(

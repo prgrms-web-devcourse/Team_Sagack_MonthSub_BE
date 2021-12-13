@@ -77,6 +77,8 @@ security:
     - /series/search/title
     - /series/search/nickname
     - /series/all
+    - /users/{id}/other
+    - /main
 
 logging:
   level:

@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Version;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.PositiveOrZero;
 import lombok.AccessLevel;
@@ -57,6 +58,9 @@ public class User extends BaseEntity {
   @ManyToOne
   @JoinColumn(name = "part_id")
   private Part part;
+
+  @Version
+  private Integer version;
 
   @Builder
   public User(

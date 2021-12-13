@@ -22,4 +22,9 @@ public interface SeriesRepository extends JpaRepository<Series, Long> {
     Pageable pageable
   );
 
+  List<Series> findBySubscribeStatus(
+    SeriesStatus subscribeStatus,
+    Pageable pageable
+  );
+
 }

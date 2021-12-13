@@ -9,6 +9,7 @@ import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeOne;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribePost;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.tags.Tags;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import org.springframework.http.MediaType;
@@ -149,6 +150,18 @@ public class SeriesController {
     @RequestParam(value = "sort", required = true) SortType sort
   ) {
     return this.seriesAssemble.getSeriesListSort(sort);
+  }
+
+  @GetMapping("users/subscribe")
+  @Operation(summary = "사용자 시리즈 구독 리스트 조회")
+  @Tags({
+    @Tag(name = "[화면]-시리즈"),
+    @Tag(name = "[화면]-메인 페이지")
+  })
+  public SeriesSubscribeList.Response getSeriesSubscribeList(
+    @AuthenticationPrincipal JwtAuthentication authentication
+  ) {
+    return this.seriesAssemble.getSeriesSubscribeList(authentication.userId);
   }
 
 }
