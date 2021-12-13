@@ -34,7 +34,6 @@ public class MyChannelController {
   @Operation(summary = "다른 유저 채널 조회")
   @Tag(name = "[화면]-다른 유저 채널")
   public MyChannel.OtherResponse getOtherChannel(
-    @AuthenticationPrincipal JwtAuthentication authentication,
     @PathVariable Long userId
   ) {
     return this.channelAssemble.getOtherChannel(userId);

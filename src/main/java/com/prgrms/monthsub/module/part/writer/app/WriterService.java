@@ -9,11 +9,14 @@ import com.prgrms.monthsub.module.part.user.domain.User;
 import com.prgrms.monthsub.module.part.writer.app.provider.WriterProvider;
 import com.prgrms.monthsub.module.part.writer.domain.Writer;
 import com.prgrms.monthsub.module.part.writer.domain.exception.WriterException.WriterNotFound;
+import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(readOnly = true)
 public class WriterService implements WriterProvider {
 
   private final WriterRepository writerRepository;
@@ -38,17 +41,21 @@ public class WriterService implements WriterProvider {
       .orElseGet(() -> this.getWriterAndChangeUserPart(userId));
   }
 
-  @Transactional(readOnly = true)
   public Writer findWriterByUserId(Long userId) {
     return this.writerRepository
       .findByUserId(userId)
       .orElseThrow(() -> new WriterNotFound("id=" + userId));
   }
 
-  @Transactional(readOnly = true)
   public Optional<Writer> findWriterObjectByUserId(Long userId) {
     return this.writerRepository
       .findByUserId(userId);
+  }
+
+  public List<Writer> findAll(Pageable pageable) {
+    return this.writerRepository
+      .findAll(pageable)
+      .getContent();
   }
 
   private Writer getWriterAndChangeUserPart(Long userId) {
