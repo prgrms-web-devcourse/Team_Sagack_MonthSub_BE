@@ -1,0 +1,1 @@
+alter table expulsion CHANGE fileKey file_key text;
