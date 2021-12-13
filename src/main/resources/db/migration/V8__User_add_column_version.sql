@@ -1,2 +1,1 @@
-ALTER TABLE user
-    ADD COLUMN version int NULL;
+ALTER TABLE user ADD COLUMN version int NULL;
