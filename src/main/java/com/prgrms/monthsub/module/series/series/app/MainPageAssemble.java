@@ -19,21 +19,19 @@ public class MainPageAssemble {
 
   private final int PAGE_NUM = 0;
   private final int PAGE_SIZE = 8;
+  private final int PAGE_WRITER_NUM = 10;
 
   private final SeriesService seriesService;
   private final WriterService writerService;
-  private final SeriesUserService seriesUserService;
   private final MainPageConverter mainPageConverter;
 
   public MainPageAssemble(
     SeriesService seriesService,
     WriterService writerService,
-    SeriesUserService seriesUserService,
     MainPageConverter mainPageConverter
   ) {
     this.seriesService = seriesService;
     this.writerService = writerService;
-    this.seriesUserService = seriesUserService;
     this.mainPageConverter = mainPageConverter;
   }
 
@@ -46,7 +44,7 @@ public class MainPageAssemble {
     ));
 
     List<Writer> popularWriterList = this.writerService.findAll(
-      PageRequest.of(PAGE_NUM, PAGE_SIZE + 2, Sort.by(Direction.DESC, "followCount")));
+      PageRequest.of(PAGE_NUM, PAGE_WRITER_NUM, Sort.by(Direction.DESC, "followCount")));
 
     List<Series> recentSeriesList = this.seriesService.findBySubscribeStatus(
       SeriesStatus.SUBSCRIPTION_AVAILABLE,

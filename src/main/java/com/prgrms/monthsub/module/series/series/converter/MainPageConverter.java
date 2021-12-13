@@ -54,7 +54,7 @@ public class MainPageConverter {
         .getUser()
         .getNickname())
       .seriesId(series.getId())
-      .thumbnail(this.toThumbnailEndpoint(series.getThumbnailKey()))
+      .thumbnail(this.s3.getDomain() + "/" + series.getThumbnailKey())
       .title(series.getTitle())
       .subscribeStatus(String.valueOf(series.getSubscribeStatus()))
       .introduceSentence(series.getIntroduceSentence())
@@ -65,10 +65,6 @@ public class MainPageConverter {
       .likes(series.getLikes())
       .category(series.getCategory())
       .build();
-  }
-
-  public String toThumbnailEndpoint(String thumbnailKey) {
-    return this.s3.getDomain() + "/" + thumbnailKey;
   }
 
 }
