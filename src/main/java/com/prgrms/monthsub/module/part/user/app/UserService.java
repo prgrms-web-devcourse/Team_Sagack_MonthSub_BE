@@ -10,8 +10,8 @@ import com.prgrms.monthsub.module.part.user.domain.exception.UserException.NickN
 import com.prgrms.monthsub.module.part.user.domain.exception.UserException.UserNotFound;
 import com.prgrms.monthsub.module.part.user.dto.UserEdit;
 import com.prgrms.monthsub.module.part.user.dto.UserSignUp;
-import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.ExpulsionImageName;
-import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.ExpulsionImageStatus;
+import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.FileCategory;
+import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.Status;
 import com.prgrms.monthsub.module.worker.explusion.domain.ExpulsionService;
 import java.util.Optional;
 import java.util.UUID;
@@ -44,13 +44,13 @@ public class UserService implements UserProvider {
     this.expulsionService = expulsionService;
   }
 
-  @Transactional
   @Override
   public Optional<User> findByNickname(String nickname) {
     return this.userRepository
       .findByNickname(nickname);
   }
 
+  @Override
   public User findById(Long userId) {
     return this.userRepository
       .findById(userId)
@@ -94,7 +94,6 @@ public class UserService implements UserProvider {
       .getId());
   }
 
-
   @Transactional
   public String uploadProfileImage(
     Optional<MultipartFile> image,
@@ -129,8 +128,8 @@ public class UserService implements UserProvider {
 
     if (originalProfileKey != null) {
       expulsionService.save(
-        user.getId(), originalProfileKey, ExpulsionImageStatus.CREATED,
-        ExpulsionImageName.USER_PROFILE
+        user.getId(), originalProfileKey, Status.CREATED,
+        FileCategory.USER_PROFILE
       );
     }
 

@@ -61,7 +61,7 @@ public class ArticleController {
     @AuthenticationPrincipal JwtAuthentication authentication,
     @PathVariable Long id
   ) {
-    return this.articleAssemble.getArticleOne(id);
+    return this.articleAssemble.getArticleOne(id, authentication.userId);
   }
 
   @PutMapping(path = "/{id}/thumbnail", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })

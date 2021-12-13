@@ -1,19 +1,18 @@
 package com.prgrms.monthsub.module.series.series.dto;
 
-import com.prgrms.monthsub.module.series.series.domain.Series.Category;
+import com.prgrms.monthsub.module.series.series.domain.Series;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 import lombok.Builder;
+import lombok.Getter;
 
 public class SeriesSubscribeList {
 
   @Schema(name = "SeriesSubscribeList.Response")
   public record Response(
-    SeriesObject series,
-    SubscribeObject subscribe,
-    Category category,
-    WriterObject writer
+    List<SeriesListObject> seriesList
   ) {
   }
 
@@ -42,6 +41,25 @@ public class SeriesSubscribeList {
     Integer round,
     LocalDate date
   ) {
+  }
+
+  @Getter
+  @Builder
+  public static class SeriesListObject {
+    public Long userId;
+    public Long writerId;
+    public Long seriesId;
+    public String nickname;
+    public String thumbnail;
+    public String title;
+    public String introduceSentence;
+    public LocalDate seriesStartDate;
+    public LocalDate seriesEndDate;
+    public String subscribeStatus;
+    public LocalDate subscribeStartDate;
+    public LocalDate subscribeEndDate;
+    public int likes;
+    Series.Category category;
   }
 
   @Builder

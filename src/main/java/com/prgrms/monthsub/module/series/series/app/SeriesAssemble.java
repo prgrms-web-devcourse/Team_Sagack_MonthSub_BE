@@ -16,8 +16,8 @@ import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeEdit;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeList;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeOne;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribePost;
-import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.ExpulsionImageName;
-import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.ExpulsionImageStatus;
+import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.FileCategory;
+import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.Status;
 import com.prgrms.monthsub.module.worker.explusion.domain.ExpulsionService;
 import java.util.Arrays;
 import java.util.Collections;
@@ -108,18 +108,18 @@ public class SeriesAssemble {
     return this.seriesConverter.seriesToSeriesOneResponse(series, articleList, uploadDateList);
   }
 
-  public List<SeriesSubscribeList.Response> getSeriesListSort(SortType sort) {
-    return (
+  public SeriesSubscribeList.Response getSeriesListSort(SortType sort) {
+    return new SeriesSubscribeList.Response((
       switch (sort) {
         case RECENT -> this.seriesService.findAll(Sort.by(Direction.DESC, "createdAt", "id"));
         case POPULAR -> this.seriesService.findAll(Sort.by(Direction.DESC, "likes"));
       })
       .stream()
       .map(this.seriesConverter::seriesListToResponse)
-      .collect(Collectors.toList());
+      .collect(Collectors.toList()));
   }
 
-  public List<SeriesSubscribeList.Response> getSeriesList(
+  public SeriesSubscribeList.Response getSeriesList(
     Long lastSeriesId,
     Integer size
   ) {
@@ -129,13 +129,13 @@ public class SeriesAssemble {
       Sort.by(Direction.DESC, "createdAt", "id")
     );
 
-    return (
+    return new SeriesSubscribeList.Response((
       (lastSeriesId == null) ? this.seriesService.findAll(cursorPageable)
         : this.seriesService.getSeries(lastSeriesId, cursorPageable)
     )
       .stream()
       .map(this.seriesConverter::seriesListToResponse)
-      .collect(Collectors.toList());
+      .collect(Collectors.toList()));
   }
 
   public SeriesSubscribeOne.ResponseUsageEdit getSeriesUsageEdit(Long seriesId) {
@@ -145,23 +145,23 @@ public class SeriesAssemble {
     return this.seriesConverter.seriesToResponseUsageEdit(series, uploadDateList);
   }
 
-  public List<SeriesSubscribeList.Response> getSeriesSearchTitle(String title) {
-    return this.seriesService.getSeriesSearchTitle(title)
+  public SeriesSubscribeList.Response getSeriesSearchTitle(String title) {
+    return new SeriesSubscribeList.Response(this.seriesService.getSeriesSearchTitle(title)
       .stream()
       .map(this.seriesConverter::seriesListToResponse)
-      .collect(Collectors.toList());
+      .collect(Collectors.toList()));
   }
 
-  public List<SeriesSubscribeList.Response> getSeriesSearchNickname(String nickname) {
-    return userProvider.findByNickname(nickname)
+  public SeriesSubscribeList.Response getSeriesSearchNickname(String nickname) {
+    return this.userProvider.findByNickname(nickname)
       .map(user -> {
         Writer writer = this.writerProvider.findByUserId(user.getId());
-        return this.seriesService.findAllByWriterId(writer.getId())
+        return new SeriesSubscribeList.Response(this.seriesService.findAllByWriterId(writer.getId())
           .stream()
           .map(this.seriesConverter::seriesListToResponse)
-          .collect(Collectors.toList());
+          .collect(Collectors.toList()));
       })
-      .orElseGet(Collections::emptyList);
+      .orElseGet(() -> {return new SeriesSubscribeList.Response(Collections.emptyList());});
   }
 
   @Transactional
@@ -180,8 +180,8 @@ public class SeriesAssemble {
     );
 
     expulsionService.save(
-      userId, originalThumbnailKey, ExpulsionImageStatus.CREATED,
-      ExpulsionImageName.SERIES_THUMBNAIL
+      userId, originalThumbnailKey, Status.CREATED,
+      FileCategory.SERIES_THUMBNAIL
     );
 
     series.changeThumbnailKey(thumbnailKey);
