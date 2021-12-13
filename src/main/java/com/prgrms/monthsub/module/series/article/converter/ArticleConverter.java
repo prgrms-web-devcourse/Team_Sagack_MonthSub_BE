@@ -1,6 +1,7 @@
 package com.prgrms.monthsub.module.series.article.converter;
 
 import com.prgrms.monthsub.common.s3.config.S3;
+import com.prgrms.monthsub.module.part.user.domain.User;
 import com.prgrms.monthsub.module.series.article.domain.Article;
 import com.prgrms.monthsub.module.series.article.dto.ArticleOne;
 import com.prgrms.monthsub.module.series.article.dto.ArticlePost;
@@ -40,7 +41,8 @@ public class ArticleConverter {
 
   public ArticleOne.Response articleToArticleOneResponse(
     Article article,
-    Long articleCount
+    Long articleCount,
+    User user
   ) {
     return new ArticleOne.Response(
       article.getTitle(),
@@ -49,7 +51,10 @@ public class ArticleConverter {
       articleCount.intValue(),
       article.getCreatedAt()
         .toLocalDate()
-        .toString()
+        .toString(),
+      user.getNickname(),
+      user.getProfileKey(),
+      user.getProfileIntroduce()
     );
   }
 
