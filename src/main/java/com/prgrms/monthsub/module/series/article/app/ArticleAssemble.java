@@ -11,8 +11,8 @@ import com.prgrms.monthsub.module.series.article.dto.ArticleOne;
 import com.prgrms.monthsub.module.series.article.dto.ArticlePost;
 import com.prgrms.monthsub.module.series.series.app.SeriesService;
 import com.prgrms.monthsub.module.series.series.domain.Series;
-import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.ExpulsionImageName;
-import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.ExpulsionImageStatus;
+import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.FileCategory;
+import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.Status;
 import com.prgrms.monthsub.module.worker.explusion.domain.ExpulsionService;
 import java.util.UUID;
 import org.springframework.stereotype.Service;
@@ -113,8 +113,8 @@ public class ArticleAssemble {
     );
 
     expulsionService.save(
-      userId, originalThumbnailKey, ExpulsionImageStatus.CREATED,
-      ExpulsionImageName.ARTICLE_THUMBNAIL
+      userId, originalThumbnailKey, Status.CREATED,
+      FileCategory.ARTICLE_THUMBNAIL
     );
 
     article.changeThumbnailKey(thumbnailKey);

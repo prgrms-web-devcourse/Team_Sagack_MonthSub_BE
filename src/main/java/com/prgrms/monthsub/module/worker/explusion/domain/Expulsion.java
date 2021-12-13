@@ -28,43 +28,72 @@ public class Expulsion {
   @Column(name = "id", columnDefinition = "BIGINT")
   private Long id;
 
+  @Column(name = "domain_id", columnDefinition = "BIGINT", nullable = false)
+  private Long domainId;
+
   @Column(name = "user_id", columnDefinition = "BIGINT")
   private Long userId;
 
-  @Column(name = "image_key", columnDefinition = "TEXT", nullable = false)
-  private String imageKey;
+  @Column(name = "file_key", columnDefinition = "TEXT", nullable = false)
+  private String fileKey;
 
   @Enumerated(EnumType.STRING)
-  @Column(name = "expulsion_image_status", columnDefinition = "VARCHAR(50)", nullable = false)
-  private ExpulsionImageStatus expulsionImageStatus;
+  @Column(name = "status", columnDefinition = "VARCHAR(50)", nullable = false)
+  private Status status;
 
   @Enumerated(EnumType.STRING)
-  @Column(name = "expulsion_image_name", columnDefinition = "VARCHAR(50)", nullable = false)
-  private ExpulsionImageName expulsionImageName;
+  @Column(name = "domain_type", columnDefinition = "VARCHAR(50)", nullable = false)
+  private DomainType domainType;
 
-  @Column(name = "hard_delete_date", columnDefinition = "TIMESTAMP", updatable = false)
+  @Enumerated(EnumType.STRING)
+  @Column(name = "file_category", columnDefinition = "VARCHAR(50)", nullable = false)
+  private FileCategory fileCategory;
+
+  @Enumerated(EnumType.STRING)
+  @Column(name = "file_type", columnDefinition = "VARCHAR(50)", nullable = false)
+  private FileType fileType;
+
+  @Column(name = "soft_delete_date", columnDefinition = "TIMESTAMP", updatable = false)
+  private LocalDateTime softDeleteDate;
+
+  @Column(name = "hard_delete_date", columnDefinition = "TIMESTAMP")
   private LocalDateTime hardDeleteDate;
 
-  public enum ExpulsionImageName {
+  public enum Status {
+    CREATED,
+    DELETED;
 
+    public static Status of(String status) {
+      return Status.valueOf(status.toUpperCase());
+    }
+  }
+
+  public enum DomainType {
+    USER,
+    WRITER,
+    SERIES,
+    ARTICLE,
+    BILL;
+  }
+
+  public enum FileCategory {
     SERIES_THUMBNAIL,
     ARTICLE_THUMBNAIL,
     USER_PROFILE;
 
-    public static ExpulsionImageName of(String expulsionImageName) {
-      return ExpulsionImageName.valueOf(expulsionImageName.toUpperCase());
+    public static FileCategory of(String fileCategory) {
+      return FileCategory.valueOf(fileCategory.toUpperCase());
     }
   }
 
-  public enum ExpulsionImageStatus {
+  public enum FileType {
+    TEXT,
+    IMAGE,
+    VIDEO;
 
-    CREATED,
-    DELETED;
-
-    public static ExpulsionImageStatus of(String imageExpulsionStatus) {
-      return ExpulsionImageStatus.valueOf(imageExpulsionStatus.toUpperCase());
+    public static FileType of(String fileType) {
+      return FileType.valueOf(fileType.toUpperCase());
     }
-
   }
 
 }

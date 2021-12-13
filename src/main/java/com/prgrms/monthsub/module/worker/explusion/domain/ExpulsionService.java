@@ -1,8 +1,7 @@
 package com.prgrms.monthsub.module.worker.explusion.domain;
 
-import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.ExpulsionImageName;
-import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.ExpulsionImageStatus;
-import java.time.LocalDateTime;
+import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.FileCategory;
+import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.Status;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,18 +14,18 @@ public class ExpulsionService {
 
   public void save(
     Long userId,
-    String originalThumbnailKey,
-    ExpulsionImageStatus expulsionImageStatus,
-    ExpulsionImageName expulsionImageName
+    String originalKey,
+    Status status,
+    FileCategory fileCategory
   ) {
-    Expulsion expulsion = Expulsion.builder()
-      .userId(userId)
-      .imageKey(originalThumbnailKey)
-      .expulsionImageStatus(expulsionImageStatus)
-      .expulsionImageName(expulsionImageName)
-      .hardDeleteDate(LocalDateTime.now())
-      .build();
-    this.expulsionRepository.save(expulsion);
+//    Expulsion expulsion = Expulsion.builder()
+//      .userId(userId)
+//      .fileKey(originalKey)
+//      .status(status)
+//      .fileCategory(fileCategory)
+//      .hardDeleteDate(LocalDateTime.now())
+//      .build();
+//    this.expulsionRepository.save(expulsion);
   }
 
 }
