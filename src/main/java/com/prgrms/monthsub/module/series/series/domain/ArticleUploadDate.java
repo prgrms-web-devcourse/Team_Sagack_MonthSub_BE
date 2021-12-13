@@ -28,7 +28,7 @@ public class ArticleUploadDate {
   private Long seriesId;
 
   @Enumerated(EnumType.STRING)
-  @Column(name = "day", columnDefinition = "VARCHAR(50)", nullable = false)
+  @Column(name = "date", columnDefinition = "VARCHAR(50)", nullable = false)
   private UploadDate uploadDate;
 
   @Builder
