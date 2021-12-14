@@ -218,7 +218,7 @@ public class SeriesAssemble {
   }
 
   @Transactional
-  public String changeThumbnail(
+  public void changeThumbnail(
     MultipartFile thumbnail,
     Long seriesId,
     Long userId

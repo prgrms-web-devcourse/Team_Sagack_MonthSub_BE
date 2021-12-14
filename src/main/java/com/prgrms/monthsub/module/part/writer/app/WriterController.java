@@ -14,11 +14,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/writers")
 @Tag(name = "Writer")
-public class WriterLikeController {
+public class WriterController {
 
   private final WriterLikesService writerLikesService;
 
-  public WriterLikeController(WriterLikesService writerLikesService) {this.writerLikesService = writerLikesService;}
+  public WriterController(WriterLikesService writerLikesService) {
+    this.writerLikesService = writerLikesService;
+  }
 
   @PostMapping("/{id}/follow")
   @Operation(summary = "작가 팔로우 클릭 이벤트")

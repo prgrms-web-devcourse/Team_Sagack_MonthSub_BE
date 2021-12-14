@@ -112,15 +112,6 @@ public class SeriesController {
     return this.seriesAssemble.getSeriesPostList(authentication.userId);
   }
 
-  @GetMapping("/writer/posts")
-  @Operation(summary = "작가가 발행한 시리즈 리스트")
-  @Tag(name = "[화면]-시리즈")
-  public SeriesSubscribeList.Response getSeriesPostList(
-    @AuthenticationPrincipal JwtAuthentication authentication
-  ) {
-    return this.seriesAssemble.getSeriesPostList(authentication.userId);
-  }
-
   @GetMapping("/search/title")
   @Operation(summary = "시리즈 제목으로 리스트 조회(검색)")
   @Tag(name = "[화면]-시리즈")

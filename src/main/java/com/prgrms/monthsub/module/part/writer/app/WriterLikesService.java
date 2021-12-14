@@ -49,7 +49,7 @@ public class WriterLikesService {
             .getId(), likeStatus);
       })
       .orElseGet(() -> {
-        Writer writer = this.writerProvider.findById(writerId);
+        Writer writer = this.writerProvider.findWriterByUserId(writerId);
         writer.updateFollowCount(INCREASE_NUM);
         return new WriterFollowEvent.Response(this.writerLikesRepository.save(WriterLikes.builder()
             .likesStatus(LikesStatus.Like)

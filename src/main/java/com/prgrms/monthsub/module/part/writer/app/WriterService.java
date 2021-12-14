@@ -34,7 +34,7 @@ public class WriterService implements WriterProvider {
   }
 
   @Override
-  public Writer findById(Long writerId) {
+  public Writer findWriterByUserId(Long writerId) {
     return this.writerRepository
       .findById(writerId)
       .orElseThrow(() -> new WriterNotFound("id=" + writerId));
@@ -46,13 +46,6 @@ public class WriterService implements WriterProvider {
     return this.writerRepository
       .findByUserId(userId)
       .orElseGet(() -> this.getWriterAndChangeUserPart(userId));
-  }
-
-  @Override
-  public Writer findWriterByUserId(Long userId) {
-    return this.writerRepository
-      .findByUserId(userId)
-      .orElseThrow(() -> new WriterNotFound("id=" + userId));
   }
 
   public Optional<Writer> findWriterObjectByUserId(Long userId) {
