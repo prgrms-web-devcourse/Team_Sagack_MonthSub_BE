@@ -50,6 +50,11 @@ public class WriterLikes extends BaseEntity {
     this.likesStatus = likesStatus;
   }
 
+  public WriterLikes.LikesStatus changeLikeStatus(LikesStatus likesStatus) {
+    this.likesStatus = likesStatus;
+    return this.likesStatus;
+  }
+
   public enum LikesStatus {
 
     Like,
