@@ -217,6 +217,22 @@ public class SeriesAssemble {
     );
   }
 
+  @Transactional
+  public String changeThumbnail(
+    MultipartFile thumbnail,
+    Long seriesId,
+    Long userId
+  ) {
+    Series series = this.seriesService.getById(seriesId);
+
+    String originalThumbnailKey = series.getThumbnailKey();
+
+    String thumbnailKey = this.uploadThumbnailImage(
+      thumbnail,
+      seriesId
+    );
+  }
+
   public String uploadThumbnailImage(
     MultipartFile image,
     Long id
