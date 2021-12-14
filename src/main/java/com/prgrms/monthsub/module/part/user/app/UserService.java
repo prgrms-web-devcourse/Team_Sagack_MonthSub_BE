@@ -86,10 +86,13 @@ public class UserService implements UserProvider {
   @Transactional
   public UserEdit.Response edit(
     Long id,
-    UserEdit.Request request
+    UserEdit.Request request,
+    Optional<MultipartFile> image
   ) {
     checkNicName(request.nickName());
     User user = this.findById(id);
+
+    this.uploadProfileImage(image, user);
     user.editUser(request.nickName(), request.profileIntroduce());
 
     return new UserEdit.Response(this.userRepository.save(user)
@@ -97,12 +100,10 @@ public class UserService implements UserProvider {
   }
 
   @Transactional
-  public String uploadProfileImage(
+  public void uploadProfileImage(
     Optional<MultipartFile> image,
-    Long userId
+    User user
   ) {
-    User user = this.findById(userId);
-
     String profileKey = image.map(imageFile -> {
           if (imageFile.isEmpty()) {
             return null;
@@ -111,7 +112,8 @@ public class UserService implements UserProvider {
           String key = User.class.getSimpleName()
             .toLowerCase()
             + "s"
-            + "/" + userId.toString()
+            + "/" + user.getId()
+            .toString()
             + "/profile/"
             + UUID.randomUUID()
             + this.s3Client.getExtension(imageFile);
@@ -140,10 +142,6 @@ public class UserService implements UserProvider {
     }
 
     user.changeProfileKey(profileKey);
-
-    return this.userConverter.UserProfile(
-      Optional.ofNullable(user.getProfileKey())
-    );
   }
 
   private void checkEmail(String email) {

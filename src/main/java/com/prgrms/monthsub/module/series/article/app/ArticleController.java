@@ -49,9 +49,10 @@ public class ArticleController {
   public ArticleEdit.TextChangeResponse editArticle(
     @AuthenticationPrincipal JwtAuthentication authentication,
     @PathVariable Long id,
-    @Valid @RequestBody ArticleEdit.TextChangeRequest request
+    @RequestPart MultipartFile file,
+    @Valid @RequestPart ArticleEdit.TextChangeRequest request
   ) {
-    return this.articleAssemble.editArticle(id, request);
+    return this.articleAssemble.editArticle(id, request, file, authentication.userId);
   }
 
   @GetMapping(path = "/{id}")
@@ -63,19 +64,6 @@ public class ArticleController {
     @Valid @RequestBody ArticleOne.Request request
   ) {
     return this.articleAssemble.getArticleOne(id, request.seriesId(), authentication.userId);
-  }
-
-  @PutMapping(path = "/{id}/thumbnail", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
-  @Operation(summary = "아티클 썸네일 이미지 업데이트")
-  @Tag(name = "[화면]-아티클")
-  public String registerImage(
-    @AuthenticationPrincipal JwtAuthentication authentication,
-    @PathVariable Long id,
-    @RequestPart MultipartFile file,
-    @Valid @RequestPart ArticleEdit.imageChangeResponse request
-  ) {
-    return this.articleAssemble.changeThumbnail(
-      file, request.seriesId(), id, authentication.userId);
   }
 
 }

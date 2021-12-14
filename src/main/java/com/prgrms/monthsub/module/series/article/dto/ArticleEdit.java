@@ -11,19 +11,16 @@ public class ArticleEdit {
     String title,
 
     @NotBlank
-    String contents
+    String contents,
+
+    @NotBlank
+    Long seriesId
   ) {
   }
 
   @Schema(name = "ArticleEdit.TextChangeResponse")
   public record TextChangeResponse(
     Long id
-  ) {
-  }
-
-  @Schema(name = "ArticleEdit.imageChangeResponse")
-  public record imageChangeResponse(
-    Long seriesId
   ) {
   }
 

@@ -74,14 +74,15 @@ public class UserController {
     return this.userConverter.EntityToUserMeResponse(user);
   }
 
-  @PatchMapping(path = "/me")
+  @PatchMapping(path = "/me", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
   @Operation(summary = "내 정보 수정")
   @Tag(name = "[화면]-마이페이지")
   public UserEdit.Response edit(
     @AuthenticationPrincipal JwtAuthentication authentication,
-    @Valid @RequestBody UserEdit.Request request
+    @Valid @RequestPart UserEdit.Request request,
+    @RequestPart(required = false) MultipartFile file
   ) {
-    return this.userService.edit(authentication.userId, request);
+    return this.userService.edit(authentication.userId, request, Optional.ofNullable(file));
   }
 
   @PostMapping(path = "/signup")
@@ -89,16 +90,6 @@ public class UserController {
   @Tag(name = "[화면]-회원가입")
   public UserSignUp.Response signUp(@RequestBody UserSignUp.Request request) {
     return this.userService.signUp(request);
-  }
-
-  @PostMapping(path = "/profile", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
-  @Operation(summary = "유저 프로필 이미지 업로드")
-  @Tag(name = "[화면]-마이페이지")
-  public String registerImage(
-    @AuthenticationPrincipal JwtAuthentication authentication,
-    @RequestPart(required = false) MultipartFile file
-  ) {
-    return this.userService.uploadProfileImage(Optional.ofNullable(file), authentication.userId);
   }
 
 }

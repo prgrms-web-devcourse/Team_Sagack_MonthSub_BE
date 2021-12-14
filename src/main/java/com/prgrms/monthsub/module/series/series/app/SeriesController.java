@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -92,26 +91,25 @@ public class SeriesController {
     return this.seriesAssemble.getSeriesUsageEdit(id);
   }
 
-  @PutMapping(path = "/{id}/edit")
+  @PutMapping(path = "/{id}/edit", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
   @Operation(summary = "시리즈 공고 게시글 수정")
   @Tag(name = "[화면]-시리즈")
   public SeriesSubscribeEdit.Response editSeries(
     @AuthenticationPrincipal JwtAuthentication authentication,
     @PathVariable Long id,
-    @Valid @RequestBody SeriesSubscribeEdit.Request request
-  ) {
-    return this.seriesAssemble.editSeries(id, request);
-  }
-
-  @PutMapping(path = "/{id}/thumbnail", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
-  @Operation(summary = "시리즈 썸네일 이미지 업데이트")
-  @Tag(name = "[화면]-시리즈")
-  public String registerImage(
-    @AuthenticationPrincipal JwtAuthentication authentication,
-    @PathVariable Long id,
+    @Valid @RequestPart SeriesSubscribeEdit.Request request,
     @RequestPart MultipartFile file
   ) {
-    return this.seriesAssemble.changeThumbnail(file, id, authentication.userId);
+    return this.seriesAssemble.editSeries(id, request, file, authentication.userId);
+  }
+
+  @GetMapping("/writer/posts")
+  @Operation(summary = "작가가 발행한 시리즈 리스트")
+  @Tag(name = "[화면]-시리즈")
+  public SeriesSubscribeList.Response getSeriesPostList(
+    @AuthenticationPrincipal JwtAuthentication authentication
+  ) {
+    return this.seriesAssemble.getSeriesPostList(authentication.userId);
   }
 
   @GetMapping("/search/title")

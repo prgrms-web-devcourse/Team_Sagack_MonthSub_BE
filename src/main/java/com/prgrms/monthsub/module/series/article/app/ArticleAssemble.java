@@ -78,9 +78,12 @@ public class ArticleAssemble {
   @Transactional
   public ArticleEdit.TextChangeResponse editArticle(
     Long id,
-    ArticleEdit.TextChangeRequest request
+    ArticleEdit.TextChangeRequest request,
+    MultipartFile thumbnail,
+    Long userId
   ) {
     Article article = articleService.find(id);
+    this.changeThumbnail(thumbnail, request.seriesId(), article, userId);
     article.changeWriting(request.title(), request.contents());
 
     return new ArticleEdit.TextChangeResponse(article.getId());
@@ -99,24 +102,23 @@ public class ArticleAssemble {
   }
 
   @Transactional
-  public String changeThumbnail(
+  public void changeThumbnail(
     MultipartFile thumbnail,
     Long seriesId,
-    Long articleId,
+    Article article,
     Long userId
   ) {
-    Article article = articleService.find(articleId);
 
     String originalThumbnailKey = article.getThumbnailKey();
 
     String thumbnailKey = this.uploadThumbnailImage(
       thumbnail,
       seriesId,
-      articleId
+      article.getId()
     );
 
     expulsionService.save(
-      articleId,
+      article.getId(),
       userId,
       originalThumbnailKey,
       Status.CREATED,
@@ -126,8 +128,6 @@ public class ArticleAssemble {
     );
 
     article.changeThumbnailKey(thumbnailKey);
-
-    return this.articleConverter.toThumbnailEndpoint(thumbnailKey);
   }
 
   protected String uploadThumbnailImage(

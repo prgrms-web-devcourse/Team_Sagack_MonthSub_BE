@@ -98,13 +98,43 @@ public class SeriesAssemble {
   @Transactional
   public SeriesSubscribeEdit.Response editSeries(
     Long seriesId,
-    SeriesSubscribeEdit.Request request
+    SeriesSubscribeEdit.Request request,
+    MultipartFile thumbnail,
+    Long userId
   ) {
     Series series = this.seriesService.getById(seriesId);
+    this.changeThumbnail(thumbnail, series, userId);
     series.editSeries(request);
 
     return new SeriesSubscribeEdit.Response(this.seriesService.save(series));
   }
+
+  @Transactional
+  public void changeThumbnail(
+    MultipartFile thumbnail,
+    Series series,
+    Long userId
+  ) {
+    String originalThumbnailKey = series.getThumbnailKey();
+
+    String thumbnailKey = this.uploadThumbnailImage(
+      thumbnail,
+      series.getId()
+    );
+
+    expulsionService.save(
+      series.getId(),
+      userId,
+      originalThumbnailKey,
+      Status.CREATED,
+      DomainType.SERIES,
+      FileCategory.SERIES_THUMBNAIL,
+      FileType.IMAGE
+    );
+
+    series.changeThumbnailKey(thumbnailKey);
+  }
+
 
   public SeriesSubscribeOne.Response getSeriesBySeriesId(Long seriesId) {
     List<Article> articleList = this.articleService.getArticleListBySeriesId(seriesId);
@@ -177,34 +207,14 @@ public class SeriesAssemble {
       .collect(Collectors.toList()));
   }
 
-  @Transactional
-  public String changeThumbnail(
-    MultipartFile thumbnail,
-    Long seriesId,
-    Long userId
-  ) {
-    Series series = this.seriesService.getById(seriesId);
-
-    String originalThumbnailKey = series.getThumbnailKey();
-
-    String thumbnailKey = this.uploadThumbnailImage(
-      thumbnail,
-      seriesId
+  public SeriesSubscribeList.Response getSeriesPostList(Long userId) {
+    return new SeriesSubscribeList.Response(
+      this.seriesService.findAllByWriterId(this.writerProvider.findWriterByUserId(userId)
+          .getId())
+        .stream()
+        .map(seriesConverter::seriesListToResponse)
+        .collect(Collectors.toList())
     );
-
-    expulsionService.save(
-      seriesId,
-      userId,
-      originalThumbnailKey,
-      Status.CREATED,
-      DomainType.SERIES,
-      FileCategory.SERIES_THUMBNAIL,
-      FileType.IMAGE
-    );
-
-    series.changeThumbnailKey(thumbnailKey);
-
-    return this.seriesConverter.toThumbnailEndpoint(thumbnailKey);
   }
 
   public String uploadThumbnailImage(
