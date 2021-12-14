@@ -88,11 +88,12 @@ public class ArticleAssemble {
 
   public ArticleOne.Response getArticleOne(
     Long id,
+    Long seriesId,
     Long userId
   ) {
     Article article = articleService.find(id);
-    Long articleCount = this.articleService.countBySeriesId(id);
-    User user = userProvider.findById(id);
+    Long articleCount = this.articleService.countBySeriesId(seriesId);
+    User user = userProvider.findById(userId);
 
     return articleConverter.articleToArticleOneResponse(article, articleCount, user);
   }
