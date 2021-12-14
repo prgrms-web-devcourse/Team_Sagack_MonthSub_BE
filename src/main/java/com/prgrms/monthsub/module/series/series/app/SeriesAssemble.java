@@ -177,6 +177,16 @@ public class SeriesAssemble {
       .collect(Collectors.toList()));
   }
 
+  public SeriesSubscribeList.Response getSeriesPostList(Long userId) {
+    return new SeriesSubscribeList.Response(
+      this.seriesService.findAllByWriterId(this.writerProvider.findWriterByUserId(userId)
+          .getId())
+        .stream()
+        .map(seriesConverter::seriesListToResponse)
+        .collect(Collectors.toList())
+    );
+  }
+
   @Transactional
   public String changeThumbnail(
     MultipartFile thumbnail,
