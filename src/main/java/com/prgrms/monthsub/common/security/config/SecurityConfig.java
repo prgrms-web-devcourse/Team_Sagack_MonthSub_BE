@@ -121,6 +121,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
       .authorizeRequests()
       .antMatchers("/users/me")
       .hasAnyRole("USER")
+      .antMatchers("/expulsion")
+      .hasAnyRole("ADMIN")
       .anyRequest()
       .fullyAuthenticated()
       .and()
