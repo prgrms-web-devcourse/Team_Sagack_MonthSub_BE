@@ -68,6 +68,8 @@ public class WriterLikesService {
     return this.writerLikesRepository.findByUserIdAndWriterId(userId, writerId)
       .map(writerLikes -> {
         String likeStatus = String.valueOf(writerLikes.changeLikeStatus(LikesStatus.Nothing));
+        writerLikes.getWriter()
+          .updateFollowCount(DECREASE_NUM);
         return new WriterFollowEvent.Response(
           this.writerLikesRepository.save(writerLikes)
             .getId(), likeStatus);
