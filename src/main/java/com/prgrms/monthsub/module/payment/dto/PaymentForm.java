@@ -3,7 +3,6 @@ package com.prgrms.monthsub.module.payment.dto;
 import com.prgrms.monthsub.module.series.series.domain.Series.Category;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import lombok.Builder;
 
 public class PaymentForm {
@@ -26,7 +25,7 @@ public class PaymentForm {
     public LocalDate startDate;
     public LocalDate endDate;
     public String[] date;
-    public LocalTime time;
+    public String time;
   }
-  
+
 }

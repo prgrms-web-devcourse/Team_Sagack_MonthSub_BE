@@ -3,7 +3,6 @@ package com.prgrms.monthsub.module.series.series.dto;
 import com.prgrms.monthsub.module.series.series.domain.Series;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
@@ -79,7 +78,7 @@ public class SeriesSubscribeList {
   @Builder
   public static class UploadObject {
     public String[] date;
-    public LocalTime time;
+    public String time;
   }
 
   @Builder

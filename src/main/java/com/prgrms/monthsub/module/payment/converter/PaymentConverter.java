@@ -42,7 +42,8 @@ public class PaymentConverter {
             }
           )
           .toArray(String[]::new))
-        .time(series.getUploadTime())
+        .time(series.getUploadTime()
+          .toString())
         .build()
     );
   }
