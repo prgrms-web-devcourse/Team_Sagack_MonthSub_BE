@@ -102,7 +102,8 @@ public class SeriesConverter {
             }
           )
           .toArray(String[]::new))
-        .time(series.getUploadTime())
+        .time(series.getUploadTime()
+          .toString())
         .build(),
       SubscribeObject.builder()
         .startDate(series.getSubscribeStartDate())
@@ -181,7 +182,8 @@ public class SeriesConverter {
             }
           )
           .toArray(String[]::new))
-        .time(series.getUploadTime())
+        .time(series.getUploadTime()
+          .toString())
         .build(),
       SubscribeObject.builder()
         .startDate(series.getSubscribeStartDate())
