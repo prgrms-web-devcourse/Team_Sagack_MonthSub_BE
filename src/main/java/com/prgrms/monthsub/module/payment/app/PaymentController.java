@@ -5,8 +5,6 @@ import com.prgrms.monthsub.module.payment.dto.PaymentForm;
 import com.prgrms.monthsub.module.payment.dto.PaymentPost;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,15 +18,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class PaymentController {
 
   private final PaymentService paymentService;
-  private final PayService payService;
-  private final Logger log = LoggerFactory.getLogger(getClass());
 
   public PaymentController(
-    PaymentService paymentService,
-    PayService payService
+    PaymentService paymentService
   ) {
     this.paymentService = paymentService;
-    this.payService = payService;
   }
 
   @GetMapping("/series/{id}")
@@ -48,6 +42,6 @@ public class PaymentController {
     @AuthenticationPrincipal JwtAuthentication authentication,
     @PathVariable Long id
   ) {
-    return this.payService.pay(id, authentication.userId);
+    return this.paymentService.pay(id, authentication.userId);
   }
 }
