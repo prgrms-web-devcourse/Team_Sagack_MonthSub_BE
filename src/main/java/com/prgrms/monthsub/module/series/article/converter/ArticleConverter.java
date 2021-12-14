@@ -53,7 +53,7 @@ public class ArticleConverter {
         .toLocalDate()
         .toString(),
       user.getNickname(),
-      user.getProfileKey(),
+      (user.getProfileKey() == null ? null : this.s3.getDomain() + "/" + user.getProfileKey()),
       user.getProfileIntroduce()
     );
   }
