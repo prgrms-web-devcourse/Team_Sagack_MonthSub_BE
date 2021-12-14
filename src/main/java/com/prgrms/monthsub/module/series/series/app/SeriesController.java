@@ -10,6 +10,7 @@ import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribePost;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.tags.Tags;
+import java.util.Optional;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import org.springframework.http.MediaType;
@@ -98,9 +99,10 @@ public class SeriesController {
     @AuthenticationPrincipal JwtAuthentication authentication,
     @PathVariable Long id,
     @Valid @RequestPart SeriesSubscribeEdit.Request request,
-    @RequestPart MultipartFile file
+    @RequestPart(required = false) MultipartFile file
   ) {
-    return this.seriesAssemble.editSeries(id, request, file, authentication.userId);
+    return this.seriesAssemble.editSeries(
+      id, request, Optional.ofNullable(file), authentication.userId);
   }
 
   @GetMapping("/writer/posts")
