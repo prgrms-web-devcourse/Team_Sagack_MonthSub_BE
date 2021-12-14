@@ -60,6 +60,7 @@ public class User extends BaseEntity {
   private Part part;
 
   @Version
+  @Column(name = "version", columnDefinition = "integer default 0")
   private Integer version;
 
   @Builder
@@ -113,6 +114,13 @@ public class User extends BaseEntity {
   ) {
     this.nickname = nickname;
     this.profileIntroduce = profileIntroduce;
+  }
+
+  public int decreasePoint(int point) {
+    if (this.point - point < 0) {
+      throw new IllegalArgumentException("포인트가 부족합니다.");
+    }
+    return this.point -= point;
   }
 
 }
