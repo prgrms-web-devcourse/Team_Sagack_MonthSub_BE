@@ -54,6 +54,10 @@ public class Writer extends BaseEntity {
     this.subScribeStatus = subScribeStatus;
   }
 
+  public void updateFollowCount(int followNum) {
+    this.followCount += followNum;
+  }
+
   public void editSubScribeStatus(SeriesStatus status) {
     this.subScribeStatus = status;
   }

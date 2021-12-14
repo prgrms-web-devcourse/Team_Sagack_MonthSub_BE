@@ -33,6 +33,13 @@ public class WriterService implements WriterProvider {
     this.userService = userService;
   }
 
+  @Override
+  public Writer findById(Long writerId) {
+    return this.writerRepository
+      .findById(writerId)
+      .orElseThrow(() -> new WriterNotFound("id=" + writerId));
+  }
+
   @Transactional
   @Override
   public Writer findByUserId(Long userId) {
