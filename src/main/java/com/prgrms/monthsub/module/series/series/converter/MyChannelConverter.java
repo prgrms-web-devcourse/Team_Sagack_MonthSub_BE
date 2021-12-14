@@ -33,7 +33,6 @@ public class MyChannelConverter {
     User user,
     Writer writer,
     List<Writer> followingWriterList,
-    List<Series> seriesLikeList,
     List<Series> seriesSubscribeList,
     List<Series> seriesPostList
   ) {
@@ -42,9 +41,6 @@ public class MyChannelConverter {
       followingWriterList.size(),
       followingWriterList.stream()
         .map(writerConverter::writerToMyChannelFollowWriterObject)
-        .collect(Collectors.toList()),
-      seriesLikeList.stream()
-        .map(seriesConverter::seriesToMyChannelLikeObject)
         .collect(Collectors.toList()),
       seriesSubscribeList.stream()
         .map(seriesConverter::seriesToMyChannelSubscribeObject)
@@ -59,7 +55,6 @@ public class MyChannelConverter {
   public MyChannel.Response myChannelToResponseWithoutWriter(
     User user,
     List<Writer> followingWriterList,
-    List<Series> seriesLikeList,
     List<Series> seriesSubscribeList
   ) {
     return new MyChannel.Response(
@@ -67,9 +62,6 @@ public class MyChannelConverter {
       followingWriterList.size(),
       followingWriterList.stream()
         .map(writerConverter::writerToMyChannelFollowWriterObject)
-        .collect(Collectors.toList()),
-      seriesLikeList.stream()
-        .map(seriesConverter::seriesToMyChannelLikeObject)
         .collect(Collectors.toList()),
       seriesSubscribeList.stream()
         .map(seriesConverter::seriesToMyChannelSubscribeObject)

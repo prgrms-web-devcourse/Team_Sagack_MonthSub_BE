@@ -183,30 +183,6 @@ public class SeriesConverter {
     );
   }
 
-  public MyChannel.MyChannelLikeObject seriesToMyChannelLikeObject(Series series) {
-    return MyChannel.MyChannelLikeObject.builder()
-      .userId(series.getWriter()
-        .getUser()
-        .getId())
-      .writerId(series.getWriter()
-        .getId())
-      .nickname(series.getWriter()
-        .getUser()
-        .getNickname())
-      .seriesId(series.getId())
-      .thumbnail(this.toThumbnailEndpoint(series.getThumbnailKey()))
-      .title(series.getTitle())
-      .subscribeStatus(String.valueOf(series.getSubscribeStatus()))
-      .introduceSentence(series.getIntroduceSentence())
-      .seriesStartDate(series.getSeriesStartDate())
-      .seriesEndDate(series.getSeriesEndDate())
-      .subscribeStartDate(series.getSeriesStartDate())
-      .subscribeEndDate(series.getSubscribeEndDate())
-      .likes(series.getLikes())
-      .category(series.getCategory())
-      .build();
-  }
-
   public MyChannel.MyChannelSubscribeObject seriesToMyChannelSubscribeObject(Series series) {
     return MyChannel.MyChannelSubscribeObject.builder()
       .userId(series.getWriter()
