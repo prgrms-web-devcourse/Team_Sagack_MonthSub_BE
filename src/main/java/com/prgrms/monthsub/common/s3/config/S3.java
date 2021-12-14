@@ -24,6 +24,10 @@ public class S3 {
 
   public enum Bucket {
     IMAGE, VIDEO;
+
+    public static Bucket of(String bucket) {
+      return Bucket.valueOf(bucket.toUpperCase());
+    }
   }
 
 }

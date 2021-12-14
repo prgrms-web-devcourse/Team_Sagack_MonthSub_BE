@@ -17,7 +17,9 @@ import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeList;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeList.Response;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeOne;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribePost;
+import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.DomainType;
 import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.FileCategory;
+import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.FileType;
 import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.Status;
 import com.prgrms.monthsub.module.worker.explusion.domain.ExpulsionService;
 import java.util.Arrays;
@@ -191,8 +193,13 @@ public class SeriesAssemble {
     );
 
     expulsionService.save(
-      userId, originalThumbnailKey, Status.CREATED,
-      FileCategory.SERIES_THUMBNAIL
+      seriesId,
+      userId,
+      originalThumbnailKey,
+      Status.CREATED,
+      DomainType.SERIES,
+      FileCategory.SERIES_THUMBNAIL,
+      FileType.IMAGE
     );
 
     series.changeThumbnailKey(thumbnailKey);
@@ -211,7 +218,7 @@ public class SeriesAssemble {
       + UUID.randomUUID() +
       this.s3Client.getExtension(image);
 
-    return this.s3Client.upload(Bucket.IMAGE, image, key, S3Client.imageExtensions);
+    return this.s3Client.upload(Bucket.IMAGE, image, key);
   }
 
 }
