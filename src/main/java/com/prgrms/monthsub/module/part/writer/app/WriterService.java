@@ -48,6 +48,7 @@ public class WriterService implements WriterProvider {
       .orElseGet(() -> this.getWriterAndChangeUserPart(userId));
   }
 
+  @Override
   public Writer findWriterByUserId(Long userId) {
     return this.writerRepository
       .findByUserId(userId)
