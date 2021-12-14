@@ -11,7 +11,9 @@ import com.prgrms.monthsub.module.series.article.dto.ArticleOne;
 import com.prgrms.monthsub.module.series.article.dto.ArticlePost;
 import com.prgrms.monthsub.module.series.series.app.SeriesService;
 import com.prgrms.monthsub.module.series.series.domain.Series;
+import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.DomainType;
 import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.FileCategory;
+import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.FileType;
 import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.Status;
 import com.prgrms.monthsub.module.worker.explusion.domain.ExpulsionService;
 import java.util.UUID;
@@ -113,8 +115,13 @@ public class ArticleAssemble {
     );
 
     expulsionService.save(
-      userId, originalThumbnailKey, Status.CREATED,
-      FileCategory.ARTICLE_THUMBNAIL
+      articleId,
+      userId,
+      originalThumbnailKey,
+      Status.CREATED,
+      DomainType.ARTICLE,
+      FileCategory.ARTICLE_THUMBNAIL,
+      FileType.IMAGE
     );
 
     article.changeThumbnailKey(thumbnailKey);
@@ -137,7 +144,7 @@ public class ArticleAssemble {
       + UUID.randomUUID() +
       this.s3Client.getExtension(image);
 
-    return this.s3Client.upload(Bucket.IMAGE, image, key, S3Client.imageExtensions);
+    return this.s3Client.upload(Bucket.IMAGE, image, key);
   }
 
 }
