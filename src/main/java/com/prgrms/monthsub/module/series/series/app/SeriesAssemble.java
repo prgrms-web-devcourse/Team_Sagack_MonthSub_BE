@@ -25,6 +25,7 @@ import com.prgrms.monthsub.module.worker.explusion.domain.ExpulsionService;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import org.springframework.data.domain.PageRequest;
@@ -99,22 +100,27 @@ public class SeriesAssemble {
   public SeriesSubscribeEdit.Response editSeries(
     Long seriesId,
     SeriesSubscribeEdit.Request request,
-    MultipartFile thumbnail,
+    Optional<MultipartFile> thumbnail,
     Long userId
   ) {
     Series series = this.seriesService.getById(seriesId);
-    this.changeThumbnail(thumbnail, series, userId);
+    thumbnail.map(multipartFile -> this.changeThumbnail(multipartFile, series, userId));
+
     series.editSeries(request);
 
     return new SeriesSubscribeEdit.Response(this.seriesService.save(series));
   }
 
   @Transactional
-  public void changeThumbnail(
+  public String changeThumbnail(
     MultipartFile thumbnail,
     Series series,
     Long userId
   ) {
+    if (thumbnail.isEmpty()) {
+      return null;
+    }
+    
     String originalThumbnailKey = series.getThumbnailKey();
 
     String thumbnailKey = this.uploadThumbnailImage(
@@ -133,6 +139,8 @@ public class SeriesAssemble {
     );
 
     series.changeThumbnailKey(thumbnailKey);
+
+    return thumbnailKey;
   }
 
 

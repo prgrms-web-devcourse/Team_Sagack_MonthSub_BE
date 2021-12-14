@@ -92,7 +92,7 @@ public class UserService implements UserProvider {
     checkNicName(request.nickName());
     User user = this.findById(id);
 
-    this.uploadProfileImage(image, user);
+    image.map(multipartFile -> this.uploadProfileImage(multipartFile, user));
     user.editUser(request.nickName(), request.profileIntroduce());
 
     return new UserEdit.Response(this.userRepository.save(user)
@@ -100,32 +100,28 @@ public class UserService implements UserProvider {
   }
 
   @Transactional
-  public void uploadProfileImage(
-    Optional<MultipartFile> image,
+  public String uploadProfileImage(
+    MultipartFile image,
     User user
   ) {
-    String profileKey = image.map(imageFile -> {
-          if (imageFile.isEmpty()) {
-            return null;
-          }
+    if (image.isEmpty()) {
+      return null;
+    }
 
-          String key = User.class.getSimpleName()
-            .toLowerCase()
-            + "s"
-            + "/" + user.getId()
-            .toString()
-            + "/profile/"
-            + UUID.randomUUID()
-            + this.s3Client.getExtension(imageFile);
+    String key = User.class.getSimpleName()
+      .toLowerCase()
+      + "s"
+      + "/" + user.getId()
+      .toString()
+      + "/profile/"
+      + UUID.randomUUID()
+      + this.s3Client.getExtension(image);
 
-          return this.s3Client.upload(
-            Bucket.IMAGE,
-            imageFile,
-            key
-          );
-        }
-      )
-      .orElse(null);
+    String profileKey = this.s3Client.upload(
+      Bucket.IMAGE,
+      image,
+      key
+    );
 
     String originalProfileKey = user.getProfileKey();
 
@@ -142,6 +138,8 @@ public class UserService implements UserProvider {
     }
 
     user.changeProfileKey(profileKey);
+
+    return key;
   }
 
   private void checkEmail(String email) {

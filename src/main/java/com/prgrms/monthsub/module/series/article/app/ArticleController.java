@@ -6,6 +6,7 @@ import com.prgrms.monthsub.module.series.article.dto.ArticleOne;
 import com.prgrms.monthsub.module.series.article.dto.ArticlePost;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.Optional;
 import javax.validation.Valid;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -49,10 +50,11 @@ public class ArticleController {
   public ArticleEdit.TextChangeResponse editArticle(
     @AuthenticationPrincipal JwtAuthentication authentication,
     @PathVariable Long id,
-    @RequestPart MultipartFile file,
+    @RequestPart(required = false) MultipartFile file,
     @Valid @RequestPart ArticleEdit.TextChangeRequest request
   ) {
-    return this.articleAssemble.editArticle(id, request, file, authentication.userId);
+    return this.articleAssemble.editArticle(
+      id, request, Optional.ofNullable(file), authentication.userId);
   }
 
   @GetMapping(path = "/{id}")

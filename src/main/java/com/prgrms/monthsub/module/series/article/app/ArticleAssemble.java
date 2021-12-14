@@ -16,6 +16,7 @@ import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.FileCategory
 import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.FileType;
 import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.Status;
 import com.prgrms.monthsub.module.worker.explusion.domain.ExpulsionService;
+import java.util.Optional;
 import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -79,11 +80,13 @@ public class ArticleAssemble {
   public ArticleEdit.TextChangeResponse editArticle(
     Long id,
     ArticleEdit.TextChangeRequest request,
-    MultipartFile thumbnail,
+    Optional<MultipartFile> thumbnail,
     Long userId
   ) {
     Article article = articleService.find(id);
-    this.changeThumbnail(thumbnail, request.seriesId(), article, userId);
+
+    thumbnail.map(
+      multipartFile -> this.changeThumbnail(multipartFile, request.seriesId(), article, userId));
     article.changeWriting(request.title(), request.contents());
 
     return new ArticleEdit.TextChangeResponse(article.getId());
@@ -102,12 +105,15 @@ public class ArticleAssemble {
   }
 
   @Transactional
-  public void changeThumbnail(
+  public String changeThumbnail(
     MultipartFile thumbnail,
     Long seriesId,
     Article article,
     Long userId
   ) {
+    if (thumbnail.isEmpty()) {
+      return null;
+    }
 
     String originalThumbnailKey = article.getThumbnailKey();
 
@@ -128,6 +134,8 @@ public class ArticleAssemble {
     );
 
     article.changeThumbnailKey(thumbnailKey);
+
+    return thumbnailKey;
   }
 
   protected String uploadThumbnailImage(
