@@ -59,9 +59,10 @@ public class ArticleController {
   @Tag(name = "[화면]-아티클")
   public ArticleOne.Response editArticle(
     @AuthenticationPrincipal JwtAuthentication authentication,
-    @PathVariable Long id
+    @PathVariable Long id,
+    @Valid @RequestBody ArticleOne.Request request
   ) {
-    return this.articleAssemble.getArticleOne(id, authentication.userId);
+    return this.articleAssemble.getArticleOne(id, request.seriesId(), authentication.userId);
   }
 
   @PutMapping(path = "/{id}/thumbnail", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
