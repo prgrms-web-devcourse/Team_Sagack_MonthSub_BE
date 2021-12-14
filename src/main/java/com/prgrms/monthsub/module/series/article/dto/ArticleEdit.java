@@ -13,7 +13,6 @@ public class ArticleEdit {
     @NotBlank
     String contents,
 
-    @NotBlank
     Long seriesId
   ) {
   }
