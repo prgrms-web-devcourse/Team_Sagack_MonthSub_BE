@@ -87,6 +87,10 @@ public class SeriesConverter {
         .endDate(series.getSeriesEndDate())
         .articleCount(series.getArticleCount())
         .likes(series.getLikes())
+        .createdDate(series.getCreatedAt()
+          .toLocalDate())
+        .updatedDate(series.getCreatedAt()
+          .toLocalDate())
         .build(),
       UploadObject.builder()
         .date(uploadDateList.stream()
@@ -162,6 +166,10 @@ public class SeriesConverter {
         .introduceSentence(series.getIntroduceSentence())
         .thumbnail(this.toThumbnailEndpoint(series.getThumbnailKey()))
         .price(series.getPrice())
+        .createdDate(series.getCreatedAt()
+          .toLocalDate())
+        .updatedDate(series.getCreatedAt()
+          .toLocalDate())
         .build(),
       series.getCategory(),
       UploadObject.builder()
@@ -183,30 +191,6 @@ public class SeriesConverter {
         .status(String.valueOf(series.getSubscribeStatus()))
         .build()
     );
-  }
-
-  public MyChannel.MyChannelLikeObject seriesToMyChannelLikeObject(Series series) {
-    return MyChannel.MyChannelLikeObject.builder()
-      .userId(series.getWriter()
-        .getUser()
-        .getId())
-      .writerId(series.getWriter()
-        .getId())
-      .nickname(series.getWriter()
-        .getUser()
-        .getNickname())
-      .seriesId(series.getId())
-      .thumbnail(this.toThumbnailEndpoint(series.getThumbnailKey()))
-      .title(series.getTitle())
-      .subscribeStatus(String.valueOf(series.getSubscribeStatus()))
-      .introduceSentence(series.getIntroduceSentence())
-      .seriesStartDate(series.getSeriesStartDate())
-      .seriesEndDate(series.getSeriesEndDate())
-      .subscribeStartDate(series.getSeriesStartDate())
-      .subscribeEndDate(series.getSubscribeEndDate())
-      .likes(series.getLikes())
-      .category(series.getCategory())
-      .build();
   }
 
   public MyChannel.MyChannelSubscribeObject seriesToMyChannelSubscribeObject(Series series) {

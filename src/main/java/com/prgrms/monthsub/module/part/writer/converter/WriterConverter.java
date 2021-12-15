@@ -2,7 +2,9 @@ package com.prgrms.monthsub.module.part.writer.converter;
 
 import com.prgrms.monthsub.common.s3.config.S3;
 import com.prgrms.monthsub.module.part.user.converter.UserConverter;
+import com.prgrms.monthsub.module.part.user.domain.User;
 import com.prgrms.monthsub.module.part.writer.domain.Writer;
+import com.prgrms.monthsub.module.part.writer.dto.WriterLikesList.WriterLikesObject;
 import com.prgrms.monthsub.module.series.series.dto.MainPage;
 import com.prgrms.monthsub.module.series.series.dto.MyChannel;
 import com.prgrms.monthsub.module.series.series.dto.MyChannel.MyChannelFollowWriterObject;
@@ -40,8 +42,11 @@ public class WriterConverter {
       .writerId(writer.getId())
       .nickname(writer.getUser()
         .getNickname())
-      .profileImage(this.s3.getDomain() + "/" + writer.getUser()
-        .getProfileKey())
+      .profileImage(
+        writer.getUser()
+          .getProfileKey() == null ? null : this.s3.getDomain() + "/" + writer.getUser()
+          .getProfileKey()
+      )
       .subscribeStatus(String.valueOf(writer.getSubScribeStatus()))
       .build();
   }
@@ -53,9 +58,24 @@ public class WriterConverter {
       .writerId(writer.getId())
       .nickname(writer.getUser()
         .getNickname())
-      .profileImage(this.s3.getDomain() + "/" + writer.getUser()
-        .getProfileKey())
+      .profileImage(
+        writer.getUser()
+          .getProfileKey() == null ? null : this.s3.getDomain() + "/" + writer.getUser()
+          .getProfileKey()
+      )
       .subscribeStatus(String.valueOf(writer.getSubScribeStatus()))
+      .build();
+  }
+
+  public WriterLikesObject writerLikesToWriterLikesList(Writer writer) {
+    User user = writer.getUser();
+
+    return WriterLikesObject.builder()
+      .nickname(user.getNickname())
+      .profileIntroduce(user.getProfileIntroduce())
+      .profileKey(
+        user.getProfileKey() == null ? null : this.s3.getDomain() + "/" + user.getProfileKey())
+      .followCount(writer.getFollowCount())
       .build();
   }
 

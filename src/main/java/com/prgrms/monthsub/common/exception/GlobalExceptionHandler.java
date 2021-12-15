@@ -95,12 +95,14 @@ public class GlobalExceptionHandler {
     TypeMismatchDataAccessException.class,
     HttpMessageNotReadableException.class,
     MissingServletRequestParameterException.class,
-    MultipartException.class
+    MultipartException.class,
+    InvalidInputException.class
   })
   protected ResponseEntity<ErrorResponse> handleBadRequestException(InvalidInputException e) {
     log.error("handleBadRequestException", e);
 
-    final ErrorResponse response = ErrorResponse.of(ErrorCodes.INVALID_INPUT_VALUE());
+    final ErrorCodes errorCode = e.getErrorCode();
+    final ErrorResponse response = ErrorResponse.of(errorCode, e.getClass());
 
     return ResponseEntity
       .status(HttpStatus.BAD_REQUEST)

@@ -53,6 +53,10 @@ public record ErrorCodes(ErrorCode errorCode, String message) {
     return new ErrorCodes(ErrorCode.DUPLICATED_NICKNAME_VALUE, message);
   }
 
+  public static ErrorCodes DUPLICATED_PAYMENT(String message) {
+    return new ErrorCodes(ErrorCode.DUPLICATED_PAYMENT, message);
+  }
+
   @Getter
   public enum ErrorCode {
 
@@ -67,6 +71,7 @@ public record ErrorCodes(ErrorCode errorCode, String message) {
     INVALID_UPLOAD_FILE_TYPE("F001", HttpStatus.BAD_REQUEST),
     DUPLICATED_EMAIL_VALUE("A005", HttpStatus.BAD_REQUEST),
     DUPLICATED_NICKNAME_VALUE("A006", HttpStatus.BAD_REQUEST),
+    DUPLICATED_PAYMENT("P001", HttpStatus.BAD_REQUEST),
 
     //401
     UN_AUTHORIZED("A004", HttpStatus.UNAUTHORIZED),

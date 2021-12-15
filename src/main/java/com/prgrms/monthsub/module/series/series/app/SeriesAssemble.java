@@ -14,7 +14,6 @@ import com.prgrms.monthsub.module.series.series.domain.Series;
 import com.prgrms.monthsub.module.series.series.domain.type.SortType;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeEdit;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeList;
-import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeList.Response;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeOne;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribePost;
 import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.DomainType;
@@ -200,19 +199,23 @@ public class SeriesAssemble {
     return this.userProvider.findByNickname(nickname)
       .map(user -> {
         Writer writer = this.writerProvider.findByUserId(user.getId());
-        return new SeriesSubscribeList.Response(this.seriesService.findAllByWriterId(writer.getId())
-          .stream()
-          .map(this.seriesConverter::seriesListToResponse)
-          .collect(Collectors.toList()));
+        return new SeriesSubscribeList.Response(
+          this.seriesService.findAllByWriterId(writer.getId())
+            .stream()
+            .map(this.seriesConverter::seriesListToResponse)
+            .collect(Collectors.toList())
+        );
       })
       .orElseGet(() -> {return new SeriesSubscribeList.Response(Collections.emptyList());});
   }
 
   public SeriesSubscribeList.Response getSeriesSubscribeList(Long userId) {
-    return new Response(this.seriesUserService.findAllMySubscribeByUserId(userId)
-      .stream()
-      .map(seriesUser -> seriesConverter.seriesListToResponse(seriesUser.getSeries()))
-      .collect(Collectors.toList()));
+    return new SeriesSubscribeList.Response(
+      this.seriesUserService.findAllMySubscribeByUserId(userId)
+        .stream()
+        .map(seriesUser -> seriesConverter.seriesListToResponse(seriesUser.getSeries()))
+        .collect(Collectors.toList())
+    );
   }
 
   public SeriesSubscribeList.Response getSeriesPostList(Long userId) {
@@ -222,6 +225,22 @@ public class SeriesAssemble {
         .stream()
         .map(seriesConverter::seriesListToResponse)
         .collect(Collectors.toList())
+    );
+  }
+
+  @Transactional
+  public void changeThumbnail(
+    MultipartFile thumbnail,
+    Long seriesId,
+    Long userId
+  ) {
+    Series series = this.seriesService.getById(seriesId);
+
+    String originalThumbnailKey = series.getThumbnailKey();
+
+    String thumbnailKey = this.uploadThumbnailImage(
+      thumbnail,
+      seriesId
     );
   }
 

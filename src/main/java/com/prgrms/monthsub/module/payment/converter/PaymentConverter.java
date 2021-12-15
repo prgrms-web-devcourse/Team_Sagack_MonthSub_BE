@@ -1,8 +1,12 @@
 package com.prgrms.monthsub.module.payment.converter;
 
 import com.prgrms.monthsub.common.s3.config.S3;
+import com.prgrms.monthsub.module.part.user.domain.User;
+import com.prgrms.monthsub.module.payment.domain.Payment;
 import com.prgrms.monthsub.module.payment.dto.PaymentForm.PaymentSeries;
 import com.prgrms.monthsub.module.payment.dto.PaymentForm.Response;
+import com.prgrms.monthsub.module.payment.dto.PaymentPost;
+import com.prgrms.monthsub.module.payment.dto.PaymentPost.UserPoint;
 import com.prgrms.monthsub.module.series.series.domain.ArticleUploadDate;
 import com.prgrms.monthsub.module.series.series.domain.Series;
 import java.util.List;
@@ -27,7 +31,7 @@ public class PaymentConverter {
           .getUser()
           .getNickname())
         .title(series.getTitle())
-        .thumbnail(this.toThumbnailEndpoint(series.getThumbnailKey()))
+        .thumbnail(this.s3.getDomain() + "/" + series.getThumbnailKey())
         .category(series.getCategory())
         .price(series.getPrice())
         .articleCount(series.getArticleCount())
@@ -48,8 +52,51 @@ public class PaymentConverter {
     );
   }
 
-  public String toThumbnailEndpoint(String thumbnailKey) {
-    return this.s3.getDomain() + "/" + thumbnailKey;
+  public Payment paymentToEntity(
+    Series series,
+    User user
+  ) {
+    return Payment.builder()
+      .series(series)
+      .userId(user.getId())
+      .build();
+  }
+
+  public PaymentPost.Response paymentResponse(
+    Series series,
+    List<ArticleUploadDate> uploadDateList,
+    int point
+  ) {
+    return new PaymentPost.Response(
+      PaymentPost.PaymentSeries.builder()
+        .email(series.getWriter()
+          .getUser()
+          .getEmail())
+        .nickname(series.getWriter()
+          .getUser()
+          .getNickname())
+        .title(series.getTitle())
+        .thumbnail(this.s3.getDomain() + "/" + series.getThumbnailKey())
+        .category(series.getCategory())
+        .price(series.getPrice())
+        .articleCount(series.getArticleCount())
+        .startDate(series.getSubscribeStartDate())
+        .endDate(series.getSubscribeEndDate())
+        .date(uploadDateList.stream()
+          .map(
+            uploadDate -> {
+              return uploadDate.getUploadDate()
+                .toString()
+                .toLowerCase();
+            }
+          )
+          .toArray(String[]::new))
+        .time(series.getUploadTime())
+        .build(),
+      UserPoint.builder()
+        .point(point)
+        .build()
+    );
   }
 
 }

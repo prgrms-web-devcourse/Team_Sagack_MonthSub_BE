@@ -49,12 +49,13 @@ public class ArticleConverter {
       article.getContents(),
       this.toThumbnailEndpoint(article.getThumbnailKey()),
       articleCount.intValue(),
-      article.getCreatedAt()
-        .toLocalDate()
-        .toString(),
       user.getNickname(),
-      user.getProfileKey(),
-      user.getProfileIntroduce()
+      (user.getProfileKey() == null ? null : this.s3.getDomain() + "/" + user.getProfileKey()),
+      user.getProfileIntroduce(),
+      article.getCreatedAt()
+        .toLocalDate(),
+      article.getUpdateAt()
+        .toLocalDate()
     );
   }
 

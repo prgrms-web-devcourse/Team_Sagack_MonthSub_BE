@@ -3,13 +3,14 @@ package com.prgrms.monthsub.module.payment.dto;
 import com.prgrms.monthsub.module.series.series.domain.Series.Category;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import lombok.Builder;
 
-public class PaymentForm {
-
-  @Schema(name = "PaymentForm.Response")
+public class PaymentPost {
+  @Schema(name = "PaymentPost.Response")
   public record Response(
-    PaymentSeries series
+    PaymentPost.PaymentSeries series,
+    UserPoint user
   ) {
   }
 
@@ -25,7 +26,12 @@ public class PaymentForm {
     public LocalDate startDate;
     public LocalDate endDate;
     public String[] date;
-    public String time;
+    public LocalTime time;
+  }
+
+  @Builder
+  public static class UserPoint {
+    public int point;
   }
 
 }

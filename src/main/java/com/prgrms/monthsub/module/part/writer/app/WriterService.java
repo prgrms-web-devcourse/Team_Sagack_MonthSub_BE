@@ -33,19 +33,19 @@ public class WriterService implements WriterProvider {
     this.userService = userService;
   }
 
+  @Override
+  public Writer findWriterByUserId(Long writerId) {
+    return this.writerRepository
+      .findById(writerId)
+      .orElseThrow(() -> new WriterNotFound("id=" + writerId));
+  }
+
   @Transactional
   @Override
   public Writer findByUserId(Long userId) {
     return this.writerRepository
       .findByUserId(userId)
       .orElseGet(() -> this.getWriterAndChangeUserPart(userId));
-  }
-
-  @Override
-  public Writer findWriterByUserId(Long userId) {
-    return this.writerRepository
-      .findByUserId(userId)
-      .orElseThrow(() -> new WriterNotFound("id=" + userId));
   }
 
   public Optional<Writer> findWriterObjectByUserId(Long userId) {

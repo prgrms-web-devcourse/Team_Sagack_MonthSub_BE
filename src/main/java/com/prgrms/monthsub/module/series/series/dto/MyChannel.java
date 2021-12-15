@@ -15,7 +15,6 @@ public class MyChannel {
     SeriesOneWithUserResponse user,
     int followIngCount,
     List<MyChannelFollowWriterObject> followWriterList,
-    List<MyChannelLikeObject> likeList,
     List<MyChannelSubscribeObject> subscribeList,
     int followCount,
     List<MyChannelSeriesObject> seriesPostList
@@ -40,25 +39,6 @@ public class MyChannel {
     String nickname;
     String profileImage;
     String subscribeStatus;
-  }
-
-  @Builder
-  @Getter
-  public static class MyChannelLikeObject {
-    public Long userId;
-    public Long writerId;
-    public Long seriesId;
-    public String nickname;
-    public String thumbnail;
-    public String title;
-    public String introduceSentence;
-    public LocalDate seriesStartDate;
-    public LocalDate seriesEndDate;
-    public String subscribeStatus;
-    public LocalDate subscribeStartDate;
-    public LocalDate subscribeEndDate;
-    public int likes;
-    Series.Category category;
   }
 
   @Builder

@@ -1,6 +1,7 @@
 package com.prgrms.monthsub.module.series.article.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.time.LocalDate;
 
 public class ArticleOne {
 
@@ -10,10 +11,11 @@ public class ArticleOne {
     String contents,
     String thumbnailKey,
     int round,
-    String createdAt,
     String nickname,
     String profileKey,
-    String profileIntroduce
+    String profileIntroduce,
+    LocalDate createdDate,
+    LocalDate updatedDate
   ) {
   }
 
