@@ -1,11 +1,13 @@
 package com.prgrms.monthsub.module.series.series.app;
 
+import com.prgrms.monthsub.module.series.series.converter.SeriesConverter;
 import com.prgrms.monthsub.module.series.series.domain.Series;
 import com.prgrms.monthsub.module.series.series.domain.SeriesLikes;
 import com.prgrms.monthsub.module.series.series.domain.SeriesLikes.LikesStatus;
 import com.prgrms.monthsub.module.series.series.domain.exception.SeriesException.SeriesLikesNotFound;
 import com.prgrms.monthsub.module.series.series.dto.SeriesLikesEvent;
-import java.util.List;
+import com.prgrms.monthsub.module.series.series.dto.SeriesLikesList;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,13 +16,16 @@ public class SeriesLikesService {
 
   private final SeriesLikesRepository seriesLikesRepository;
   private final SeriesService seriesService;
+  private final SeriesConverter seriesConverter;
 
   public SeriesLikesService(
     SeriesLikesRepository seriesLikesRepository,
-    SeriesService seriesService
+    SeriesService seriesService,
+    SeriesConverter seriesConverter
   ) {
     this.seriesLikesRepository = seriesLikesRepository;
     this.seriesService = seriesService;
+    this.seriesConverter = seriesConverter;
   }
 
   @Transactional
@@ -91,8 +96,14 @@ public class SeriesLikesService {
   }
 
   @Transactional(readOnly = true)
-  public List<SeriesLikes> findAllMySeriesLikeByUserId(Long userId) {
-    return this.seriesLikesRepository.findAllByUserId(userId);
+  public SeriesLikesList.Response findAllMySeriesLikeByUserId(Long userId) {
+    return new SeriesLikesList.Response(
+      this.seriesLikesRepository.findAllByUserId(userId)
+        .stream()
+        .map(SeriesLikes::getSeries)
+        .map(this.seriesConverter::seriesListToResponse)
+        .collect(Collectors.toList())
+    );
   }
 
 }
