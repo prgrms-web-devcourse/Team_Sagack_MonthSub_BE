@@ -78,16 +78,18 @@ public class SeriesAssemble {
     SeriesSubscribePost.Request request
   ) {
     Writer writer = this.writerProvider.findByUserId(userId);
-    Series series = this.seriesConverter.SeriesSubscribePostResponseToEntity(
-      writer,
-      request
-    );
+    Series series = this.seriesConverter.toEntity(writer, request);
     Long seriesId = this.seriesService.save(series);
 
     Arrays.stream(request.uploadDate())
-      .forEach(uploadDate -> this.seriesService.articleUploadDateSave(
-        this.articleUploadDateConverter.ArticleUploadDateRequestToEntity(
-          seriesId, uploadDate))
+      .forEach(uploadDate ->
+        {
+          ArticleUploadDate articleUploadDate = this.articleUploadDateConverter.toEntity(
+            seriesId, uploadDate
+          );
+
+          this.seriesService.articleUploadDateSave(articleUploadDate);
+        }
       );
 
     String thumbnailKey = this.uploadThumbnailImage(thumbnail, seriesId);
@@ -120,7 +122,7 @@ public class SeriesAssemble {
     if (thumbnail.isEmpty()) {
       return null;
     }
-    
+
     String originalThumbnailKey = series.getThumbnailKey();
 
     String thumbnailKey = this.uploadThumbnailImage(
@@ -149,7 +151,7 @@ public class SeriesAssemble {
     Series series = this.seriesService.getById(seriesId);
     List<ArticleUploadDate> uploadDateList = this.seriesService.getArticleUploadDate(seriesId);
 
-    return this.seriesConverter.seriesToSeriesOneResponse(series, articleList, uploadDateList);
+    return this.seriesConverter.toSeriesOneResponse(series, articleList, uploadDateList);
   }
 
   public SeriesSubscribeList.Response getSeriesListSort(SortType sort) {
@@ -159,7 +161,7 @@ public class SeriesAssemble {
         case POPULAR -> this.seriesService.findAll(Sort.by(Direction.DESC, "likes"));
       })
       .stream()
-      .map(this.seriesConverter::seriesListToResponse)
+      .map(this.seriesConverter::toResponse)
       .collect(Collectors.toList()));
   }
 
@@ -174,18 +176,21 @@ public class SeriesAssemble {
       Sort.by(Direction.DESC, "createdAt", "id")
     );
 
-    return new SeriesSubscribeList.Response((
-      (lastSeriesId == null) ?
-        categories.contains(Category.ALL) ? this.seriesService.findAll(cursorPageable)
-          : this.seriesService.getSeriesByCategories(categories, cursorPageable)
-        : categories.contains(Category.ALL) ?
-          this.seriesService.getSeries(lastSeriesId, cursorPageable)
-          : this.seriesService.getSeriesByCategoriesLessThanId(
-            lastSeriesId, categories, cursorPageable)
-    )
-      .stream()
-      .map(this.seriesConverter::seriesListToResponse)
-      .collect(Collectors.toList()));
+    return new SeriesSubscribeList.Response(
+      getSeries(lastSeriesId, cursorPageable)
+        .stream()
+        .map(this.seriesConverter::toResponse)
+        .collect(Collectors.toList())
+    );
+  }
+
+  private List<Series> getSeries(
+    Long lastSeriesId,
+    PageRequest cursorPageable
+  ) {
+    return Optional.ofNullable(lastSeriesId)
+      .map(lastId -> this.seriesService.getSeries(lastId, cursorPageable))
+      .orElse(this.seriesService.findAll(cursorPageable));
   }
 
   public SeriesSubscribeOne.ResponseUsageEdit getSeriesUsageEdit(Long seriesId) {
@@ -196,58 +201,48 @@ public class SeriesAssemble {
   }
 
   public SeriesSubscribeList.Response getSeriesSearchTitle(String title) {
-    return new SeriesSubscribeList.Response(this.seriesService.getSeriesSearchTitle(title)
-      .stream()
-      .map(this.seriesConverter::seriesListToResponse)
-      .collect(Collectors.toList()));
+    return new SeriesSubscribeList.Response(
+      this.seriesService
+        .getSeriesSearchTitle(title)
+        .stream()
+        .map(this.seriesConverter::toResponse)
+        .collect(Collectors.toList())
+    );
   }
 
   public SeriesSubscribeList.Response getSeriesSearchNickname(String nickname) {
     return this.userProvider.findByNickname(nickname)
       .map(user -> {
         Writer writer = this.writerProvider.findByUserId(user.getId());
+
         return new SeriesSubscribeList.Response(
-          this.seriesService.findAllByWriterId(writer.getId())
+          this.seriesService
+            .findAllByWriterId(writer.getId())
             .stream()
-            .map(this.seriesConverter::seriesListToResponse)
+            .map(this.seriesConverter::toResponse)
             .collect(Collectors.toList())
         );
       })
-      .orElseGet(() -> {return new SeriesSubscribeList.Response(Collections.emptyList());});
+      .orElseGet(() -> new SeriesSubscribeList.Response(Collections.emptyList()));
   }
 
   public SeriesSubscribeList.Response getSeriesSubscribeList(Long userId) {
     return new SeriesSubscribeList.Response(
-      this.seriesUserService.findAllMySubscribeByUserId(userId)
+      this.seriesUserService
+        .findAllMySubscribeByUserId(userId)
         .stream()
-        .map(seriesUser -> seriesConverter.seriesListToResponse(seriesUser.getSeries()))
+        .map(seriesUser -> seriesConverter.toResponse(seriesUser.getSeries()))
         .collect(Collectors.toList())
     );
   }
 
   public SeriesSubscribeList.Response getSeriesPostList(Long userId) {
     return new SeriesSubscribeList.Response(
-      this.seriesService.findAllByWriterId(this.writerProvider.findWriterByUserId(userId)
-          .getId())
+      this.seriesService
+        .findAllByWriterId(this.writerProvider.findById(userId).getId())
         .stream()
-        .map(seriesConverter::seriesListToResponse)
+        .map(seriesConverter::toResponse)
         .collect(Collectors.toList())
-    );
-  }
-
-  @Transactional
-  public void changeThumbnail(
-    MultipartFile thumbnail,
-    Long seriesId,
-    Long userId
-  ) {
-    Series series = this.seriesService.getById(seriesId);
-
-    String originalThumbnailKey = series.getThumbnailKey();
-
-    String thumbnailKey = this.uploadThumbnailImage(
-      thumbnail,
-      seriesId
     );
   }
 
@@ -255,9 +250,7 @@ public class SeriesAssemble {
     MultipartFile image,
     Long id
   ) {
-    String key = Series.class.getSimpleName()
-      .toLowerCase()
-      + "/" + id.toString()
+    String key = "series/" + id.toString()
       + "/thumbnail/"
       + UUID.randomUUID() +
       this.s3Client.getExtension(image);

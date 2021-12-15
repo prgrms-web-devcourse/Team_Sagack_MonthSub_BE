@@ -36,8 +36,7 @@ public class SeriesService implements SeriesProvider {
 
   @Transactional
   public Long save(Series series) {
-    return this.seriesRepository.save(series)
-      .getId();
+    return this.seriesRepository.save(series).getId();
   }
 
   @Transactional
@@ -72,9 +71,7 @@ public class SeriesService implements SeriesProvider {
   }
 
   public List<Series> findAll(Pageable pageable) {
-    return this.seriesRepository
-      .findAll(pageable)
-      .getContent();
+    return this.seriesRepository.findAll(pageable).getContent();
   }
 
   public List<Series> findBySubscribeStatus(

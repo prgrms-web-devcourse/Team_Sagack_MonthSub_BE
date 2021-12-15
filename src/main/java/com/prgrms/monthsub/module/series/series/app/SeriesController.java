@@ -104,7 +104,8 @@ public class SeriesController {
     @RequestPart(required = false) MultipartFile file
   ) {
     return this.seriesAssemble.editSeries(
-      id, request, Optional.ofNullable(file), authentication.userId);
+      id, request, Optional.ofNullable(file), authentication.userId
+    );
   }
 
   @GetMapping("/writer/posts")

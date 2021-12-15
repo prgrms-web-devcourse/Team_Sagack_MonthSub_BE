@@ -55,14 +55,9 @@ public class ArticleAssemble {
     ArticlePost.Request request
   ) {
     Series series = this.seriesService.getById(request.seriesId());
-
     Long articleCount = this.articleService.countBySeriesId(request.seriesId());
+    Article article = this.articleConverter.toEntity(series, request, articleCount.intValue() + 1);
 
-    Article article = this.articleConverter.ArticlePostToEntity(
-      series,
-      request,
-      articleCount.intValue() + 1
-    );
     this.articleService.save(article);
 
     String thumbnailKey = this.uploadThumbnailImage(
@@ -85,8 +80,10 @@ public class ArticleAssemble {
   ) {
     Article article = articleService.find(id);
 
-    thumbnail.map(
-      multipartFile -> this.changeThumbnail(multipartFile, request.seriesId(), article, userId));
+    thumbnail.map(multipartFile ->
+      this.changeThumbnail(multipartFile, request.seriesId(), article, userId)
+    )
+    ;
     article.changeWriting(request.title(), request.contents());
 
     return new ArticleEdit.ChangeResponse(article.getId());
@@ -101,7 +98,7 @@ public class ArticleAssemble {
     Long articleCount = this.articleService.countBySeriesId(seriesId);
     User user = userProvider.findById(userId);
 
-    return articleConverter.articleToArticleOneResponse(article, articleCount, user);
+    return articleConverter.toArticleOneResponse(article, articleCount, user);
   }
 
   @Transactional
@@ -116,7 +113,6 @@ public class ArticleAssemble {
     }
 
     String originalThumbnailKey = article.getThumbnailKey();
-
     String thumbnailKey = this.uploadThumbnailImage(
       thumbnail,
       seriesId,
@@ -143,12 +139,8 @@ public class ArticleAssemble {
     Long seriesId,
     Long articleId
   ) {
-    String key = Series.class.getSimpleName()
-      .toLowerCase()
-      + "/" + seriesId.toString()
-      + "/" + Article.class.getSimpleName()
-      .toLowerCase()
-      + "/" + articleId.toString()
+    String key = "series/" + seriesId.toString()
+      + "/article/" + articleId.toString()
       + "/thumbnail/"
       + UUID.randomUUID() +
       this.s3Client.getExtension(image);

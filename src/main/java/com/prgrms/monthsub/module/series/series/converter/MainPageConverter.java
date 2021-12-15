@@ -23,36 +23,31 @@ public class MainPageConverter {
     this.s3 = s3;
   }
 
-  public MainPage.Response MainPageToResponse(
+  public MainPage.Response toResponse(
     List<Series> popularSeriesList,
     List<Writer> popularWriterList,
     List<Series> recentSeriesList
   ) {
     return new MainPage.Response(
       popularSeriesList.stream()
-        .map(this::MainPageToMainPageSubscribeObject)
+        .map(this::toMainPageSubscribeObject)
         .collect(Collectors.toList()),
       popularWriterList.stream()
-        .map(this.writerConverter::writerToMainPageFollowWriterObject)
+        .map(this.writerConverter::toMainPageFollowWriterObject)
         .collect(Collectors.toList()),
       recentSeriesList.stream()
-        .map(this::MainPageToMainPageSubscribeObject)
+        .map(this::toMainPageSubscribeObject)
         .collect(Collectors.toList())
     );
   }
 
-  public MainPage.MainPageSubscribeObject MainPageToMainPageSubscribeObject(
+  public MainPage.MainPageSubscribeObject toMainPageSubscribeObject(
     Series series
   ) {
     return MainPage.MainPageSubscribeObject.builder()
-      .userId(series.getWriter()
-        .getUser()
-        .getId())
-      .writerId(series.getWriter()
-        .getId())
-      .nickname(series.getWriter()
-        .getUser()
-        .getNickname())
+      .userId(series.getWriter().getUser().getId())
+      .writerId(series.getWriter().getId())
+      .nickname(series.getWriter().getUser().getNickname())
       .seriesId(series.getId())
       .thumbnail(this.s3.getDomain() + "/" + series.getThumbnailKey())
       .title(series.getTitle())

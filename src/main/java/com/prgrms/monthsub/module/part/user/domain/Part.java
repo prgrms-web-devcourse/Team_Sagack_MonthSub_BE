@@ -33,9 +33,14 @@ public class Part {
 
   public List<GrantedAuthority> getAuthorities() {
     return permissions.stream()
-      .map(gp -> new SimpleGrantedAuthority(gp.getPermission()
-        .getName()))
+      .map(gp -> new SimpleGrantedAuthority(gp.getPermission().getName()))
       .collect(toList());
+  }
+
+  public enum Name {
+    ADMIN_GROUP,
+    AUTHOR_GROUP,
+    USER_GROUP
   }
 
 }

@@ -45,7 +45,7 @@ public class SeriesConverter {
     this.s3 = s3;
   }
 
-  public Series SeriesSubscribePostResponseToEntity(
+  public Series toEntity(
     Writer writer,
     SeriesSubscribePost.Request req
   ) {
@@ -67,13 +67,13 @@ public class SeriesConverter {
       .build();
   }
 
-  public SeriesSubscribeOne.Response seriesToSeriesOneResponse(
+  public SeriesSubscribeOne.Response toSeriesOneResponse(
     Series series,
     List<Article> articleList,
     List<ArticleUploadDate> uploadDateList
   ) {
 
-    SeriesOneWithWriterResponse writerResponse = writerConverter.writerToSeriesOneWithWriterResponse(
+    SeriesOneWithWriterResponse writerResponse = writerConverter.toSeriesOneWithWriter(
       series.getWriter());
     return new Response(
       SeriesObject.builder()
@@ -87,23 +87,16 @@ public class SeriesConverter {
         .endDate(series.getSeriesEndDate())
         .articleCount(series.getArticleCount())
         .likes(series.getLikes())
-        .createdDate(series.getCreatedAt()
-          .toLocalDate())
-        .updatedDate(series.getCreatedAt()
-          .toLocalDate())
+        .createdDate(series.getCreatedAt().toLocalDate())
+        .updatedDate(series.getCreatedAt().toLocalDate())
         .build(),
       UploadObject.builder()
-        .date(uploadDateList.stream()
-          .map(
-            uploadDate -> {
-              return uploadDate.getUploadDate()
-                .toString()
-                .toLowerCase();
-            }
-          )
-          .toArray(String[]::new))
-        .time(series.getUploadTime()
-          .toString())
+        .date(uploadDateList.stream().map(uploadDate ->
+          uploadDate.getUploadDate()
+            .toString()
+            .toLowerCase()
+        ).toArray(String[]::new))
+        .time(series.getUploadTime().toString())
         .build(),
       SubscribeObject.builder()
         .startDate(series.getSubscribeStartDate())
@@ -113,34 +106,24 @@ public class SeriesConverter {
       series.getCategory(),
       WriterObject.builder()
         .id(writerResponse.writerId())
-        .userId(writerResponse.user()
-          .userId())
+        .userId(writerResponse.user().userId())
         .followCount(writerResponse.followCount())
-        .email(writerResponse.user()
-          .email())
-        .profileImage(writerResponse.user()
-          .profileImage())
-        .profileIntroduce(writerResponse.user()
-          .profileIntroduce())
-        .nickname(writerResponse.user()
-          .nickname())
+        .email(writerResponse.user().email())
+        .profileImage(writerResponse.user().profileImage())
+        .profileIntroduce(writerResponse.user().profileIntroduce())
+        .nickname(writerResponse.user().nickname())
         .build(),
       articleList.stream()
-        .map(articleConverter::articleToArticleBySeriesIdResponse)
+        .map(articleConverter::toArticle)
         .collect(Collectors.toList())
     );
   }
 
-  public SeriesSubscribeList.SeriesListObject seriesListToResponse(Series series) {
+  public SeriesSubscribeList.SeriesListObject toResponse(Series series) {
     return SeriesSubscribeList.SeriesListObject.builder()
-      .userId(series.getWriter()
-        .getUser()
-        .getId())
-      .writerId(series.getWriter()
-        .getId())
-      .nickname(series.getWriter()
-        .getUser()
-        .getNickname())
+      .userId(series.getWriter().getUser().getId())
+      .writerId(series.getWriter().getId())
+      .nickname(series.getWriter().getUser().getNickname())
       .seriesId(series.getId())
       .thumbnail(this.toThumbnailEndpoint(series.getThumbnailKey()))
       .title(series.getTitle())
@@ -166,24 +149,15 @@ public class SeriesConverter {
         .introduceSentence(series.getIntroduceSentence())
         .thumbnail(this.toThumbnailEndpoint(series.getThumbnailKey()))
         .price(series.getPrice())
-        .createdDate(series.getCreatedAt()
-          .toLocalDate())
-        .updatedDate(series.getCreatedAt()
-          .toLocalDate())
+        .createdDate(series.getCreatedAt().toLocalDate())
+        .updatedDate(series.getCreatedAt().toLocalDate())
         .build(),
       series.getCategory(),
       UploadObject.builder()
-        .date(uploadDateList.stream()
-          .map(
-            uploadDate -> {
-              return uploadDate.getUploadDate()
-                .toString()
-                .toLowerCase();
-            }
-          )
-          .toArray(String[]::new))
-        .time(series.getUploadTime()
-          .toString())
+        .date(uploadDateList.stream().map(uploadDate -> uploadDate.getUploadDate()
+          .toString()
+          .toLowerCase()
+        ).toArray(String[]::new)).time(series.getUploadTime().toString())
         .build(),
       SubscribeObject.builder()
         .startDate(series.getSubscribeStartDate())
@@ -195,14 +169,9 @@ public class SeriesConverter {
 
   public MyChannel.MyChannelSubscribeObject seriesToMyChannelSubscribeObject(Series series) {
     return MyChannel.MyChannelSubscribeObject.builder()
-      .userId(series.getWriter()
-        .getUser()
-        .getId())
-      .writerId(series.getWriter()
-        .getId())
-      .nickname(series.getWriter()
-        .getUser()
-        .getNickname())
+      .userId(series.getWriter().getUser().getId())
+      .writerId(series.getWriter().getId())
+      .nickname(series.getWriter().getUser().getNickname())
       .seriesId(series.getId())
       .thumbnail(this.toThumbnailEndpoint(series.getThumbnailKey()))
       .title(series.getTitle())
@@ -219,14 +188,9 @@ public class SeriesConverter {
 
   public MyChannel.MyChannelSeriesObject seriesToMyChannelSeriesObject(Series series) {
     return MyChannel.MyChannelSeriesObject.builder()
-      .userId(series.getWriter()
-        .getUser()
-        .getId())
-      .writerId(series.getWriter()
-        .getId())
-      .nickname(series.getWriter()
-        .getUser()
-        .getNickname())
+      .userId(series.getWriter().getUser().getId())
+      .writerId(series.getWriter().getId())
+      .nickname(series.getWriter().getUser().getNickname())
       .seriesId(series.getId())
       .thumbnail(this.toThumbnailEndpoint(series.getThumbnailKey()))
       .title(series.getTitle())

@@ -10,7 +10,7 @@ public class ArticleUploadDateConverter {
   public ArticleUploadDateConverter() {
   }
 
-  public ArticleUploadDate ArticleUploadDateRequestToEntity(
+  public ArticleUploadDate toEntity(
     Long seriesId,
     String uploadDate
   ) {

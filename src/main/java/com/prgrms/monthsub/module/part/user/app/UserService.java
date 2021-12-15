@@ -48,8 +48,7 @@ public class UserService implements UserProvider {
 
   @Override
   public Optional<User> findByNickname(String nickname) {
-    return this.userRepository
-      .findByNickname(nickname);
+    return this.userRepository.findByNickname(nickname);
   }
 
   @Override
@@ -79,7 +78,8 @@ public class UserService implements UserProvider {
   public UserSignUp.Response signUp(UserSignUp.Request request) {
     checkEmail(request.email());
     checkNicName(request.nickName());
-    User entity = this.userRepository.save(this.userConverter.UserSignUpRequestToEntity(request));
+    User entity = this.userRepository.save(this.userConverter.toEntity(request));
+
     return new UserSignUp.Response(entity.getId());
   }
 
@@ -95,8 +95,7 @@ public class UserService implements UserProvider {
     image.map(multipartFile -> this.uploadProfileImage(multipartFile, user));
     user.editUser(request.nickName(), request.profileIntroduce());
 
-    return new UserEdit.Response(this.userRepository.save(user)
-      .getId());
+    return new UserEdit.Response(this.userRepository.save(user).getId());
   }
 
   @Transactional
@@ -108,14 +107,11 @@ public class UserService implements UserProvider {
       return null;
     }
 
-    String key = User.class.getSimpleName()
-      .toLowerCase()
-      + "s"
-      + "/" + user.getId()
-      .toString()
-      + "/profile/"
-      + UUID.randomUUID()
-      + this.s3Client.getExtension(image);
+    String key =
+      "users/" + user.getId().toString()
+        + "/profile/"
+        + UUID.randomUUID()
+        + this.s3Client.getExtension(image);
 
     String profileKey = this.s3Client.upload(
       Bucket.IMAGE,

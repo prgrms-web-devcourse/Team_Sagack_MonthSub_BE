@@ -9,7 +9,6 @@ import com.prgrms.monthsub.module.part.user.dto.UserMe;
 import com.prgrms.monthsub.module.part.user.dto.UserMe.Response;
 import com.prgrms.monthsub.module.part.user.dto.UserSignUp;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeList.SeriesOneWithUserResponse;
-import java.util.Optional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -30,9 +29,10 @@ public class UserConverter {
     this.bCryptEncoder = bCryptEncoder;
   }
 
-  public SeriesOneWithUserResponse userToSeriesOneWithUserResponse(User user) {
+  public SeriesOneWithUserResponse toSeriesOneWithUser(User user) {
     String profileImage =
       user.getProfileKey() == null ? null : this.s3.getDomain() + "/" + user.getProfileKey();
+
     return new SeriesOneWithUserResponse(
       user.getId(),
       user.getEmail(),
@@ -42,9 +42,10 @@ public class UserConverter {
     );
   }
 
-  public UserMe.Response EntityToUserMeResponse(User user) {
+  public UserMe.Response toUserMe(User user) {
     String profileImage =
       user.getProfileKey() == null ? null : this.s3.getDomain() + "/" + user.getProfileKey();
+
     return new Response(
       user.getId(),
       user.getEmail(),
@@ -57,13 +58,7 @@ public class UserConverter {
     );
   }
 
-  public String UserProfile(Optional<String> profileKey) {
-    return profileKey
-      .map(imageKey -> this.s3.getDomain() + "/" + imageKey)
-      .orElse(null);
-  }
-
-  public User UserSignUpRequestToEntity(UserSignUp.Request request) {
+  public User toEntity(UserSignUp.Request request) {
     return User.builder()
       .email(request.email())
       .nickname(request.nickName())

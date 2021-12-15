@@ -101,7 +101,7 @@ public class SeriesLikesService {
       this.seriesLikesRepository.findAllByUserId(userId)
         .stream()
         .map(SeriesLikes::getSeries)
-        .map(this.seriesConverter::seriesListToResponse)
+        .map(this.seriesConverter::toResponse)
         .collect(Collectors.toList())
     );
   }

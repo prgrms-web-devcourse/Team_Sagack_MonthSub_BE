@@ -15,7 +15,9 @@ public class MainPageController {
 
   private final MainPageAssemble mainPageAssemble;
 
-  public MainPageController(MainPageAssemble mainPageAssemble) {this.mainPageAssemble = mainPageAssemble;}
+  public MainPageController(MainPageAssemble mainPageAssemble) {
+    this.mainPageAssemble = mainPageAssemble;
+  }
 
   @GetMapping
   @Operation(summary = "메인 페이지 조회")

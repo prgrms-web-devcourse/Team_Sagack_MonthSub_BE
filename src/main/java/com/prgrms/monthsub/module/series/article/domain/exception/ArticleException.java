@@ -8,9 +8,7 @@ public class ArticleException {
 
   public static class ArticleNotFound extends BusinessException {
     public ArticleNotFound(String... message) {
-      super(ErrorCodes.ENTITY_NOT_FOUND(Arrays.stream(message)
-        .toList()
-        .toString()));
+      super(ErrorCodes.ENTITY_NOT_FOUND(Arrays.stream(message).toList().toString()));
     }
   }
 
