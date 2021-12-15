@@ -61,7 +61,6 @@ public class PaymentConverter {
       .build();
   }
 
-
   public PaymentPost.Response paymentResponse(
     Series series,
     List<ArticleUploadDate> uploadDateList,
