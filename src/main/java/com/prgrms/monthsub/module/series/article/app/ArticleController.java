@@ -44,7 +44,7 @@ public class ArticleController {
     return this.articleAssemble.createArticle(file, request);
   }
 
-  @PutMapping(path = "/{id}")
+  @PutMapping(path = "/{id}", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
   @Operation(summary = "아티클 수정")
   @Tag(name = "[화면]-아티클")
   public ArticleEdit.ChangeResponse editArticle(
