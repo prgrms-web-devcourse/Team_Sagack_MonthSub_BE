@@ -85,6 +85,8 @@ dependencies {
 
     implementation 'com.auth0:java-jwt:3.18.2'
 
+    implementation 'org.springframework.retry:spring-retry'
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
 }

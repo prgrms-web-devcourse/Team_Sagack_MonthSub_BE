@@ -6,11 +6,11 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import lombok.Builder;
 
-public class PaymentForm {
-
-  @Schema(name = "PaymentForm.Response")
+public class PaymentPost {
+  @Schema(name = "PaymentPost.Response")
   public record Response(
-    PaymentSeries series
+    PaymentPost.PaymentSeries series,
+    UserPoint user
   ) {
   }
 
@@ -28,5 +28,10 @@ public class PaymentForm {
     public String[] date;
     public LocalTime time;
   }
-  
+
+  @Builder
+  public static class UserPoint {
+    public int point;
+  }
+
 }
