@@ -77,9 +77,9 @@ public class ArticleAssemble {
   }
 
   @Transactional
-  public ArticleEdit.TextChangeResponse editArticle(
+  public ArticleEdit.ChangeResponse editArticle(
     Long id,
-    ArticleEdit.TextChangeRequest request,
+    ArticleEdit.ChangeRequest request,
     Optional<MultipartFile> thumbnail,
     Long userId
   ) {
@@ -89,7 +89,7 @@ public class ArticleAssemble {
       multipartFile -> this.changeThumbnail(multipartFile, request.seriesId(), article, userId));
     article.changeWriting(request.title(), request.contents());
 
-    return new ArticleEdit.TextChangeResponse(article.getId());
+    return new ArticleEdit.ChangeResponse(article.getId());
   }
 
   public ArticleOne.Response getArticleOne(

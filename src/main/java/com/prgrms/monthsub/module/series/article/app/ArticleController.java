@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -45,13 +45,13 @@ public class ArticleController {
   }
 
   @PutMapping(path = "/{id}")
-  @Operation(summary = "아티클 텍스트 정보 수정")
+  @Operation(summary = "아티클 수정")
   @Tag(name = "[화면]-아티클")
-  public ArticleEdit.TextChangeResponse editArticle(
+  public ArticleEdit.ChangeResponse editArticle(
     @AuthenticationPrincipal JwtAuthentication authentication,
     @PathVariable Long id,
     @RequestPart(required = false) MultipartFile file,
-    @Valid @RequestPart ArticleEdit.TextChangeRequest request
+    @Valid @RequestPart ArticleEdit.ChangeRequest request
   ) {
     return this.articleAssemble.editArticle(
       id, request, Optional.ofNullable(file), authentication.userId);
@@ -60,12 +60,12 @@ public class ArticleController {
   @GetMapping(path = "/{id}")
   @Operation(summary = "아티클 단건 조회")
   @Tag(name = "[화면]-아티클")
-  public ArticleOne.Response editArticle(
+  public ArticleOne.Response getArticle(
     @AuthenticationPrincipal JwtAuthentication authentication,
     @PathVariable Long id,
-    @Valid @RequestBody ArticleOne.Request request
+    @RequestParam(value = "seriesId", required = true) Long seriesId
   ) {
-    return this.articleAssemble.getArticleOne(id, request.seriesId(), authentication.userId);
+    return this.articleAssemble.getArticleOne(id, seriesId, authentication.userId);
   }
 
 }
