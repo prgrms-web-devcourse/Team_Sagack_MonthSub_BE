@@ -1,6 +1,8 @@
 package com.prgrms.monthsub.module.payment.converter;
 
 import com.prgrms.monthsub.common.s3.config.S3;
+import com.prgrms.monthsub.module.part.user.domain.User;
+import com.prgrms.monthsub.module.payment.domain.Payment;
 import com.prgrms.monthsub.module.payment.dto.PaymentForm.PaymentSeries;
 import com.prgrms.monthsub.module.payment.dto.PaymentForm.Response;
 import com.prgrms.monthsub.module.payment.dto.PaymentPost;
@@ -47,6 +49,16 @@ public class PaymentConverter {
         .time(series.getUploadTime())
         .build()
     );
+  }
+
+  public Payment paymentToEntity(
+    Series series,
+    User user
+  ) {
+    return Payment.builder()
+      .series(series)
+      .userId(user.getId())
+      .build();
   }
 
 

@@ -1,6 +1,7 @@
 package com.prgrms.monthsub.module.part.user.domain.exception;
 
 import com.prgrms.monthsub.common.exception.base.BusinessException;
+import com.prgrms.monthsub.common.exception.base.InvalidInputException;
 import com.prgrms.monthsub.common.exception.model.ErrorCodes;
 import java.util.Arrays;
 
@@ -14,7 +15,7 @@ public class UserException {
     }
   }
 
-  public static class EmailDuplicated extends BusinessException {
+  public static class EmailDuplicated extends InvalidInputException {
     public EmailDuplicated(String... message) {
       super(ErrorCodes.DUPLICATED_EMAIL_VALUE(Arrays.stream(message)
         .toList()
@@ -22,7 +23,7 @@ public class UserException {
     }
   }
 
-  public static class NickNameDuplicated extends BusinessException {
+  public static class NickNameDuplicated extends InvalidInputException {
     public NickNameDuplicated(String... message) {
       super(ErrorCodes.DUPLICATED_NICKNAME_VALUE(Arrays.stream(message)
         .toList()
