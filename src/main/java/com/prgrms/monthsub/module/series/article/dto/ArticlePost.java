@@ -19,7 +19,8 @@ public class ArticlePost {
 
   @Schema(name = "ArticlePost.Response")
   public record Response(
-    Long id
+    Long id,
+    Boolean isMine
   ) {
   }
 

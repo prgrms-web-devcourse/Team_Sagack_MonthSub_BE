@@ -19,7 +19,8 @@ public class ArticleEdit {
 
   @Schema(name = "ArticleEdit.ChangeResponse")
   public record ChangeResponse(
-    Long id
+    Long id,
+    Boolean isMine
   ) {
   }
 
