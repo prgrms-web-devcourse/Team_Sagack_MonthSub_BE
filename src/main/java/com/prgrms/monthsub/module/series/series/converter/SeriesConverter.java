@@ -87,6 +87,10 @@ public class SeriesConverter {
         .endDate(series.getSeriesEndDate())
         .articleCount(series.getArticleCount())
         .likes(series.getLikes())
+        .createdDate(series.getCreatedAt()
+          .toLocalDate())
+        .updatedDate(series.getCreatedAt()
+          .toLocalDate())
         .build(),
       UploadObject.builder()
         .date(uploadDateList.stream()
@@ -161,6 +165,10 @@ public class SeriesConverter {
         .introduceSentence(series.getIntroduceSentence())
         .thumbnail(this.toThumbnailEndpoint(series.getThumbnailKey()))
         .price(series.getPrice())
+        .createdDate(series.getCreatedAt()
+          .toLocalDate())
+        .updatedDate(series.getCreatedAt()
+          .toLocalDate())
         .build(),
       series.getCategory(),
       UploadObject.builder()

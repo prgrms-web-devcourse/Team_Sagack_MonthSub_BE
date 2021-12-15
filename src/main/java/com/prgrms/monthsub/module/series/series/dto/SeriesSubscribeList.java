@@ -74,6 +74,8 @@ public class SeriesSubscribeList {
     public LocalDate endDate;
     public int articleCount;
     public int likes;
+    public LocalDate createdDate;
+    public LocalDate updatedDate;
   }
 
   @Builder
