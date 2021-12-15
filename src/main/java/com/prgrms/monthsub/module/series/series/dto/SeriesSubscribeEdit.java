@@ -27,7 +27,8 @@ public class SeriesSubscribeEdit {
 
   @Schema(name = "SeriesSubscribeEdit.Response")
   public record Response(
-    Long seriesId
+    Long seriesId,
+    Boolean isMine
   ) {
   }
 

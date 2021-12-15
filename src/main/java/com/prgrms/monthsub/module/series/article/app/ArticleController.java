@@ -41,7 +41,7 @@ public class ArticleController {
     @RequestPart MultipartFile file,
     @Valid @RequestPart ArticlePost.Request request
   ) {
-    return this.articleAssemble.createArticle(file, request);
+    return this.articleAssemble.createArticle(file, request, authentication.userId);
   }
 
   @PutMapping(path = "/{id}", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })

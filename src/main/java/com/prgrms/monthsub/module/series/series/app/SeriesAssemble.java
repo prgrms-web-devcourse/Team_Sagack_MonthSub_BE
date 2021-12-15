@@ -11,6 +11,7 @@ import com.prgrms.monthsub.module.series.series.converter.ArticleUploadDateConve
 import com.prgrms.monthsub.module.series.series.converter.SeriesConverter;
 import com.prgrms.monthsub.module.series.series.domain.ArticleUploadDate;
 import com.prgrms.monthsub.module.series.series.domain.Series;
+import com.prgrms.monthsub.module.series.series.domain.exception.SeriesException.SeriesNotUpdate;
 import com.prgrms.monthsub.module.series.series.domain.type.SortType;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeEdit;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeList;
@@ -24,6 +25,7 @@ import com.prgrms.monthsub.module.worker.explusion.domain.ExpulsionService;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -107,7 +109,15 @@ public class SeriesAssemble {
 
     series.editSeries(request);
 
-    return new SeriesSubscribeEdit.Response(this.seriesService.save(series));
+    boolean isMine = Objects.equals(series.getWriter()
+      .getUser()
+      .getId(), userId);
+
+    if (!isMine) {
+      throw new SeriesNotUpdate();
+    }
+
+    return new SeriesSubscribeEdit.Response(this.seriesService.save(series), isMine);
   }
 
   @Transactional
@@ -119,7 +129,7 @@ public class SeriesAssemble {
     if (thumbnail.isEmpty()) {
       return null;
     }
-    
+
     String originalThumbnailKey = series.getThumbnailKey();
 
     String thumbnailKey = this.uploadThumbnailImage(
