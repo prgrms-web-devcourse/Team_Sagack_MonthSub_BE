@@ -62,7 +62,7 @@ public class PaymentService {
       return this.transactionTemplate.execute(status -> this.createPayment(id, userId));
     } catch (ObjectOptimisticLockingFailureException e) {
       log.info("충돌 감지 재시도: {}", e.getMessage());
-      
+
       throw new ObjectOptimisticLockingFailureException("충돌", Throwable.class);
     }
   }

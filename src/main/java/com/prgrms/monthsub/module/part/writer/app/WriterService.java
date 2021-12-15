@@ -61,7 +61,7 @@ public class WriterService implements WriterProvider {
   private Writer becameWriter(Long userId) {
     User user = this.userService.findById(userId);
     Part part = this.partService.findByName(Part.Name.AUTHOR_GROUP.name());
-    
+
     user.changePart(part);
 
     Writer entity = Writer.builder()

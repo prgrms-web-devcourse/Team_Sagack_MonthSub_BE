@@ -79,7 +79,7 @@ public class SeriesLikesService {
           SeriesLikes.LikesStatus changeStatus = seriesLikes.changeLikeStatus();
 
           seriesLikes.getSeries().changeLikesCount(changeStatus);
-          
+
           return new SeriesLikesEvent.Response(
             this.seriesLikesRepository
               .save(seriesLikes)

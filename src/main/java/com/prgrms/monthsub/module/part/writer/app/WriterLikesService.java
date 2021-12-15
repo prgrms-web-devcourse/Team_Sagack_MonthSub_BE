@@ -91,7 +91,7 @@ public class WriterLikesService {
       .findByUserIdAndWriterId(userId, writerId)
       .map(writerLikes -> {
         String likeStatus = String.valueOf(writerLikes.changeLikeStatus(LikesStatus.Like));
-        
+
         writerLikes.getWriter().updateFollowCount(INCREASE_NUM);
 
         return new WriterFollowEvent.Response(
