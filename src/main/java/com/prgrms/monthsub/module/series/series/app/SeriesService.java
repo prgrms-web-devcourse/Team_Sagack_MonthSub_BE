@@ -3,6 +3,7 @@ package com.prgrms.monthsub.module.series.series.app;
 import com.prgrms.monthsub.module.series.series.app.Provider.SeriesProvider;
 import com.prgrms.monthsub.module.series.series.domain.ArticleUploadDate;
 import com.prgrms.monthsub.module.series.series.domain.Series;
+import com.prgrms.monthsub.module.series.series.domain.Series.Category;
 import com.prgrms.monthsub.module.series.series.domain.Series.SeriesStatus;
 import com.prgrms.monthsub.module.series.series.domain.exception.SeriesException.SeriesNotFound;
 import java.util.List;
@@ -83,11 +84,28 @@ public class SeriesService implements SeriesProvider {
     return this.seriesRepository.findBySubscribeStatus(status, pageable);
   }
 
+  public List<Series> getSeriesByCategoriesLessThanId(
+    Long id,
+    List<Category> categories,
+    Pageable pageable
+  ) {
+    return this.seriesRepository.findAllByIdLessThanAndCategoryIn(id, categories, pageable);
+  }
+
   public List<Series> getSeries(
     Long id,
     Pageable pageable
   ) {
     return this.seriesRepository.findByIdLessThan(id, pageable);
+  }
+
+
+  public List<Series> getSeriesByCategories(
+    List<Category> categories,
+    Pageable pageable
+  ) {
+    return this.seriesRepository
+      .findAllByCategoryIn(categories, pageable);
   }
 
 }

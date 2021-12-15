@@ -139,6 +139,7 @@ public class Series extends BaseEntity {
 
   public enum Category {
 
+    ALL,
     POEM,
     NOVEL,
     INTERVIEW,

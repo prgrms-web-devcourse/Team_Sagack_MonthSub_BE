@@ -11,6 +11,7 @@ import com.prgrms.monthsub.module.series.series.converter.ArticleUploadDateConve
 import com.prgrms.monthsub.module.series.series.converter.SeriesConverter;
 import com.prgrms.monthsub.module.series.series.domain.ArticleUploadDate;
 import com.prgrms.monthsub.module.series.series.domain.Series;
+import com.prgrms.monthsub.module.series.series.domain.Series.Category;
 import com.prgrms.monthsub.module.series.series.domain.type.SortType;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeEdit;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeList;
@@ -164,7 +165,8 @@ public class SeriesAssemble {
 
   public SeriesSubscribeList.Response getSeriesList(
     Long lastSeriesId,
-    Integer size
+    Integer size,
+    List<Category> categories
   ) {
     PageRequest cursorPageable = PageRequest.of(
       0,
@@ -173,8 +175,13 @@ public class SeriesAssemble {
     );
 
     return new SeriesSubscribeList.Response((
-      (lastSeriesId == null) ? this.seriesService.findAll(cursorPageable)
-        : this.seriesService.getSeries(lastSeriesId, cursorPageable)
+      (lastSeriesId == null) ?
+        categories.contains(Category.ALL) ? this.seriesService.findAll(cursorPageable)
+          : this.seriesService.getSeriesByCategories(categories, cursorPageable)
+        : categories.contains(Category.ALL) ?
+          this.seriesService.getSeries(lastSeriesId, cursorPageable)
+          : this.seriesService.getSeriesByCategoriesLessThanId(
+            lastSeriesId, categories, cursorPageable)
     )
       .stream()
       .map(this.seriesConverter::seriesListToResponse)
