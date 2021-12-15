@@ -30,9 +30,9 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
   }
 
   @Override
-  public Authentication authenticate(Authentication authentication)
-    throws AuthenticationException {
+  public Authentication authenticate(Authentication authentication) throws AuthenticationException {
     JwtAuthenticationToken jwtAuthentication = (JwtAuthenticationToken) authentication;
+
     return processUserAuthentication(
       String.valueOf(jwtAuthentication.getPrincipal()),
       jwtAuthentication.getCredentials()
@@ -45,15 +45,16 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
   ) {
     try {
       User user = userService.login(principal, credentials);
-      List<GrantedAuthority> authorities = user.getPart()
-        .getAuthorities();
+      List<GrantedAuthority> authorities = user.getPart().getAuthorities();
       String token = getToken(user.getUsername(), authorities);
+
       JwtAuthenticationToken authenticated =
         new JwtAuthenticationToken(
           new JwtAuthentication(token, user.getId(), user.getUsername()), null,
           authorities
         );
       authenticated.setDetails(user);
+
       return authenticated;
     } catch (IllegalArgumentException e) {
       throw new BadCredentialsException(e.getMessage());
@@ -67,6 +68,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
     String[] roles = authorities.stream()
       .map(GrantedAuthority::getAuthority)
       .toArray(String[]::new);
+
     return jwt.sign(Jwt.Claims.from(username, roles));
   }
 

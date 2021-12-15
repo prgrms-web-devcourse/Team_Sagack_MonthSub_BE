@@ -52,9 +52,9 @@ public class S3Client {
   @PostConstruct
   public void setS3Client() {
     AWSCredentials credentials = new BasicAWSCredentials(
-      aws.getCredentials()
-        .getAccessKey(), aws.getCredentials()
-      .getSecretKey());
+      aws.getCredentials().getAccessKey(),
+      aws.getCredentials().getSecretKey()
+    );
 
     s3Client = AmazonS3ClientBuilder
       .standard()
@@ -65,24 +65,7 @@ public class S3Client {
 
   public String getExtension(MultipartFile file) {
     return Objects.requireNonNull(file.getOriginalFilename())
-      .substring(file.getOriginalFilename()
-        .indexOf("."));
-  }
-
-  private void fileExtensionCheck(
-    MultipartFile file,
-    List<String> extensions
-  ) {
-    String[] fileInfo = Objects.requireNonNull(file.getContentType())
-      .split("/");
-
-    boolean isImage = Arrays
-      .stream(fileInfo)
-      .anyMatch(extensions::contains);
-
-    if (!isImage) {
-      throw new ImageExtensionNotMatch();
-    }
+      .substring(file.getOriginalFilename().indexOf("."));
   }
 
   public void deleteKeys(

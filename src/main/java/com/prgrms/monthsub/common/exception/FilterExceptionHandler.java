@@ -49,9 +49,9 @@ public class FilterExceptionHandler extends OncePerRequestFilter {
     try {
       ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
       objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+
       String objectToJson = objectMapper.writeValueAsString(json);
-      response.getWriter()
-        .write(objectToJson);
+      response.getWriter().write(objectToJson);
     } catch (IOException e) {
       e.printStackTrace();
     }

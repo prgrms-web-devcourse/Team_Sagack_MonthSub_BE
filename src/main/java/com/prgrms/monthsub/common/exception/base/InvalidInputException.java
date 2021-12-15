@@ -15,6 +15,8 @@ public class InvalidInputException extends BusinessException {
     super(errorCode);
   }
 
-  public InvalidInputException() {super(ErrorCodes.INVALID_INPUT_VALUE());}
+  public InvalidInputException() {
+    super(ErrorCodes.INVALID_INPUT_VALUE());
+  }
 
 }

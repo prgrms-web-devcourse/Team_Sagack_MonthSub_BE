@@ -9,7 +9,9 @@ public class WebConfig implements WebMvcConfigurer {
 
   private final Security security;
 
-  public WebConfig(Security security) {this.security = security;}
+  public WebConfig(Security security) {
+    this.security = security;
+  }
 
   @Override
   public void addCorsMappings(CorsRegistry registry) {

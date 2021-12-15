@@ -27,6 +27,7 @@ public class ArticleService {
   public Article find(Long id) {
     return this.articleRepository.findById(id)
       .orElseThrow(() -> new ArticleNotFound("articleId=" + id));
+    ㄴㄷ
   }
 
   public List<Article> getArticleListBySeriesId(Long seriesId) {
