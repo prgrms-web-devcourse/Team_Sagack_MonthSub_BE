@@ -14,7 +14,7 @@ public class Security {
 
   private Jwt jwt;
   private Cors cors;
-  private List<String> allows;
+  private Security.Allows allows;
 
   @Getter
   @Setter
@@ -29,6 +29,13 @@ public class Security {
   @Setter
   public static class Cors {
     private String[] origin;
+  }
+
+  @Getter
+  @Setter
+  public static class Allows {
+    private List<String> get;
+    private List<String> post;
   }
 
 }

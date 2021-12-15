@@ -33,7 +33,8 @@ public class GlobalExceptionHandler {
     log.error("handleMethodArgumentNotValidException", e);
 
     final ErrorResponse response = ErrorResponse.of(
-      ErrorCodes.INVALID_INPUT_VALUE(), e.getBindingResult());
+      ErrorCodes.INVALID_INPUT_VALUE(), e.getBindingResult()
+    );
 
     return ResponseEntity
       .status(HttpStatus.BAD_REQUEST)
@@ -45,7 +46,8 @@ public class GlobalExceptionHandler {
     log.error("handleBindException", e);
 
     final ErrorResponse response = ErrorResponse.of(
-      ErrorCodes.INVALID_INPUT_VALUE(), e.getBindingResult());
+      ErrorCodes.INVALID_INPUT_VALUE(), e.getBindingResult()
+    );
 
     return ResponseEntity
       .status(HttpStatus.BAD_REQUEST)

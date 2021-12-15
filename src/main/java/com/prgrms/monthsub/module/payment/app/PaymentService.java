@@ -47,12 +47,10 @@ public class PaymentService {
 
   @Transactional
   public PaymentForm.Response getSeriesById(Long seriesId) {
-
     Series series = this.seriesProvider.getById(seriesId);
     List<ArticleUploadDate> uploadDateList = this.seriesProvider.getArticleUploadDate(seriesId);
 
-    return this.paymentConverter.seriesToPaymentWindowResponse(series, uploadDateList);
-
+    return this.paymentConverter.toPaymentForm(series, uploadDateList);
   }
 
   @Retryable(maxAttempts = 3, value = ObjectOptimisticLockingFailureException.class)
@@ -64,6 +62,7 @@ public class PaymentService {
       return this.transactionTemplate.execute(status -> this.createPayment(id, userId));
     } catch (ObjectOptimisticLockingFailureException e) {
       log.info("충돌 감지 재시도: {}", e.getMessage());
+
       throw new ObjectOptimisticLockingFailureException("충돌", Throwable.class);
     }
   }
@@ -73,21 +72,19 @@ public class PaymentService {
     Long seriesId,
     Long userId
   ) throws ObjectOptimisticLockingFailureException {
-
     Series series = this.seriesProvider.getById(seriesId);
     List<ArticleUploadDate> uploadDateList = this.seriesProvider.getArticleUploadDate(seriesId);
 
     User user = this.userProvider.findById(userId);
     user.decreasePoint(series.getPrice());
 
-    this.paymentRepository.findByUserIdAndSeriesId(userId, seriesId)
-      .map(pay -> {
-        throw new PaymentDuplicated("이미 결제되었습니다.");
-      });
+    this.paymentRepository
+      .findByUserIdAndSeriesId(userId, seriesId)
+      .map(pay -> {throw new PaymentDuplicated("이미 결제되었습니다.");});
 
-    this.paymentRepository.save(this.paymentConverter.paymentToEntity(series, user));
+    this.paymentRepository.save(this.paymentConverter.toEntity(series, user));
 
-    return this.paymentConverter.paymentResponse(series, uploadDateList, user.getPoint());
+    return this.paymentConverter.toPaymentPost(series, uploadDateList, user.getPoint());
 
   }
 }

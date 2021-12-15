@@ -6,6 +6,8 @@ import com.prgrms.monthsub.module.part.user.app.provider.UserProvider;
 import com.prgrms.monthsub.module.part.user.domain.User;
 import com.prgrms.monthsub.module.series.article.converter.ArticleConverter;
 import com.prgrms.monthsub.module.series.article.domain.Article;
+import com.prgrms.monthsub.module.series.article.domain.exception.ArticleException.ArticleNotCreate;
+import com.prgrms.monthsub.module.series.article.domain.exception.ArticleException.ArticleNotUpdate;
 import com.prgrms.monthsub.module.series.article.dto.ArticleEdit;
 import com.prgrms.monthsub.module.series.article.dto.ArticleOne;
 import com.prgrms.monthsub.module.series.article.dto.ArticlePost;
@@ -16,6 +18,7 @@ import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.FileCategory
 import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.FileType;
 import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.Status;
 import com.prgrms.monthsub.module.worker.explusion.domain.ExpulsionService;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.stereotype.Service;
@@ -52,17 +55,22 @@ public class ArticleAssemble {
   @Transactional
   public ArticlePost.Response createArticle(
     MultipartFile thumbnail,
-    ArticlePost.Request request
+    ArticlePost.Request request,
+    Long userId
   ) {
     Series series = this.seriesService.getById(request.seriesId());
-
     Long articleCount = this.articleService.countBySeriesId(request.seriesId());
+    Article article = this.articleConverter.toEntity(series, request, articleCount.intValue() + 1);
 
-    Article article = this.articleConverter.ArticlePostToEntity(
-      series,
-      request,
-      articleCount.intValue() + 1
-    );
+    boolean isMine = Objects.equals(article.getSeries()
+      .getWriter()
+      .getUser()
+      .getId(), userId);
+
+    if (!isMine) {
+      throw new ArticleNotCreate();
+    }
+
     this.articleService.save(article);
 
     String thumbnailKey = this.uploadThumbnailImage(
@@ -73,7 +81,7 @@ public class ArticleAssemble {
 
     article.changeThumbnailKey(thumbnailKey);
 
-    return new ArticlePost.Response(article.getId());
+    return new ArticlePost.Response(article.getId(), isMine);
   }
 
   @Transactional
@@ -85,11 +93,20 @@ public class ArticleAssemble {
   ) {
     Article article = articleService.find(id);
 
+    boolean isMine = Objects.equals(article.getSeries()
+      .getWriter()
+      .getUser()
+      .getId(), userId);
+
+    if (!isMine) {
+      throw new ArticleNotUpdate();
+    }
+
     thumbnail.map(
       multipartFile -> this.changeThumbnail(multipartFile, request.seriesId(), article, userId));
     article.changeWriting(request.title(), request.contents());
 
-    return new ArticleEdit.ChangeResponse(article.getId());
+    return new ArticleEdit.ChangeResponse(article.getId(), isMine);
   }
 
   public ArticleOne.Response getArticleOne(
@@ -101,7 +118,7 @@ public class ArticleAssemble {
     Long articleCount = this.articleService.countBySeriesId(seriesId);
     User user = userProvider.findById(userId);
 
-    return articleConverter.articleToArticleOneResponse(article, articleCount, user);
+    return articleConverter.toArticleOneResponse(article, articleCount, user);
   }
 
   @Transactional
@@ -116,7 +133,6 @@ public class ArticleAssemble {
     }
 
     String originalThumbnailKey = article.getThumbnailKey();
-
     String thumbnailKey = this.uploadThumbnailImage(
       thumbnail,
       seriesId,
@@ -143,12 +159,8 @@ public class ArticleAssemble {
     Long seriesId,
     Long articleId
   ) {
-    String key = Series.class.getSimpleName()
-      .toLowerCase()
-      + "/" + seriesId.toString()
-      + "/" + Article.class.getSimpleName()
-      .toLowerCase()
-      + "/" + articleId.toString()
+    String key = "series/" + seriesId.toString()
+      + "/article/" + articleId.toString()
       + "/thumbnail/"
       + UUID.randomUUID() +
       this.s3Client.getExtension(image);

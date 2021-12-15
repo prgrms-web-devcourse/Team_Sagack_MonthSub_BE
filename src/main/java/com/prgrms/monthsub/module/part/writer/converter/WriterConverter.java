@@ -25,56 +25,54 @@ public class WriterConverter {
     this.s3 = s3;
   }
 
-  public SeriesOneWithWriterResponse writerToSeriesOneWithWriterResponse(Writer writer) {
+  public SeriesOneWithWriterResponse toSeriesOneWithWriter(Writer writer) {
     return new SeriesOneWithWriterResponse(
       writer.getId(),
       writer.getFollowCount(),
-      this.userConverter.userToSeriesOneWithUserResponse(writer.getUser())
+      this.userConverter.toSeriesOneWithUser(writer.getUser())
     );
   }
 
-  public MyChannel.MyChannelFollowWriterObject writerToMyChannelFollowWriterObject(
+  public MyChannel.MyChannelFollowWriterObject toMyChannelFollowWriterObject(
     Writer writer
   ) {
     return MyChannelFollowWriterObject.builder()
-      .userId(writer.getUser()
-        .getId())
+      .userId(writer.getUser().getId())
       .writerId(writer.getId())
-      .nickname(writer.getUser()
-        .getNickname())
+      .nickname(writer.getUser().getNickname())
       .profileImage(
-        writer.getUser()
-          .getProfileKey() == null ? null : this.s3.getDomain() + "/" + writer.getUser()
-          .getProfileKey()
+        writer.getUser().getProfileKey() == null
+          ? null
+          : this.s3.getDomain() + "/" + writer.getUser().getProfileKey()
       )
       .subscribeStatus(String.valueOf(writer.getSubScribeStatus()))
       .build();
   }
 
-  public MainPage.MainPageFollowWriterObject writerToMainPageFollowWriterObject(Writer writer) {
+  public MainPage.MainPageFollowWriterObject toMainPageFollowWriterObject(Writer writer) {
     return MainPage.MainPageFollowWriterObject.builder()
-      .userId(writer.getUser()
-        .getId())
+      .userId(writer.getUser().getId())
       .writerId(writer.getId())
-      .nickname(writer.getUser()
-        .getNickname())
+      .nickname(writer.getUser().getNickname())
       .profileImage(
-        writer.getUser()
-          .getProfileKey() == null ? null : this.s3.getDomain() + "/" + writer.getUser()
-          .getProfileKey()
+        writer.getUser().getProfileKey() == null
+          ? null
+          : this.s3.getDomain() + "/" + writer.getUser().getProfileKey()
       )
       .subscribeStatus(String.valueOf(writer.getSubScribeStatus()))
       .build();
   }
 
-  public WriterLikesObject writerLikesToWriterLikesList(Writer writer) {
+  public WriterLikesObject toWriterLikesList(Writer writer) {
     User user = writer.getUser();
 
     return WriterLikesObject.builder()
       .nickname(user.getNickname())
       .profileIntroduce(user.getProfileIntroduce())
       .profileKey(
-        user.getProfileKey() == null ? null : this.s3.getDomain() + "/" + user.getProfileKey())
+        user.getProfileKey() == null
+          ? null
+          : this.s3.getDomain() + "/" + user.getProfileKey())
       .followCount(writer.getFollowCount())
       .build();
   }

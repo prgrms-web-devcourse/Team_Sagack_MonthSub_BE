@@ -58,9 +58,9 @@ public class UserController {
     User user = (User) resultToken.getDetails();
 
     return new UserLogin.Response(
-      user.getId(), authentication.token, authentication.username,
-      user.getPart()
-        .getName()
+      user.getId(),
+      authentication.token, authentication.username,
+      user.getPart().getName()
     );
   }
 
@@ -71,7 +71,7 @@ public class UserController {
     @AuthenticationPrincipal JwtAuthentication authentication
   ) {
     User user = this.userService.findById(authentication.userId);
-    return this.userConverter.EntityToUserMeResponse(user);
+    return this.userConverter.toUserMe(user);
   }
 
   @PatchMapping(path = "/me", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })

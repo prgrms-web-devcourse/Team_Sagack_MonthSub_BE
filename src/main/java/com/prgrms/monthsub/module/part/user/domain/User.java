@@ -120,6 +120,7 @@ public class User extends BaseEntity {
     if (this.point - point < 0) {
       throw new IllegalArgumentException("포인트가 부족합니다.");
     }
+
     return this.point -= point;
   }
 

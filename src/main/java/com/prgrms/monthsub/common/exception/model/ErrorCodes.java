@@ -57,6 +57,10 @@ public record ErrorCodes(ErrorCode errorCode, String message) {
     return new ErrorCodes(ErrorCode.DUPLICATED_PAYMENT, message);
   }
 
+  public static ErrorCodes INVALID_UPDATE(String message) {
+    return new ErrorCodes(ErrorCode.INVALID_INPUT_VALUE, message);
+  }
+
   @Getter
   public enum ErrorCode {
 

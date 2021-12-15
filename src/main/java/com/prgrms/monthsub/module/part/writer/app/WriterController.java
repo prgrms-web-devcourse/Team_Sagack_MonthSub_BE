@@ -19,15 +19,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/writers")
 @Tag(name = "Writer")
 public class WriterController {
-
-  private final WriterService writerService;
   private final WriterLikesService writerLikesService;
 
   public WriterController(
-    WriterService writerService,
     WriterLikesService writerLikesService
   ) {
-    this.writerService = writerService;
     this.writerLikesService = writerLikesService;
   }
 

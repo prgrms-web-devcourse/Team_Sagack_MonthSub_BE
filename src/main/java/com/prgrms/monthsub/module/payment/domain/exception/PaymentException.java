@@ -8,9 +8,7 @@ public class PaymentException {
 
   public static class PaymentDuplicated extends InvalidInputException {
     public PaymentDuplicated(String... message) {
-      super(ErrorCodes.DUPLICATED_PAYMENT(Arrays.stream(message)
-        .toList()
-        .toString()));
+      super(ErrorCodes.DUPLICATED_PAYMENT(Arrays.stream(message).toList().toString()));
     }
   }
 

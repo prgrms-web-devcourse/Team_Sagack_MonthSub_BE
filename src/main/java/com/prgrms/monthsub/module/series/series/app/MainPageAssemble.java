@@ -51,7 +51,7 @@ public class MainPageAssemble {
       PageRequest.of(PAGE_NUM, PAGE_SIZE, Sort.by(Direction.DESC, "createdAt", "id"))
     );
 
-    return this.mainPageConverter.MainPageToResponse(
+    return this.mainPageConverter.toResponse(
       popularSeriesList, popularWriterList, recentSeriesList
     );
 

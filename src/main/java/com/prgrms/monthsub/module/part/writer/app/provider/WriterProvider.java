@@ -6,6 +6,6 @@ public interface WriterProvider {
 
   Writer findByUserId(Long userId);
 
-  Writer findWriterByUserId(Long userId);
+  Writer findById(Long userId);
 
 }

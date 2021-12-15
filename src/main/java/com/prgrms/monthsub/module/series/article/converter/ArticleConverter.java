@@ -6,7 +6,7 @@ import com.prgrms.monthsub.module.series.article.domain.Article;
 import com.prgrms.monthsub.module.series.article.dto.ArticleOne;
 import com.prgrms.monthsub.module.series.article.dto.ArticlePost;
 import com.prgrms.monthsub.module.series.series.domain.Series;
-import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeList.BriefArticleBySeriesIdResponse;
+import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeList.BriefArticleResponse;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -14,9 +14,11 @@ public class ArticleConverter {
 
   private final S3 s3;
 
-  public ArticleConverter(S3 s3) {this.s3 = s3;}
+  public ArticleConverter(S3 s3) {
+    this.s3 = s3;
+  }
 
-  public Article ArticlePostToEntity(
+  public Article toEntity(
     Series series,
     ArticlePost.Request request,
     int round
@@ -29,17 +31,16 @@ public class ArticleConverter {
       .build();
   }
 
-  public BriefArticleBySeriesIdResponse articleToArticleBySeriesIdResponse(Article article) {
-    return new BriefArticleBySeriesIdResponse(
+  public BriefArticleResponse toArticle(Article article) {
+    return new BriefArticleResponse(
       article.getId(),
       article.getTitle(),
       article.getRound(),
-      article.getCreatedAt()
-        .toLocalDate()
+      article.getCreatedAt().toLocalDate()
     );
   }
 
-  public ArticleOne.Response articleToArticleOneResponse(
+  public ArticleOne.Response toArticleOneResponse(
     Article article,
     Long articleCount,
     User user
@@ -50,12 +51,12 @@ public class ArticleConverter {
       this.toThumbnailEndpoint(article.getThumbnailKey()),
       articleCount.intValue(),
       user.getNickname(),
-      (user.getProfileKey() == null ? null : this.s3.getDomain() + "/" + user.getProfileKey()),
+      (user.getProfileKey() == null
+        ? null
+        : this.s3.getDomain() + "/" + user.getProfileKey()),
       user.getProfileIntroduce(),
-      article.getCreatedAt()
-        .toLocalDate(),
-      article.getUpdateAt()
-        .toLocalDate()
+      article.getCreatedAt().toLocalDate(),
+      article.getUpdateAt().toLocalDate()
     );
   }
 

@@ -34,7 +34,7 @@ public class SeriesSubscribeList {
   }
 
   @Schema(name = "SeriesSubScribeList.BriefArticleBySeriesIdResponse")
-  public record BriefArticleBySeriesIdResponse(
+  public record BriefArticleResponse(
     Long articleId,
     String title,
     Integer round,

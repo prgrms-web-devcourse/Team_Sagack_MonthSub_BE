@@ -62,4 +62,14 @@ public class Writer extends BaseEntity {
     this.subScribeStatus = status;
   }
 
+  public void editSubScribeStatus(
+    boolean isSubscription
+  ) {
+    this.editSubScribeStatus(
+      isSubscription
+        ? SeriesStatus.SUBSCRIPTION_AVAILABLE
+        : SeriesStatus.SUBSCRIPTION_UNAVAILABLE
+    );
+  }
+
 }

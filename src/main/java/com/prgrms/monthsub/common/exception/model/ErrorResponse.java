@@ -29,8 +29,7 @@ public class ErrorResponse {
   ) {
     ErrorCode code = exceptions.errorCode();
     this.message = exceptions.message();
-    this.status = code.getStatus()
-      .value();
+    this.status = code.getStatus().value();
     this.errors = errors;
     this.code = code.getCode();
     this.severTime = LocalDateTime.now();
@@ -39,8 +38,7 @@ public class ErrorResponse {
   private ErrorResponse(final ErrorCodes exceptions) {
     ErrorCode code = exceptions.errorCode();
     this.message = exceptions.message();
-    this.status = code.getStatus()
-      .value();
+    this.status = code.getStatus().value();
     this.errors = new ArrayList<>();
     this.code = code.getCode();
     this.severTime = LocalDateTime.now();
@@ -52,8 +50,7 @@ public class ErrorResponse {
   ) {
     ErrorCode code = exceptions.errorCode();
     this.message = exceptions.message();
-    this.status = code.getStatus()
-      .value();
+    this.status = code.getStatus().value();
     this.errors = new ArrayList<>();
     this.code = code.getCode();
     this.exception = exceptionClass.getSimpleName();
@@ -86,10 +83,11 @@ public class ErrorResponse {
   }
 
   public static ErrorResponse of(MethodArgumentTypeMismatchException e) {
-    final String value = e.getValue() == null ? "" : e.getValue()
-      .toString();
+    final String value = e.getValue() == null ? "" : e.getValue().toString();
     final List<ErrorResponse.FieldError> errors = ErrorResponse.FieldError.of(
-      e.getName(), value, e.getErrorCode());
+      e.getName(), value, e.getErrorCode()
+    );
+
     return new ErrorResponse(ErrorCodes.INVALID_TYPE_VALUE(), errors);
   }
 
@@ -117,6 +115,7 @@ public class ErrorResponse {
     ) {
       List<FieldError> fieldErrors = new ArrayList<>();
       fieldErrors.add(new FieldError(field, value, reason));
+
       return fieldErrors;
     }
 
@@ -124,11 +123,11 @@ public class ErrorResponse {
       final List<org.springframework.validation.FieldError> fieldErrors = bindingResult.getFieldErrors();
       return fieldErrors.stream()
         .map(error -> new FieldError(
-          error.getField(),
-          error.getRejectedValue() == null ? "" : error.getRejectedValue()
-            .toString(),
-          error.getDefaultMessage()
-        ))
+            error.getField(),
+            error.getRejectedValue() == null ? "" : error.getRejectedValue().toString(),
+            error.getDefaultMessage()
+          )
+        )
         .collect(Collectors.toList());
     }
   }

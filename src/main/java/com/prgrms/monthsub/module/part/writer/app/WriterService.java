@@ -34,10 +34,10 @@ public class WriterService implements WriterProvider {
   }
 
   @Override
-  public Writer findWriterByUserId(Long writerId) {
+  public Writer findById(Long id) {
     return this.writerRepository
-      .findById(writerId)
-      .orElseThrow(() -> new WriterNotFound("id=" + writerId));
+      .findById(id)
+      .orElseThrow(() -> new WriterNotFound("id=" + id));
   }
 
   @Transactional
@@ -45,12 +45,11 @@ public class WriterService implements WriterProvider {
   public Writer findByUserId(Long userId) {
     return this.writerRepository
       .findByUserId(userId)
-      .orElseGet(() -> this.getWriterAndChangeUserPart(userId));
+      .orElseGet(() -> this.becameWriter(userId));
   }
 
-  public Optional<Writer> findWriterObjectByUserId(Long userId) {
-    return this.writerRepository
-      .findByUserId(userId);
+  public Optional<Writer> findByUserIdOrEmpty(Long userId) {
+    return this.writerRepository.findByUserId(userId);
   }
 
   public List<Writer> findAll(Pageable pageable) {
@@ -59,11 +58,10 @@ public class WriterService implements WriterProvider {
       .getContent();
   }
 
-  private Writer getWriterAndChangeUserPart(Long userId) {
+  private Writer becameWriter(Long userId) {
     User user = this.userService.findById(userId);
+    Part part = this.partService.findByName(Part.Name.AUTHOR_GROUP.name());
 
-    //TODO : PART NAME ENUM으로 관리 필요.
-    Part part = this.partService.findByName("AUTHOR_GROUP");
     user.changePart(part);
 
     Writer entity = Writer.builder()

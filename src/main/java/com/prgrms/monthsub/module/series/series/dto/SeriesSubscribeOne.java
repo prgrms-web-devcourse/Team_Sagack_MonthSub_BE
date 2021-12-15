@@ -1,7 +1,7 @@
 package com.prgrms.monthsub.module.series.series.dto;
 
 import com.prgrms.monthsub.module.series.series.domain.Series.Category;
-import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeList.BriefArticleBySeriesIdResponse;
+import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeList.BriefArticleResponse;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeList.SeriesObject;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeList.SubscribeObject;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeList.UploadObject;
@@ -18,7 +18,7 @@ public class SeriesSubscribeOne {
     SubscribeObject subscribe,
     Category category,
     WriterObject writer,
-    List<BriefArticleBySeriesIdResponse> articleList
+    List<BriefArticleResponse> articleList
   ) {
   }
 

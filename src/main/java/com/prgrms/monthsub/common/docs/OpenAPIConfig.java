@@ -34,7 +34,7 @@ public class OpenAPIConfig {
         openAPI.info(new Info()
             .title("MonthSub API")
             .version(buildProperties.getVersion())
-            .termsOfService("Sagack")
+            .termsOfService("https://monthsub.netlify.app/")
             .license(new License().name("Apache 2.0")
               .url("http://springdoc.org"))
           )

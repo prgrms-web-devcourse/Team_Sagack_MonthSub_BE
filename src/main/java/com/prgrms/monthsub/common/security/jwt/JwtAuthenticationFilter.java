@@ -1,6 +1,6 @@
 package com.prgrms.monthsub.common.security.jwt;
 
-import static org.apache.commons.lang3.StringUtils.isNotEmpty;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 import com.prgrms.monthsub.common.exception.global.AuthenticationException.UnAuthorize;
 import com.prgrms.monthsub.module.part.user.app.AuthenticationService;
@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -59,74 +60,87 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
       .stream()
       .collect(Collectors.toMap(header -> header, request::getHeader));
 
-    log.info(String.format(
-      "[%s] %s %s",
-      request.getMethod(),
-      request.getRequestURI()
-        .toLowerCase(),
-      (request.getQueryString() != null) ? request.getQueryString() : ""
-    ));
+    log.info(
+      String.format(
+        "[%s] %s %s",
+        request.getMethod(),
+        request.getRequestURI().toLowerCase(),
+        (request.getQueryString() != null) ? request.getQueryString() : ""
+      )
+    );
+
     log.info(String.format("header=%s", headers));
 
-    if (SecurityContextHolder.getContext()
-      .getAuthentication() == null) {
-      String token = getToken(request);
-      if (token != null) {
-        try {
-          Jwt.Claims claims = verify(token);
-          log.debug("Jwt parse result: {}", claims);
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    String token = getToken(request);
 
-          String username = claims.username;
-          List<GrantedAuthority> authorities = getAuthorities(claims);
-
-          if (isNotEmpty(username) && authorities.size() > 0) {
-            User user = this.authenticationService.findByUserName(username);
-
-            JwtAuthenticationToken authentication
-              = new JwtAuthenticationToken(
-              new JwtAuthentication(token, user.getId(), username), null,
-              authorities
-            );
-            log.info("userId: {}", user.getId());
-
-            authentication.setDetails(
-              new WebAuthenticationDetailsSource().buildDetails(request));
-            SecurityContextHolder.getContext()
-              .setAuthentication(authentication);
-          }
-
-        } catch (Exception e) {
-          log.error("Invalid token:{}", e.getMessage());
-          throw new UnAuthorize();
-        }
-      }
-    } else {
+    if (authentication != null) {
       log.debug(
         "SecurityContextHolder not populated with security token, as it already contained: '{}'",
-        SecurityContextHolder.getContext()
-          .getAuthentication()
+        authentication
       );
+    }
+
+    if (authentication == null && token != null) {
+      try {
+        authenticate(request, token);
+      } catch (Exception e) {
+        log.error("Invalid token:{}", e.getMessage());
+        throw new UnAuthorize();
+      }
     }
 
     chain.doFilter(request, response);
   }
 
+  private void authenticate(
+    HttpServletRequest request,
+    String token
+  ) {
+    Jwt.Claims claims = verify(token);
+    log.debug("Jwt parse result: {}", claims);
+
+    String username = claims.username;
+    List<GrantedAuthority> authorities = getAuthorities(claims);
+
+    if (isEmpty(username) || authorities.size() <= 0) {
+      return;
+    }
+
+    User user = this.authenticationService.findByUserName(username);
+    JwtAuthenticationToken jwtToken = new JwtAuthenticationToken(
+      new JwtAuthentication(token, user.getId(), username),
+      null,
+      authorities
+    );
+
+    log.info("userId: {}", user.getId());
+
+    jwtToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+    SecurityContextHolder.getContext().setAuthentication(jwtToken);
+  }
+
   private String getToken(HttpServletRequest request) {
     String token = request.getHeader(headerKey);
-    if (isNotEmpty(token)) {
-      log.debug("Jwt token detected: {}", token);
+    String decodedToken = null;
 
-      if (!token.startsWith(this.BEARER)) {
-        throw new UnAuthorize();
-      }
-
-      try {
-        return URLDecoder.decode(token.replace(BEARER + " ", ""), "UTF-8");
-      } catch (Exception e) {
-        log.error(e.getMessage(), e);
-      }
+    if (isEmpty(token)) {
+      return null;
     }
-    return null;
+
+    log.debug("Jwt token detected: {}", token);
+
+    if (!token.startsWith(this.BEARER)) {
+      throw new UnAuthorize();
+    }
+
+    try {
+      decodedToken = URLDecoder.decode(token.replace(BEARER + " ", ""), "UTF-8");
+    } catch (Exception e) {
+      log.error(e.getMessage(), e);
+    }
+
+    return decodedToken;
   }
 
   private Jwt.Claims verify(String token) {
@@ -135,9 +149,11 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 
   private List<GrantedAuthority> getAuthorities(Jwt.Claims claims) {
     String[] roles = claims.roles;
-    return roles == null || roles.length == 0 ?
-      Collections.emptyList() :
-      Arrays.stream(roles)
+    boolean emptyRole = roles == null || roles.length == 0;
+
+    return emptyRole
+      ? Collections.emptyList()
+      : Arrays.stream(roles)
         .map(SimpleGrantedAuthority::new)
         .collect(Collectors.toList());
   }

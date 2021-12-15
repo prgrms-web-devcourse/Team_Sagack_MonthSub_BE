@@ -63,22 +63,26 @@ security:
       - http://127.0.0.1:3000
       - https://monthsub.netlify.app
   allows:
-    - /assets/**
-    - /h2-console/**
-    - /v3/api-docs/**
-    - /swagger-monthsub.html
-    - /swagger-ui/**
-    # endpoint
-    - /health
-    - /users/login
-    - /users/signup
-    - /series/sort
-    - /series/{id}
-    - /series/search/title
-    - /series/search/nickname
-    - /series/all
-    - /users/{id}/other
-    - /main
+    get:
+      - /assets/**
+      - /h2-console/**
+      - /v3/api-docs/**
+      - /swagger-monthsub.html
+      - /swagger-ui/**
+      # endpoint
+      - /health
+      - /main
+      - /series
+      - /series/sort
+      - /series/{id}
+      - /series/search/title
+      - /series/search/nickname
+      - /users/{id}/other
+    post:
+      - /users/login
+      - /users/signup
+#    put:
+#    patch:
 
 logging:
   level:

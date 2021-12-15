@@ -25,7 +25,8 @@ public class ArticleService {
   }
 
   public Article find(Long id) {
-    return this.articleRepository.findById(id)
+    return this.articleRepository
+      .findById(id)
       .orElseThrow(() -> new ArticleNotFound("articleId=" + id));
   }
 

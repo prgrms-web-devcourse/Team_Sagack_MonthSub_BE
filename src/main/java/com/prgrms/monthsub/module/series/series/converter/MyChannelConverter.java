@@ -29,7 +29,7 @@ public class MyChannelConverter {
     this.seriesConverter = seriesConverter;
   }
 
-  public MyChannel.Response myChannelToResponse(
+  public MyChannel.Response toResponse(
     User user,
     Writer writer,
     List<Writer> followingWriterList,
@@ -37,68 +37,68 @@ public class MyChannelConverter {
     List<Series> seriesPostList
   ) {
     return new MyChannel.Response(
-      userConverter.userToSeriesOneWithUserResponse(user),
+      userConverter.toSeriesOneWithUser(user),
       followingWriterList.size(),
       followingWriterList.stream()
-        .map(writerConverter::writerToMyChannelFollowWriterObject)
+        .map(writerConverter::toMyChannelFollowWriterObject)
         .collect(Collectors.toList()),
       seriesSubscribeList.stream()
-        .map(seriesConverter::seriesToMyChannelSubscribeObject)
+        .map(seriesConverter::toMyChannelSubscribeObject)
         .collect(Collectors.toList()),
       writer.getFollowCount(),
       seriesPostList.stream()
-        .map(seriesConverter::seriesToMyChannelSeriesObject)
+        .map(seriesConverter::toMyChannelSeriesObject)
         .collect(Collectors.toList())
     );
   }
 
-  public MyChannel.Response myChannelToResponseWithoutWriter(
+  public MyChannel.Response toResponseWithoutWriter(
     User user,
     List<Writer> followingWriterList,
     List<Series> seriesSubscribeList
   ) {
     return new MyChannel.Response(
-      userConverter.userToSeriesOneWithUserResponse(user),
+      userConverter.toSeriesOneWithUser(user),
       followingWriterList.size(),
       followingWriterList.stream()
-        .map(writerConverter::writerToMyChannelFollowWriterObject)
+        .map(writerConverter::toMyChannelFollowWriterObject)
         .collect(Collectors.toList()),
       seriesSubscribeList.stream()
-        .map(seriesConverter::seriesToMyChannelSubscribeObject)
+        .map(seriesConverter::toMyChannelSubscribeObject)
         .collect(Collectors.toList()),
       0,
       Collections.emptyList()
     );
   }
 
-  public MyChannel.OtherResponse otherChannelToResponse(
+  public MyChannel.OtherResponse toResponse(
     User user,
     Writer writer,
     List<Writer> followingWriterList,
     List<Series> seriesPostList
   ) {
     return new OtherResponse(
-      userConverter.userToSeriesOneWithUserResponse(user),
+      userConverter.toSeriesOneWithUser(user),
       followingWriterList.size(),
       followingWriterList.stream()
-        .map(writerConverter::writerToMyChannelFollowWriterObject)
+        .map(writerConverter::toMyChannelFollowWriterObject)
         .collect(Collectors.toList()),
       writer.getFollowCount(),
       seriesPostList.stream()
-        .map(seriesConverter::seriesToMyChannelSeriesObject)
+        .map(seriesConverter::toMyChannelSeriesObject)
         .collect(Collectors.toList())
     );
   }
 
-  public MyChannel.OtherResponse otherChannelToResponseWithoutWriter(
+  public MyChannel.OtherResponse toResponseWithoutWriter(
     User user,
     List<Writer> followingWriterList
   ) {
     return new MyChannel.OtherResponse(
-      userConverter.userToSeriesOneWithUserResponse(user),
+      userConverter.toSeriesOneWithUser(user),
       followingWriterList.size(),
       followingWriterList.stream()
-        .map(writerConverter::writerToMyChannelFollowWriterObject)
+        .map(writerConverter::toMyChannelFollowWriterObject)
         .collect(Collectors.toList()),
       0,
       Collections.emptyList()

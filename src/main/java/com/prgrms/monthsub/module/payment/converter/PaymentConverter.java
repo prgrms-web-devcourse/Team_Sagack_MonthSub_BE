@@ -16,20 +16,18 @@ import org.springframework.stereotype.Component;
 public class PaymentConverter {
   private final S3 s3;
 
-  public PaymentConverter(S3 s3) {this.s3 = s3;}
+  public PaymentConverter(S3 s3) {
+    this.s3 = s3;
+  }
 
-  public Response seriesToPaymentWindowResponse(
+  public Response toPaymentForm(
     Series series,
     List<ArticleUploadDate> uploadDateList
   ) {
     return new Response(
       PaymentSeries.builder()
-        .email(series.getWriter()
-          .getUser()
-          .getEmail())
-        .nickname(series.getWriter()
-          .getUser()
-          .getNickname())
+        .email(series.getWriter().getUser().getEmail())
+        .nickname(series.getWriter().getUser().getNickname())
         .title(series.getTitle())
         .thumbnail(this.s3.getDomain() + "/" + series.getThumbnailKey())
         .category(series.getCategory())
@@ -37,22 +35,15 @@ public class PaymentConverter {
         .articleCount(series.getArticleCount())
         .startDate(series.getSubscribeStartDate())
         .endDate(series.getSubscribeEndDate())
-        .date(uploadDateList.stream()
-          .map(
-            uploadDate -> {
-              return uploadDate.getUploadDate()
-                .toString()
-                .toLowerCase();
-            }
-          )
-          .toArray(String[]::new))
-        .time(series.getUploadTime()
-          .toString())
+        .date(uploadDateList.stream().map(uploadDate ->
+          uploadDate.getUploadDate().toString().toLowerCase()).toArray(String[]::new)
+        )
+        .time(series.getUploadTime().toString())
         .build()
     );
   }
 
-  public Payment paymentToEntity(
+  public Payment toEntity(
     Series series,
     User user
   ) {
@@ -62,19 +53,15 @@ public class PaymentConverter {
       .build();
   }
 
-  public PaymentPost.Response paymentResponse(
+  public PaymentPost.Response toPaymentPost(
     Series series,
     List<ArticleUploadDate> uploadDateList,
     int point
   ) {
     return new PaymentPost.Response(
       PaymentPost.PaymentSeries.builder()
-        .email(series.getWriter()
-          .getUser()
-          .getEmail())
-        .nickname(series.getWriter()
-          .getUser()
-          .getNickname())
+        .email(series.getWriter().getUser().getEmail())
+        .nickname(series.getWriter().getUser().getNickname())
         .title(series.getTitle())
         .thumbnail(this.s3.getDomain() + "/" + series.getThumbnailKey())
         .category(series.getCategory())
@@ -82,15 +69,9 @@ public class PaymentConverter {
         .articleCount(series.getArticleCount())
         .startDate(series.getSubscribeStartDate())
         .endDate(series.getSubscribeEndDate())
-        .date(uploadDateList.stream()
-          .map(
-            uploadDate -> {
-              return uploadDate.getUploadDate()
-                .toString()
-                .toLowerCase();
-            }
-          )
-          .toArray(String[]::new))
+        .date(uploadDateList.stream().map(uploadDate ->
+          uploadDate.getUploadDate().toString().toLowerCase()).toArray(String[]::new)
+        )
         .time(series.getUploadTime())
         .build(),
       UserPoint.builder()

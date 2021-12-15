@@ -1,5 +1,8 @@
 package com.prgrms.monthsub.common.security.config;
 
+import static org.springframework.http.HttpMethod.GET;
+import static org.springframework.http.HttpMethod.POST;
+
 import com.prgrms.monthsub.common.exception.FilterExceptionHandler;
 import com.prgrms.monthsub.common.security.jwt.Jwt;
 import com.prgrms.monthsub.common.security.jwt.JwtAuthenticationFilter;
@@ -50,30 +53,35 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Override
   public void configure(WebSecurity web) {
-    web
+    web.ignoring().antMatchers(
+      GET,
+      this.security
+        .getAllows()
+        .getGet()
+        .toArray(String[]::new)
+    );
 
-      .ignoring()
-      .antMatchers(
-        this.security
-          .getAllows()
-          .toArray(String[]::new)
-      );
+    web.ignoring().antMatchers(
+      POST,
+      this.security
+        .getAllows()
+        .getPost()
+        .toArray(String[]::new)
+    );
   }
 
   @Bean
   public AccessDeniedHandler accessDeniedHandler() {
     return (request, response, e) -> {
-      Authentication authentication = SecurityContextHolder.getContext()
-        .getAuthentication();
+      Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
       Object principal = authentication != null ? authentication.getPrincipal() : null;
+
       log.error("{} is denied", principal, e);
+
       response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-      response.getWriter()
-        .write("ACCESS DENIED");
-      response.getWriter()
-        .flush();
-      response.getWriter()
-        .close();
+      response.getWriter().write("ACCESS DENIED");
+      response.getWriter().flush();
+      response.getWriter().close();
     };
   }
 
@@ -85,12 +93,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   @Bean
   public Jwt jwt() {
     return new Jwt(
-      security.getJwt()
-        .getIssuer(),
-      security.getJwt()
-        .getClientSecret(),
-      security.getJwt()
-        .getExpirySeconds()
+      security.getJwt().getIssuer(),
+      security.getJwt().getClientSecret(),
+      security.getJwt().getExpirySeconds()
     );
   }
 
@@ -110,42 +115,32 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
   public JwtAuthenticationFilter jwtAuthenticationFilter() {
     Jwt jwt = getApplicationContext().getBean(Jwt.class);
+
     return new JwtAuthenticationFilter(
-      authenticationService, security.getJwt()
-      .getHeader(), jwt);
+      authenticationService,
+      security.getJwt().getHeader(),
+      jwt
+    );
   }
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
-    http
-      .authorizeRequests()
-      .antMatchers("/users/me")
-      .hasAnyRole("USER")
-      .antMatchers("/expulsion")
-      .hasAnyRole("ADMIN")
-      .anyRequest()
-      .fullyAuthenticated()
+    http.authorizeRequests()
+      .antMatchers("/users/me").hasAnyRole("USER")
+      .antMatchers("/expulsion").hasAnyRole("ADMIN")
+      .anyRequest().fullyAuthenticated()
       .and()
-      .cors()
-      .configurationSource(corsConfigurationSource())
+      .cors().configurationSource(corsConfigurationSource())
       .and()
-      .csrf()
-      .disable()
-      .headers()
-      .disable()
-      .formLogin()
-      .disable()
-      .httpBasic()
-      .disable()
-      .rememberMe()
-      .disable()
-      .logout()
-      .disable()
-      .exceptionHandling()
-      .accessDeniedHandler(accessDeniedHandler())
+      .csrf().disable()
+      .headers().disable()
+      .formLogin().disable()
+      .httpBasic().disable()
+      .rememberMe().disable()
+      .logout().disable()
+      .exceptionHandling().accessDeniedHandler(accessDeniedHandler())
       .and()
-      .sessionManagement()
-      .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+      .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
       .and()
       .addFilterAfter(jwtAuthenticationFilter(), SecurityContextPersistenceFilter.class)
       .addFilterBefore(exceptionHandlerFilter, jwtAuthenticationFilter().getClass());
@@ -155,16 +150,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();
 
-    Arrays.stream(this.security.getCors()
-        .getOrigin())
+    Arrays.stream(this.security.getCors().getOrigin())
       .toList()
       .forEach(configuration::addAllowedOrigin);
+
     configuration.addAllowedHeader("*");
     configuration.addAllowedMethod("*");
     configuration.setAllowCredentials(true);
 
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
     source.registerCorsConfiguration("/**", configuration);
+
     return source;
   }
 
