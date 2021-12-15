@@ -1,6 +1,7 @@
 package com.prgrms.monthsub.module.series.series.app;
 
 import com.prgrms.monthsub.common.security.jwt.JwtAuthentication;
+import com.prgrms.monthsub.module.series.series.domain.Series.Category;
 import com.prgrms.monthsub.module.series.series.domain.type.SortType;
 import com.prgrms.monthsub.module.series.series.dto.SeriesLikesEvent;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeEdit;
@@ -11,6 +12,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.tags.Tags;
 import java.util.Optional;
+import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import org.springframework.http.MediaType;
@@ -137,9 +139,11 @@ public class SeriesController {
   @Tag(name = "[화면]-시리즈")
   public SeriesSubscribeList.Response getSeriesList(
     @RequestParam(required = false) Long lastSeriesId,
-    @RequestParam @Positive Integer size
+    @RequestParam @Positive Integer size,
+    @RequestParam(required = false, defaultValue = "ALL")
+      Category[] categories
   ) {
-    return this.seriesAssemble.getSeriesList(lastSeriesId, size);
+    return this.seriesAssemble.getSeriesList(lastSeriesId, size, List.of(categories));
   }
 
   @GetMapping("/sort")
