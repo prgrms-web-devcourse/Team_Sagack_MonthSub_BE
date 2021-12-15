@@ -5,8 +5,8 @@ import javax.validation.constraints.NotBlank;
 
 public class ArticleEdit {
 
-  @Schema(name = "ArticleEdit.TextChangeRequest")
-  public record TextChangeRequest(
+  @Schema(name = "ArticleEdit.ChangeRequest")
+  public record ChangeRequest(
     @NotBlank
     String title,
 
@@ -17,8 +17,8 @@ public class ArticleEdit {
   ) {
   }
 
-  @Schema(name = "ArticleEdit.TextChangeResponse")
-  public record TextChangeResponse(
+  @Schema(name = "ArticleEdit.ChangeResponse")
+  public record ChangeResponse(
     Long id
   ) {
   }

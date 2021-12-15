@@ -5,12 +5,6 @@ import java.time.LocalDate;
 
 public class ArticleOne {
 
-  @Schema(name = "ArticleOne.Request")
-  public record Request(
-    Long seriesId
-  ) {
-  }
-
   @Schema(name = "ArticleOne.Response")
   public record Response(
     String title,
