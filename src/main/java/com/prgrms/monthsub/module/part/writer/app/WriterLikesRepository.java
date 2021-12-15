@@ -4,18 +4,27 @@ import com.prgrms.monthsub.module.part.writer.domain.WriterLikes;
 import com.prgrms.monthsub.module.part.writer.domain.WriterLikes.LikesStatus;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface WriterLikesRepository extends JpaRepository<WriterLikes, Long> {
 
-  List<WriterLikes> findAllByUserIdAndLikesStatus(
-    Long userId,
-    LikesStatus likesStatus
-  );
-
   Optional<WriterLikes> findByUserIdAndWriterId(
     Long userId,
     Long WriterId
+  );
+
+  List<WriterLikes> findAllByUserIdAndLikesStatus(
+    Long userId,
+    LikesStatus likesStatus,
+    Pageable pageable
+  );
+
+  List<WriterLikes> findByIdGreaterThanAndUserIdAndLikesStatus(
+    Long id,
+    Long userId,
+    LikesStatus likesStatus,
+    Pageable pageable
   );
 
 }
