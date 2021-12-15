@@ -43,11 +43,11 @@ public class MyChannelConverter {
         .map(writerConverter::toMyChannelFollowWriterObject)
         .collect(Collectors.toList()),
       seriesSubscribeList.stream()
-        .map(seriesConverter::seriesToMyChannelSubscribeObject)
+        .map(seriesConverter::toMyChannelSubscribeObject)
         .collect(Collectors.toList()),
       writer.getFollowCount(),
       seriesPostList.stream()
-        .map(seriesConverter::seriesToMyChannelSeriesObject)
+        .map(seriesConverter::toMyChannelSeriesObject)
         .collect(Collectors.toList())
     );
   }
@@ -64,7 +64,7 @@ public class MyChannelConverter {
         .map(writerConverter::toMyChannelFollowWriterObject)
         .collect(Collectors.toList()),
       seriesSubscribeList.stream()
-        .map(seriesConverter::seriesToMyChannelSubscribeObject)
+        .map(seriesConverter::toMyChannelSubscribeObject)
         .collect(Collectors.toList()),
       0,
       Collections.emptyList()
@@ -85,7 +85,7 @@ public class MyChannelConverter {
         .collect(Collectors.toList()),
       writer.getFollowCount(),
       seriesPostList.stream()
-        .map(seriesConverter::seriesToMyChannelSeriesObject)
+        .map(seriesConverter::toMyChannelSeriesObject)
         .collect(Collectors.toList())
     );
   }

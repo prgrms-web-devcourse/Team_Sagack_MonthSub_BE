@@ -150,11 +150,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();
 
-    Arrays.stream(
-        this.security
-          .getCors()
-          .getOrigin()
-      )
+    Arrays.stream(this.security.getCors().getOrigin())
       .toList()
       .forEach(configuration::addAllowedOrigin);
 

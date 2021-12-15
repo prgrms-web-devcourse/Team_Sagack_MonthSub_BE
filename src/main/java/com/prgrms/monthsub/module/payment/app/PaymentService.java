@@ -62,6 +62,7 @@ public class PaymentService {
       return this.transactionTemplate.execute(status -> this.createPayment(id, userId));
     } catch (ObjectOptimisticLockingFailureException e) {
       log.info("충돌 감지 재시도: {}", e.getMessage());
+      
       throw new ObjectOptimisticLockingFailureException("충돌", Throwable.class);
     }
   }
@@ -79,9 +80,7 @@ public class PaymentService {
 
     this.paymentRepository
       .findByUserIdAndSeriesId(userId, seriesId)
-      .map(pay -> {
-        throw new PaymentDuplicated("이미 결제되었습니다.");
-      });
+      .map(pay -> {throw new PaymentDuplicated("이미 결제되었습니다.");});
 
     this.paymentRepository.save(this.paymentConverter.toEntity(series, user));
 

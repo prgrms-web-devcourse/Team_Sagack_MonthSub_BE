@@ -136,8 +136,7 @@ public class S3Client {
   }
 
   private void validImageFile(MultipartFile file) {
-    String[] fileInfo = Objects.requireNonNull(file.getContentType())
-      .split("/");
+    String[] fileInfo = Objects.requireNonNull(file.getContentType()).split("/");
 
     boolean isImage = Arrays
       .stream(fileInfo)

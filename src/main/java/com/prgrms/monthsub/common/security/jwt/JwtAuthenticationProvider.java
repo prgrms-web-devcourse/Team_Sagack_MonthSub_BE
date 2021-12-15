@@ -48,11 +48,14 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
       List<GrantedAuthority> authorities = user.getPart().getAuthorities();
       String token = getToken(user.getUsername(), authorities);
 
-      JwtAuthenticationToken authenticated =
-        new JwtAuthenticationToken(
-          new JwtAuthentication(token, user.getId(), user.getUsername()), null,
-          authorities
-        );
+      JwtAuthentication jwtAuthenticationToken = new JwtAuthentication(
+        token, user.getId(), user.getUsername()
+      );
+
+      JwtAuthenticationToken authenticated = new JwtAuthenticationToken(
+        jwtAuthenticationToken, null, authorities
+      );
+
       authenticated.setDetails(user);
 
       return authenticated;

@@ -36,8 +36,8 @@ public class PaymentConverter {
         .startDate(series.getSubscribeStartDate())
         .endDate(series.getSubscribeEndDate())
         .date(uploadDateList.stream().map(uploadDate ->
-          uploadDate.getUploadDate().toString().toLowerCase()
-        ).toArray(String[]::new))
+          uploadDate.getUploadDate().toString().toLowerCase()).toArray(String[]::new)
+        )
         .time(series.getUploadTime().toString())
         .build()
     );
@@ -70,10 +70,8 @@ public class PaymentConverter {
         .startDate(series.getSubscribeStartDate())
         .endDate(series.getSubscribeEndDate())
         .date(uploadDateList.stream().map(uploadDate ->
-          uploadDate.getUploadDate()
-            .toString()
-            .toLowerCase()
-        ).toArray(String[]::new))
+          uploadDate.getUploadDate().toString().toLowerCase()).toArray(String[]::new)
+        )
         .time(series.getUploadTime())
         .build(),
       UserPoint.builder()

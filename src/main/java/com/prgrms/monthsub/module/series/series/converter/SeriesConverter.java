@@ -67,12 +67,11 @@ public class SeriesConverter {
       .build();
   }
 
-  public SeriesSubscribeOne.Response toSeriesOneResponse(
+  public SeriesSubscribeOne.Response toSeriesOne(
     Series series,
     List<Article> articleList,
     List<ArticleUploadDate> uploadDateList
   ) {
-
     SeriesOneWithWriterResponse writerResponse = writerConverter.toSeriesOneWithWriter(
       series.getWriter());
     return new Response(
@@ -138,7 +137,7 @@ public class SeriesConverter {
       .build();
   }
 
-  public SeriesSubscribeOne.ResponseUsageEdit seriesToResponseUsageEdit(
+  public SeriesSubscribeOne.ResponseUsageEdit toResponseUsageEdit(
     Series series,
     List<ArticleUploadDate> uploadDateList
   ) {
@@ -167,7 +166,7 @@ public class SeriesConverter {
     );
   }
 
-  public MyChannel.MyChannelSubscribeObject seriesToMyChannelSubscribeObject(Series series) {
+  public MyChannel.MyChannelSubscribeObject toMyChannelSubscribeObject(Series series) {
     return MyChannel.MyChannelSubscribeObject.builder()
       .userId(series.getWriter().getUser().getId())
       .writerId(series.getWriter().getId())
@@ -186,7 +185,7 @@ public class SeriesConverter {
       .build();
   }
 
-  public MyChannel.MyChannelSeriesObject seriesToMyChannelSeriesObject(Series series) {
+  public MyChannel.MyChannelSeriesObject toMyChannelSeriesObject(Series series) {
     return MyChannel.MyChannelSeriesObject.builder()
       .userId(series.getWriter().getUser().getId())
       .writerId(series.getWriter().getId())

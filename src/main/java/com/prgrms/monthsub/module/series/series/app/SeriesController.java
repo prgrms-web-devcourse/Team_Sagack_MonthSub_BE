@@ -11,8 +11,8 @@ import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribePost;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.tags.Tags;
-import java.util.Optional;
 import java.util.List;
+import java.util.Optional;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import org.springframework.http.MediaType;
@@ -135,7 +135,7 @@ public class SeriesController {
     return this.seriesAssemble.getSeriesSearchNickname(nickname);
   }
 
-  @GetMapping("/all")
+  @GetMapping
   @Operation(summary = "최신순 시리즈 리스트 조회(무한 스크롤)")
   @Tag(name = "[화면]-시리즈")
   public SeriesSubscribeList.Response getSeriesList(

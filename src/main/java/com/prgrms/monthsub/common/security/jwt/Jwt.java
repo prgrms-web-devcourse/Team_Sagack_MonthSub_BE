@@ -16,7 +16,6 @@ import java.util.Map;
 public class Jwt {
 
   private final String issuer;
-  private final String clientSecret;
   private final int expirySeconds;
   private final Algorithm algorithm;
   private final JWTVerifier jwtVerifier;
@@ -27,7 +26,6 @@ public class Jwt {
     int expirySeconds
   ) {
     this.issuer = issuer;
-    this.clientSecret = clientSecret;
     this.expirySeconds = expirySeconds;
     this.algorithm = Algorithm.HMAC512(clientSecret);
     this.jwtVerifier = require(algorithm).withIssuer(issuer).build();

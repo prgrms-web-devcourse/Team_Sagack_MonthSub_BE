@@ -82,8 +82,7 @@ public class SeriesAssemble {
     Long seriesId = this.seriesService.save(series);
 
     Arrays.stream(request.uploadDate())
-      .forEach(uploadDate ->
-        {
+      .forEach(uploadDate -> {
           ArticleUploadDate articleUploadDate = this.articleUploadDateConverter.toEntity(
             seriesId, uploadDate
           );
@@ -151,7 +150,7 @@ public class SeriesAssemble {
     Series series = this.seriesService.getById(seriesId);
     List<ArticleUploadDate> uploadDateList = this.seriesService.getArticleUploadDate(seriesId);
 
-    return this.seriesConverter.toSeriesOneResponse(series, articleList, uploadDateList);
+    return this.seriesConverter.toSeriesOne(series, articleList, uploadDateList);
   }
 
   public SeriesSubscribeList.Response getSeriesListSort(SortType sort) {
@@ -197,7 +196,7 @@ public class SeriesAssemble {
     Series series = this.seriesService.getById(seriesId);
     List<ArticleUploadDate> uploadDateList = this.seriesService.getArticleUploadDate(seriesId);
 
-    return this.seriesConverter.seriesToResponseUsageEdit(series, uploadDateList);
+    return this.seriesConverter.toResponseUsageEdit(series, uploadDateList);
   }
 
   public SeriesSubscribeList.Response getSeriesSearchTitle(String title) {

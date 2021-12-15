@@ -38,9 +38,7 @@ public class SeriesLikesService {
       .map(seriesLikes -> {
           LikesStatus changeStatus = seriesLikes.changeLikeStatus();
 
-          seriesLikes
-            .getSeries()
-            .changeLikesCount(changeStatus);
+          seriesLikes.getSeries().changeLikesCount(changeStatus);
 
           return new SeriesLikesEvent.Response(
             this.seriesLikesRepository
@@ -80,10 +78,8 @@ public class SeriesLikesService {
       .map(seriesLikes -> {
           SeriesLikes.LikesStatus changeStatus = seriesLikes.changeLikeStatus();
 
-          seriesLikes
-            .getSeries()
-            .changeLikesCount(changeStatus);
-
+          seriesLikes.getSeries().changeLikesCount(changeStatus);
+          
           return new SeriesLikesEvent.Response(
             this.seriesLikesRepository
               .save(seriesLikes)
