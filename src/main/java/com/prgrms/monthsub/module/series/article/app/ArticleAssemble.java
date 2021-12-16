@@ -4,6 +4,7 @@ import com.prgrms.monthsub.common.s3.S3Client;
 import com.prgrms.monthsub.common.s3.config.S3.Bucket;
 import com.prgrms.monthsub.module.part.user.app.provider.UserProvider;
 import com.prgrms.monthsub.module.part.user.domain.User;
+import com.prgrms.monthsub.module.payment.app.provider.PaymentProvider;
 import com.prgrms.monthsub.module.series.article.converter.ArticleConverter;
 import com.prgrms.monthsub.module.series.article.domain.Article;
 import com.prgrms.monthsub.module.series.article.domain.exception.ArticleException.ArticleNotCreate;
@@ -35,6 +36,7 @@ public class ArticleAssemble {
   private final UserProvider userProvider;
   private final ArticleConverter articleConverter;
   private final S3Client s3Client;
+  private final PaymentProvider paymentProvider;
 
   public ArticleAssemble(
     ArticleService articleService,
@@ -42,7 +44,8 @@ public class ArticleAssemble {
     ExpulsionService expulsionService,
     UserProvider userProvider,
     ArticleConverter articleConverter,
-    S3Client s3Client
+    S3Client s3Client,
+    PaymentProvider paymentProvider
   ) {
     this.articleService = articleService;
     this.seriesService = seriesService;
@@ -50,6 +53,7 @@ public class ArticleAssemble {
     this.userProvider = userProvider;
     this.articleConverter = articleConverter;
     this.s3Client = s3Client;
+    this.paymentProvider = paymentProvider;
   }
 
   @Transactional
@@ -115,6 +119,12 @@ public class ArticleAssemble {
     Long userId
   ) {
     Article article = articleService.find(id);
+
+    if (!article.isMine(userId)) {
+      this.paymentProvider.find(userId, seriesId)
+        .orElseThrow(() -> new AccessDeniedException("결제 후 이용해주세요."));
+    }
+
     Long articleCount = this.articleService.countBySeriesId(seriesId);
     User user = userProvider.findById(userId);
 
