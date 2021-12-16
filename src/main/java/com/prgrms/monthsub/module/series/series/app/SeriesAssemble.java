@@ -185,11 +185,17 @@ public class SeriesAssemble {
       Sort.by(Direction.DESC, "createdAt", "id")
     );
 
-    return new SeriesSubscribeList.Response(
-      getSeries(lastSeriesId, cursorPageable)
-        .stream()
-        .map(this.seriesConverter::toResponse)
-        .collect(Collectors.toList())
+    return new SeriesSubscribeList.Response((
+      (lastSeriesId == null) ?
+        categories.contains(Category.ALL) ? this.seriesService.findAll(cursorPageable)
+          : this.seriesService.getSeriesByCategories(categories, cursorPageable)
+        : categories.contains(Category.ALL) ?
+          this.seriesService.getSeries(lastSeriesId, cursorPageable)
+          : this.seriesService.getSeriesByCategoriesLessThanId(
+            lastSeriesId, categories, cursorPageable))
+      .stream()
+      .map(this.seriesConverter::toResponse)
+      .collect(Collectors.toList())
     );
   }
 
@@ -248,7 +254,8 @@ public class SeriesAssemble {
   public SeriesSubscribeList.Response getSeriesPostList(Long userId) {
     return new SeriesSubscribeList.Response(
       this.seriesService
-        .findAllByWriterId(this.writerProvider.findById(userId).getId())
+        .findAllByWriterId(this.writerProvider.findById(userId)
+          .getId())
         .stream()
         .map(seriesConverter::toResponse)
         .collect(Collectors.toList())
