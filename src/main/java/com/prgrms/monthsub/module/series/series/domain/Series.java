@@ -6,6 +6,7 @@ import com.prgrms.monthsub.module.series.series.domain.SeriesLikes.LikesStatus;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeEdit;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -135,6 +136,12 @@ public class Series extends BaseEntity {
 
   public void changeThumbnailKey(String thumbnailKey) {
     this.thumbnailKey = thumbnailKey;
+  }
+
+  public Boolean isMine(Long userId) {
+    return Objects.equals(this.getWriter()
+      .getUser()
+      .getId(), userId);
   }
 
   public enum Category {
