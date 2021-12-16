@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.tags.Tags;
 import java.util.List;
+import java.util.Optional;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import org.springframework.http.MediaType;
@@ -35,13 +36,16 @@ import org.springframework.web.multipart.MultipartFile;
 public class SeriesController {
 
   private final SeriesAssemble seriesAssemble;
+  private final SeriesService seriesService;
   private final SeriesLikesService seriesLikesService;
 
   public SeriesController(
     SeriesAssemble seriesAssemble,
+    SeriesService seriesService,
     SeriesLikesService seriesLikesService
   ) {
     this.seriesAssemble = seriesAssemble;
+    this.seriesService = seriesService;
     this.seriesLikesService = seriesLikesService;
   }
 
@@ -150,7 +154,7 @@ public class SeriesController {
     @RequestParam(required = false, defaultValue = "ALL")
       Category[] categories
   ) {
-    return this.seriesAssemble.getSeriesList(lastSeriesId, size, List.of(categories));
+    return this.seriesService.getSeriesList(ofNullable(lastSeriesId), size, List.of(categories));
   }
 
   @GetMapping("/sort")
