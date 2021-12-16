@@ -13,6 +13,7 @@ public class SeriesSubscribeOne {
 
   @Schema(name = "SeriesSubscribeOne.Response")
   public record Response(
+    Boolean isMine,
     SeriesObject series,
     UploadObject upload,
     SubscribeObject subscribe,

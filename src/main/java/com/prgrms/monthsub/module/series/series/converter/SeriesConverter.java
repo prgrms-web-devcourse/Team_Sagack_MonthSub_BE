@@ -70,11 +70,14 @@ public class SeriesConverter {
   public SeriesSubscribeOne.Response toSeriesOne(
     Series series,
     List<Article> articleList,
-    List<ArticleUploadDate> uploadDateList
+    List<ArticleUploadDate> uploadDateList,
+    Boolean isMine
   ) {
+    System.out.println("isMine" + isMine);
     SeriesOneWithWriterResponse writerResponse = writerConverter.toSeriesOneWithWriter(
       series.getWriter());
     return new Response(
+      isMine,
       SeriesObject.builder()
         .id(series.getId())
         .thumbnail(this.toThumbnailEndpoint(series.getThumbnailKey()))

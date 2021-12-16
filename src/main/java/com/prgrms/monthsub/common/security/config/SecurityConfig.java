@@ -1,8 +1,5 @@
 package com.prgrms.monthsub.common.security.config;
 
-import static org.springframework.http.HttpMethod.GET;
-import static org.springframework.http.HttpMethod.POST;
-
 import com.prgrms.monthsub.common.exception.FilterExceptionHandler;
 import com.prgrms.monthsub.common.security.jwt.Jwt;
 import com.prgrms.monthsub.common.security.jwt.JwtAuthenticationFilter;
@@ -16,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -53,21 +51,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Override
   public void configure(WebSecurity web) {
-    web.ignoring().antMatchers(
-      GET,
-      this.security
-        .getAllows()
-        .getGet()
-        .toArray(String[]::new)
-    );
-
-    web.ignoring().antMatchers(
-      POST,
-      this.security
-        .getAllows()
-        .getPost()
-        .toArray(String[]::new)
-    );
   }
 
   @Bean
@@ -128,6 +111,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     http.authorizeRequests()
       .antMatchers("/users/me").hasAnyRole("USER")
       .antMatchers("/expulsion").hasAnyRole("ADMIN")
+      .mvcMatchers(HttpMethod.GET, this.security.getAllows().getGet().toArray(String[]::new))
+      .permitAll()
+      .mvcMatchers(HttpMethod.POST, this.security.getAllows().getPost().toArray(String[]::new))
+      .permitAll()
       .anyRequest().fullyAuthenticated()
       .and()
       .cors().configurationSource(corsConfigurationSource())

@@ -7,8 +7,6 @@ import com.prgrms.monthsub.module.part.user.domain.User;
 import com.prgrms.monthsub.module.payment.app.provider.PaymentProvider;
 import com.prgrms.monthsub.module.series.article.converter.ArticleConverter;
 import com.prgrms.monthsub.module.series.article.domain.Article;
-import com.prgrms.monthsub.module.series.article.domain.exception.ArticleException.ArticleNotCreate;
-import com.prgrms.monthsub.module.series.article.domain.exception.ArticleException.ArticleNotUpdate;
 import com.prgrms.monthsub.module.series.article.dto.ArticleEdit;
 import com.prgrms.monthsub.module.series.article.dto.ArticleOne;
 import com.prgrms.monthsub.module.series.article.dto.ArticlePost;
@@ -19,9 +17,9 @@ import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.FileCategory
 import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.FileType;
 import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.Status;
 import com.prgrms.monthsub.module.worker.explusion.domain.ExpulsionService;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -66,13 +64,8 @@ public class ArticleAssemble {
     Long articleCount = this.articleService.countBySeriesId(request.seriesId());
     Article article = this.articleConverter.toEntity(series, request, articleCount.intValue() + 1);
 
-    boolean isMine = Objects.equals(article.getSeries()
-      .getWriter()
-      .getUser()
-      .getId(), userId);
-
-    if (!isMine) {
-      throw new ArticleNotCreate();
+    if (!article.isMine(userId)) {
+      throw new AccessDeniedException("생성 권한이 없습니다.");
     }
 
     this.articleService.save(article);
@@ -85,7 +78,7 @@ public class ArticleAssemble {
 
     article.changeThumbnailKey(thumbnailKey);
 
-    return new ArticlePost.Response(article.getId(), isMine);
+    return new ArticlePost.Response(article.getId(), true);
   }
 
   @Transactional
@@ -97,20 +90,15 @@ public class ArticleAssemble {
   ) {
     Article article = articleService.find(id);
 
-    boolean isMine = Objects.equals(article.getSeries()
-      .getWriter()
-      .getUser()
-      .getId(), userId);
-
-    if (!isMine) {
-      throw new ArticleNotUpdate();
+    if (!article.isMine(userId)) {
+      throw new AccessDeniedException("수정 권한이 없습니다.");
     }
 
     thumbnail.map(
       multipartFile -> this.changeThumbnail(multipartFile, request.seriesId(), article, userId));
     article.changeWriting(request.title(), request.contents());
 
-    return new ArticleEdit.ChangeResponse(article.getId(), isMine);
+    return new ArticleEdit.ChangeResponse(article.getId(), true);
   }
 
   public ArticleOne.Response getArticleOne(

@@ -12,7 +12,6 @@ import com.prgrms.monthsub.module.series.series.converter.SeriesConverter;
 import com.prgrms.monthsub.module.series.series.domain.ArticleUploadDate;
 import com.prgrms.monthsub.module.series.series.domain.Series;
 import com.prgrms.monthsub.module.series.series.domain.Series.Category;
-import com.prgrms.monthsub.module.series.series.domain.exception.SeriesException.SeriesNotUpdate;
 import com.prgrms.monthsub.module.series.series.domain.type.SortType;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeEdit;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeList;
@@ -26,13 +25,13 @@ import com.prgrms.monthsub.module.worker.explusion.domain.ExpulsionService;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -111,15 +110,11 @@ public class SeriesAssemble {
 
     series.editSeries(request);
 
-    boolean isMine = Objects.equals(series.getWriter()
-      .getUser()
-      .getId(), userId);
-
-    if (!isMine) {
-      throw new SeriesNotUpdate();
+    if (!series.isMine(userId)) {
+      throw new AccessDeniedException("수정 권한이 없습니다.");
     }
 
-    return new SeriesSubscribeEdit.Response(this.seriesService.save(series), isMine);
+    return new SeriesSubscribeEdit.Response(this.seriesService.save(series), true);
   }
 
   @Transactional
@@ -155,12 +150,17 @@ public class SeriesAssemble {
   }
 
 
-  public SeriesSubscribeOne.Response getSeriesBySeriesId(Long seriesId) {
+  public SeriesSubscribeOne.Response getSeriesBySeriesId(
+    Long seriesId,
+    Optional<Long> userId
+  ) {
     List<Article> articleList = this.articleService.getArticleListBySeriesId(seriesId);
     Series series = this.seriesService.getById(seriesId);
-    List<ArticleUploadDate> uploadDateList = this.seriesService.getArticleUploadDate(seriesId);
 
-    return this.seriesConverter.toSeriesOne(series, articleList, uploadDateList);
+    List<ArticleUploadDate> uploadDateList = this.seriesService.getArticleUploadDate(seriesId);
+    
+    return this.seriesConverter.toSeriesOne(
+      series, articleList, uploadDateList, series.isMine(userId.get()));
   }
 
   public SeriesSubscribeList.Response getSeriesListSort(SortType sort) {
