@@ -254,8 +254,7 @@ public class SeriesAssemble {
   public SeriesSubscribeList.Response getSeriesPostList(Long userId) {
     return new SeriesSubscribeList.Response(
       this.seriesService
-        .findAllByWriterId(this.writerProvider.findById(userId)
-          .getId())
+        .findAllByWriterId(this.writerProvider.findByUserId(userId).getId())
         .stream()
         .map(seriesConverter::toResponse)
         .collect(Collectors.toList())
