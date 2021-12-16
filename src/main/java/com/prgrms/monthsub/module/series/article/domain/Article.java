@@ -2,6 +2,7 @@ package com.prgrms.monthsub.module.series.article.domain;
 
 import com.prgrms.monthsub.common.domain.BaseEntity;
 import com.prgrms.monthsub.module.series.series.domain.Series;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -68,6 +69,16 @@ public class Article extends BaseEntity {
   ) {
     this.title = title;
     this.contents = contents;
+  }
+
+  public Boolean isMine(Long userId) {
+    return Objects.equals(
+      this.getSeries()
+        .getWriter()
+        .getUser()
+        .getId(),
+      userId
+    );
   }
 
 }
