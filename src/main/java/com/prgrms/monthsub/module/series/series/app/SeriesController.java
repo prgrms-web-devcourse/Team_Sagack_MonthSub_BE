@@ -1,5 +1,7 @@
 package com.prgrms.monthsub.module.series.series.app;
 
+import static java.util.Optional.ofNullable;
+
 import com.prgrms.monthsub.common.security.jwt.JwtAuthentication;
 import com.prgrms.monthsub.module.series.series.domain.Series.Category;
 import com.prgrms.monthsub.module.series.series.domain.type.SortType;
@@ -12,7 +14,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.tags.Tags;
 import java.util.List;
-import java.util.Optional;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import org.springframework.http.MediaType;
@@ -59,9 +60,12 @@ public class SeriesController {
   @Operation(summary = "시리즈 공고 게시글 단건 조회")
   @Tag(name = "[화면]-시리즈")
   public SeriesSubscribeOne.Response getSeriesById(
+    @AuthenticationPrincipal JwtAuthentication authentication,
     @PathVariable Long id
   ) {
-    return this.seriesAssemble.getSeriesBySeriesId(id);
+//    ofNullable(authentication)
+//      .map(authenticate -> this.seriesAssemble.getSeriesBySeriesId(id, authenticate.userId));
+    return this.seriesAssemble.getSeriesBySeriesId(id, ofNullable(authentication.userId));
   }
 
   @PostMapping("/{id}/likes")
@@ -104,7 +108,7 @@ public class SeriesController {
     @RequestPart(required = false) MultipartFile file
   ) {
     return this.seriesAssemble.editSeries(
-      id, request, Optional.ofNullable(file), authentication.userId
+      id, request, ofNullable(file), authentication.userId
     );
   }
 
