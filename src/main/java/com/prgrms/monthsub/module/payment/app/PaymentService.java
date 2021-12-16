@@ -2,7 +2,9 @@ package com.prgrms.monthsub.module.payment.app;
 
 import com.prgrms.monthsub.module.part.user.app.provider.UserProvider;
 import com.prgrms.monthsub.module.part.user.domain.User;
+import com.prgrms.monthsub.module.payment.app.provider.PaymentProvider;
 import com.prgrms.monthsub.module.payment.converter.PaymentConverter;
+import com.prgrms.monthsub.module.payment.domain.Payment;
 import com.prgrms.monthsub.module.payment.domain.exception.PaymentException.PaymentDuplicated;
 import com.prgrms.monthsub.module.payment.dto.PaymentForm;
 import com.prgrms.monthsub.module.payment.dto.PaymentPost;
@@ -11,6 +13,7 @@ import com.prgrms.monthsub.module.series.series.app.Provider.SeriesProvider;
 import com.prgrms.monthsub.module.series.series.domain.ArticleUploadDate;
 import com.prgrms.monthsub.module.series.series.domain.Series;
 import java.util.List;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
@@ -22,7 +25,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 @Service
 @EnableRetry
-public class PaymentService {
+public class PaymentService implements PaymentProvider {
 
   private final Logger log = LoggerFactory.getLogger(getClass());
   private final SeriesProvider seriesProvider;
@@ -86,5 +89,13 @@ public class PaymentService {
 
     return this.paymentConverter.toPaymentPost(series, uploadDateList, user.getPoint());
 
+  }
+
+  @Override
+  public Optional<Payment> find(
+    Long userId,
+    Long seriesId
+  ) {
+    return this.paymentRepository.findByUserIdAndSeriesId(userId, seriesId);
   }
 }
