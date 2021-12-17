@@ -73,7 +73,6 @@ public class SeriesConverter {
     List<ArticleUploadDate> uploadDateList,
     Boolean isMine
   ) {
-    System.out.println("isMine" + isMine);
     SeriesOneWithWriterResponse writerResponse = writerConverter.toSeriesOneWithWriter(
       series.getWriter());
     return new Response(

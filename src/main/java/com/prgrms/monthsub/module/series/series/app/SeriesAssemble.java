@@ -1,5 +1,7 @@
 package com.prgrms.monthsub.module.series.series.app;
 
+import static java.util.Optional.ofNullable;
+
 import com.prgrms.monthsub.common.s3.S3Client;
 import com.prgrms.monthsub.common.s3.config.S3.Bucket;
 import com.prgrms.monthsub.module.part.user.app.provider.UserProvider;
@@ -158,9 +160,11 @@ public class SeriesAssemble {
     Series series = this.seriesService.getById(seriesId);
 
     List<ArticleUploadDate> uploadDateList = this.seriesService.getArticleUploadDate(seriesId);
-    
-    return this.seriesConverter.toSeriesOne(
-      series, articleList, uploadDateList, series.isMine(userId.get()));
+
+    return ofNullable(userId).map(user ->
+        this.seriesConverter.toSeriesOne(
+          series, articleList, uploadDateList, series.isMine(user.get())))
+      .orElse(this.seriesConverter.toSeriesOne(series, articleList, uploadDateList, false));
   }
 
   public SeriesSubscribeList.Response getSeriesListSort(SortType sort) {
