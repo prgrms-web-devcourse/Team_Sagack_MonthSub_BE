@@ -51,6 +51,7 @@ public class SeriesAssemble {
   private final SeriesConverter seriesConverter;
   private final ArticleUploadDateConverter articleUploadDateConverter;
   private final SeriesUserService seriesUserService;
+  private final SeriesLikesService seriesLikesService;
 
   public SeriesAssemble(
     SeriesService seriesService,
@@ -61,7 +62,8 @@ public class SeriesAssemble {
     S3Client s3Client,
     SeriesConverter seriesConverter,
     ArticleUploadDateConverter articleUploadDateConverter,
-    SeriesUserService seriesUserService
+    SeriesUserService seriesUserService,
+    SeriesLikesService seriesLikesService
   ) {
     this.seriesService = seriesService;
     this.articleService = articleService;
@@ -72,6 +74,7 @@ public class SeriesAssemble {
     this.seriesConverter = seriesConverter;
     this.articleUploadDateConverter = articleUploadDateConverter;
     this.seriesUserService = seriesUserService;
+    this.seriesLikesService = seriesLikesService;
   }
 
   @Transactional
@@ -246,20 +249,37 @@ public class SeriesAssemble {
   }
 
   public SeriesSubscribeList.Response getSeriesSubscribeList(Long userId) {
+    List<Long> likeSeriesList = this.seriesLikesService.findAllByUserId(userId);
+
     return new SeriesSubscribeList.Response(
       this.seriesUserService
         .findAllMySubscribeByUserId(userId)
         .stream()
-        .map(seriesUser -> seriesConverter.toResponse(seriesUser.getSeries()))
+        .map(seriesUser -> {
+          Series series = seriesUser.getSeries();
+          if (likeSeriesList.contains(series.getId())) {
+            series.changeSeriesIsLiked(true);
+          }
+          return series;
+        })
+        .map(seriesConverter::toResponse)
         .collect(Collectors.toList())
     );
   }
 
   public SeriesSubscribeList.Response getSeriesPostList(Long userId) {
+    List<Long> likeSeriesList = this.seriesLikesService.findAllByUserId(userId);
+
     return new SeriesSubscribeList.Response(
       this.seriesService
         .findAllByWriterId(this.writerProvider.findByUserId(userId).getId())
         .stream()
+        .map(series -> {
+          if (likeSeriesList.contains(series.getId())) {
+            series.changeSeriesIsLiked(true);
+          }
+          return series;
+        })
         .map(seriesConverter::toResponse)
         .collect(Collectors.toList())
     );
