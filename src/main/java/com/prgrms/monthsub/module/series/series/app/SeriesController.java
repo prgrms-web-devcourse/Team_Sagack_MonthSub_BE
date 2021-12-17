@@ -155,7 +155,13 @@ public class SeriesController {
     @RequestParam(required = false, defaultValue = "ALL")
       Category[] categories
   ) {
-    return this.seriesService.getSeriesList(ofNullable(lastSeriesId), size, List.of(categories));
+    return ofNullable(authentication)
+      .map(authenticate -> this.seriesAssemble.getSeriesList(ofNullable(lastSeriesId), size,
+        List.of(categories), ofNullable(authenticate.userId)
+      ))
+      .orElse(this.seriesAssemble.getSeriesList(ofNullable(lastSeriesId), size, List.of(categories),
+        Optional.empty()
+      ));
   }
 
   @GetMapping("/sort")

@@ -19,12 +19,6 @@ public interface SeriesRepositoryCustom extends JpaRepository<Series, Long>,
 
   List<Series> findAllByWriterId(Long writerId);
 
-  List<Series> findAllByIdLessThanAndCategoryIn(
-    Long id,
-    List<Category> categories,
-    Pageable pageable
-  );
-
   List<Series> findByIdLessThan(
     Long id,
     Pageable pageable
