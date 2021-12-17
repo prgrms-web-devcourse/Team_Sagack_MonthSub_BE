@@ -117,7 +117,8 @@ public class ArticleAssemble {
     User user = userProvider.findById(userId);
 
     return articleConverter.toArticleOneResponse(
-      article.isMine(userId), article, articleCount, user);
+      article.isMine(userId), article, articleCount, user
+    );
   }
 
   @Transactional
