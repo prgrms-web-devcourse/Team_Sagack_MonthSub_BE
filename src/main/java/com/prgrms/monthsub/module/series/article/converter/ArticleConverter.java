@@ -41,11 +41,13 @@ public class ArticleConverter {
   }
 
   public ArticleOne.Response toArticleOneResponse(
+    Boolean isMine,
     Article article,
     Long articleCount,
     User user
   ) {
     return new ArticleOne.Response(
+      isMine,
       article.getTitle(),
       article.getContents(),
       this.toThumbnailEndpoint(article.getThumbnailKey()),
