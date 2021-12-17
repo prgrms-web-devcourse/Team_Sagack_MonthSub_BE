@@ -7,6 +7,7 @@ public class ArticleOne {
 
   @Schema(name = "ArticleOne.Response")
   public record Response(
+    Boolean isMine,
     String title,
     String contents,
     String thumbnailKey,

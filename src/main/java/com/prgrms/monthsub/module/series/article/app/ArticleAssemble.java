@@ -116,7 +116,9 @@ public class ArticleAssemble {
     Long articleCount = this.articleService.countBySeriesId(seriesId);
     User user = userProvider.findById(userId);
 
-    return articleConverter.toArticleOneResponse(article, articleCount, user);
+    return articleConverter.toArticleOneResponse(
+      article.isMine(userId), article, articleCount, user
+    );
   }
 
   @Transactional
