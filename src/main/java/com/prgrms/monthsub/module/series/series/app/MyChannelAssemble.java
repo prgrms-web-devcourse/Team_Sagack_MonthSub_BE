@@ -28,6 +28,7 @@ public class MyChannelAssemble {
   private final WriterService writerService;
   private final SeriesUserService seriesUserService;
   private final MyChannelConverter myChannelConverter;
+  private final SeriesLikesService seriesLikesService;
 
   public MyChannelAssemble(
     UserService userService,
@@ -35,7 +36,8 @@ public class MyChannelAssemble {
     SeriesService seriesService,
     WriterService writerService,
     SeriesUserService seriesUserService,
-    MyChannelConverter myChannelConverter
+    MyChannelConverter myChannelConverter,
+    SeriesLikesService seriesLikesService
   ) {
     this.userService = userService;
     this.writerLikesService = writerLikesService;
@@ -43,9 +45,13 @@ public class MyChannelAssemble {
     this.writerService = writerService;
     this.seriesUserService = seriesUserService;
     this.myChannelConverter = myChannelConverter;
+    this.seriesLikesService = seriesLikesService;
   }
 
   public MyChannel.Response getMyChannel(Long userId) {
+    //0. 좋아요한 시리즈 가져오기
+    List<Long> likeSeriesList = this.seriesLikesService.findAllByUserId(userId);
+
     //1. 유저 객체 가져오기
     User userEntity = this.userService.findById(userId);
 
@@ -61,6 +67,12 @@ public class MyChannelAssemble {
       .findAllMySubscribeByUserId(userId)
       .stream()
       .map(SeriesUser::getSeries)
+      .map(series -> {
+        if (likeSeriesList.contains(series.getId())) {
+          series.changeSeriesIsLiked(true);
+        }
+        return series;
+      })
       .collect(Collectors.toList());
 
     //4. (유저가 작가면) 내가 발행한 리스트 가져오기

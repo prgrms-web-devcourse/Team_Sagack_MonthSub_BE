@@ -44,6 +44,7 @@ public class MyChannel {
   @Builder
   @Getter
   public static class MyChannelSubscribeObject {
+    public boolean likeStatus;
     public Long userId;
     public Long writerId;
     public Long seriesId;
@@ -63,6 +64,7 @@ public class MyChannel {
   @Builder
   @Getter
   public static class MyChannelSeriesObject {
+    public boolean likeStatus;
     public Long userId;
     public Long writerId;
     public Long seriesId;

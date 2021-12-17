@@ -19,6 +19,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.PositiveOrZero;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -87,6 +88,9 @@ public class Series extends BaseEntity {
   @JoinColumn(name = "writer_id", referencedColumnName = "id", nullable = false)
   private Writer writer;
 
+  @Transient
+  private boolean likedStatus = false;
+
   @Builder
   private Series(
     String thumbnailKey,
@@ -133,6 +137,10 @@ public class Series extends BaseEntity {
 
   public void changeLikesCount(LikesStatus changeStatus) {
     this.likes += changeStatus.equals(LikesStatus.Like) ? 1 : -1;
+  }
+
+  public void changeSeriesIsLiked(boolean isLiked) {
+    this.likedStatus = isLiked;
   }
 
   public void changeThumbnailKey(String thumbnailKey) {
