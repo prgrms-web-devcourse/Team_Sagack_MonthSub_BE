@@ -98,7 +98,7 @@ public class SeriesLikesService {
       this.seriesLikesRepository.findAllByUserIdAndLikesStatus(userId, LikesStatus.Like)
         .stream()
         .map(seriesLikes -> {
-          seriesLikes.getSeries().insertSeriesIsLiked(true);
+          seriesLikes.getSeries().changeSeriesIsLiked(true);
           return seriesLikes.getSeries();
         })
         .map(this.seriesConverter::toResponse)

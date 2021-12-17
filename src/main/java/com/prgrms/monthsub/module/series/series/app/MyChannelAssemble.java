@@ -69,7 +69,7 @@ public class MyChannelAssemble {
       .map(SeriesUser::getSeries)
       .map(series -> {
         if (likeSeriesList.contains(series.getId())) {
-          series.insertSeriesIsLiked(true);
+          series.changeSeriesIsLiked(true);
         }
         return series;
       })

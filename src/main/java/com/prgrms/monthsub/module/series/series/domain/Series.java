@@ -138,7 +138,7 @@ public class Series extends BaseEntity {
     this.likes += changeStatus.equals(LikesStatus.Like) ? 1 : -1;
   }
 
-  public void insertSeriesIsLiked(boolean isLiked) {
+  public void changeSeriesIsLiked(boolean isLiked) {
     this.likedStatus = isLiked;
   }
 

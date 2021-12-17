@@ -258,7 +258,7 @@ public class SeriesAssemble {
         .map(seriesUser -> {
           Series series = seriesUser.getSeries();
           if (likeSeriesList.contains(series.getId())) {
-            series.insertSeriesIsLiked(true);
+            series.changeSeriesIsLiked(true);
           }
           return series;
         })
@@ -276,7 +276,7 @@ public class SeriesAssemble {
         .stream()
         .map(series -> {
           if (likeSeriesList.contains(series.getId())) {
-            series.insertSeriesIsLiked(true);
+            series.changeSeriesIsLiked(true);
           }
           return series;
         })
