@@ -63,9 +63,11 @@ public class SeriesController {
     @AuthenticationPrincipal JwtAuthentication authentication,
     @PathVariable Long id
   ) {
-//    ofNullable(authentication)
-//      .map(authenticate -> this.seriesAssemble.getSeriesBySeriesId(id, authenticate.userId));
-    return this.seriesAssemble.getSeriesBySeriesId(id, ofNullable(authentication.userId));
+    return ofNullable(authentication)
+      .map(authenticate -> this.seriesAssemble.getSeriesBySeriesId(
+        id, ofNullable(authenticate.userId)
+      ))
+      .orElse(this.seriesAssemble.getSeriesBySeriesId(id, null));
   }
 
   @PostMapping("/{id}/likes")
