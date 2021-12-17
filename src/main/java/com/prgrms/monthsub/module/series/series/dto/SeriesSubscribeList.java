@@ -45,7 +45,7 @@ public class SeriesSubscribeList {
   @Getter
   @Builder
   public static class SeriesListObject {
-    public boolean likeStatus;
+    public Boolean likeStatus;
     public Long userId;
     public Long writerId;
     public Long seriesId;

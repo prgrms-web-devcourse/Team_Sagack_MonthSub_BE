@@ -1,7 +1,5 @@
 package com.prgrms.monthsub.module.series.series.app;
 
-import static java.util.Optional.ofNullable;
-
 import com.prgrms.monthsub.common.s3.S3Client;
 import com.prgrms.monthsub.common.s3.config.S3.Bucket;
 import com.prgrms.monthsub.module.part.user.app.provider.UserProvider;
@@ -164,19 +162,25 @@ public class SeriesAssemble {
     return thumbnailKey;
   }
 
-
   public SeriesSubscribeOne.Response getSeriesBySeriesId(
     Long seriesId,
-    Optional<Long> userId
+    Optional<Long> userIdOrEmpty
   ) {
+    List<Long> likeSeriesList =
+      userIdOrEmpty.isPresent() ? this.seriesLikesService.findAllByUserId(userIdOrEmpty.get())
+        : Collections.emptyList();
+
     List<Article> articleList = this.articleService.getArticleListBySeriesId(seriesId);
     Series series = this.seriesService.getById(seriesId);
-
+    if (likeSeriesList.contains(series.getId())) {
+      series.changeSeriesIsLiked(true);
+    }
     List<ArticleUploadDate> uploadDateList = this.seriesService.getArticleUploadDate(seriesId);
 
-    return ofNullable(userId).map(user ->
+    return userIdOrEmpty
+      .map(userId ->
         this.seriesConverter.toSeriesOne(
-          series, articleList, uploadDateList, series.isMine(user.get())))
+          series, articleList, uploadDateList, series.isMine(userId)))
       .orElse(this.seriesConverter.toSeriesOne(series, articleList, uploadDateList, false));
   }
 

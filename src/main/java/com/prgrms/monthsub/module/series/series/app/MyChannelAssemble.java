@@ -13,7 +13,9 @@ import com.prgrms.monthsub.module.series.series.converter.MyChannelConverter;
 import com.prgrms.monthsub.module.series.series.domain.Series;
 import com.prgrms.monthsub.module.series.series.domain.Series.SeriesStatus;
 import com.prgrms.monthsub.module.series.series.dto.MyChannel;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -68,11 +70,10 @@ public class MyChannelAssemble {
       .findAllMySubscribeByUserId(userId)
       .stream()
       .map(Payment::getSeries)
-      .map(series -> {
+      .peek(series -> {
         if (likeSeriesList.contains(series.getId())) {
           series.changeSeriesIsLiked(true);
         }
-        return series;
       })
       .collect(Collectors.toList());
 
@@ -85,6 +86,11 @@ public class MyChannelAssemble {
         writerLikesList,
         mySubscribeList,
         seriesService.findAllByWriterId(writer.getId())
+          .stream().peek(series -> {
+            if (likeSeriesList.contains(series.getId())) {
+              series.changeSeriesIsLiked(true);
+            }
+          }).collect(Collectors.toList())
       ))
       .orElseGet(() -> myChannelConverter.toResponseWithoutWriter(
         userEntity,
@@ -93,7 +99,14 @@ public class MyChannelAssemble {
       ));
   }
 
-  public MyChannel.OtherResponse getOtherChannel(Long userId) {
+  public MyChannel.OtherResponse getOtherChannel(
+    Long userId,
+    Optional<Long> userIdOrEmpty
+  ) {
+    List<Long> likeSeriesList =
+      userIdOrEmpty.isPresent() ? this.seriesLikesService.findAllByUserId(userIdOrEmpty.get())
+        : Collections.emptyList();
+
     //1. 유저 객체 가져오기
     User userEntity = this.userService.findById(userId);
 
@@ -112,6 +125,12 @@ public class MyChannelAssemble {
           writer,
           writerLikesList,
           seriesService.findAllByWriterId(writer.getId())
+            .stream()
+            .peek(series -> {
+              if (likeSeriesList.contains(series.getId())) {
+                series.changeSeriesIsLiked(true);
+              }
+            }).collect(Collectors.toList())
         )
       )
       .orElseGet(() -> myChannelConverter.toResponseWithoutWriter(userEntity, writerLikesList));

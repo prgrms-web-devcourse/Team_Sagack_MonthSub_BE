@@ -71,7 +71,7 @@ public class SeriesController {
       .map(authenticate -> this.seriesAssemble.getSeriesBySeriesId(
         id, ofNullable(authenticate.userId)
       ))
-      .orElse(this.seriesAssemble.getSeriesBySeriesId(id, null));
+      .orElse(this.seriesAssemble.getSeriesBySeriesId(id, Optional.empty()));
   }
 
   @PostMapping("/{id}/likes")
@@ -149,6 +149,7 @@ public class SeriesController {
   @Operation(summary = "최신순 시리즈 리스트 조회(무한 스크롤)")
   @Tag(name = "[화면]-시리즈")
   public SeriesSubscribeList.Response getSeriesList(
+    @AuthenticationPrincipal JwtAuthentication authentication,
     @RequestParam(required = false) Long lastSeriesId,
     @RequestParam @Positive Integer size,
     @RequestParam(required = false, defaultValue = "ALL")

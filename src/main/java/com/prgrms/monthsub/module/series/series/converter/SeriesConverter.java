@@ -76,6 +76,7 @@ public class SeriesConverter {
     SeriesOneWithWriterResponse writerResponse = writerConverter.toSeriesOneWithWriter(
       series.getWriter());
     return new Response(
+      series.isLikedStatus(),
       isMine,
       SeriesObject.builder()
         .id(series.getId())
