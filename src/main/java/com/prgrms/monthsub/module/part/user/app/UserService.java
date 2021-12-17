@@ -77,7 +77,7 @@ public class UserService implements UserProvider {
   @Transactional
   public UserSignUp.Response signUp(UserSignUp.Request request) {
     checkEmail(request.email());
-    checkNicName(request.nickName());
+    checkNickName(request.nickName());
     User entity = this.userRepository.save(this.userConverter.toEntity(request));
 
     return new UserSignUp.Response(entity.getId());
@@ -89,7 +89,8 @@ public class UserService implements UserProvider {
     UserEdit.Request request,
     Optional<MultipartFile> image
   ) {
-    checkNicName(request.nickName());
+
+    checkNickName(request.nickName(), id);
     User user = this.findById(id);
 
     image.map(multipartFile -> this.uploadProfileImage(multipartFile, user));
@@ -97,7 +98,7 @@ public class UserService implements UserProvider {
 
     return new UserEdit.Response(this.userRepository.save(user).getId());
   }
-
+  
   @Transactional
   public String uploadProfileImage(
     MultipartFile image,
@@ -146,11 +147,24 @@ public class UserService implements UserProvider {
       });
   }
 
-  private void checkNicName(String nickName) {
+  private void checkNickName(String nickName) {
     this.userRepository
       .findByNickname(nickName)
       .map(user -> {
         throw new NickNameDuplicated("nickName = " + nickName);
+      });
+  }
+
+  private void checkNickName(
+    String nickName,
+    Long id
+  ) {
+    this.userRepository.findByNickname(nickName)
+      .map(user -> {
+        if (!user.getId().equals(id)) {
+          throw new NickNameDuplicated("nickName = " + nickName);
+        }
+        return null;
       });
   }
 
