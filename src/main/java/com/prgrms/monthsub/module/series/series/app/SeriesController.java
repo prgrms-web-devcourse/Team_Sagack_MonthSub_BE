@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.tags.Tags;
 import java.util.List;
+import java.util.Optional;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import org.springframework.http.MediaType;
@@ -67,7 +68,7 @@ public class SeriesController {
       .map(authenticate -> this.seriesAssemble.getSeriesBySeriesId(
         id, ofNullable(authenticate.userId)
       ))
-      .orElse(this.seriesAssemble.getSeriesBySeriesId(id, null));
+      .orElse(this.seriesAssemble.getSeriesBySeriesId(id, Optional.empty()));
   }
 
   @PostMapping("/{id}/likes")
@@ -145,12 +146,18 @@ public class SeriesController {
   @Operation(summary = "최신순 시리즈 리스트 조회(무한 스크롤)")
   @Tag(name = "[화면]-시리즈")
   public SeriesSubscribeList.Response getSeriesList(
+    @AuthenticationPrincipal JwtAuthentication authentication,
     @RequestParam(required = false) Long lastSeriesId,
     @RequestParam @Positive Integer size,
     @RequestParam(required = false, defaultValue = "ALL")
       Category[] categories
   ) {
-    return this.seriesAssemble.getSeriesList(lastSeriesId, size, List.of(categories));
+    return ofNullable(authentication)
+      .map(authenticate -> this.seriesAssemble.getSeriesList(
+        lastSeriesId, size, List.of(categories), ofNullable(authenticate.userId)))
+      .orElse(this.seriesAssemble.getSeriesList(lastSeriesId, size, List.of(categories),
+        Optional.empty()
+      ));
   }
 
   @GetMapping("/sort")

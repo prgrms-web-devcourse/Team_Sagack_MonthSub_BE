@@ -30,6 +30,7 @@ public class MainPage {
   @Getter
   @Builder
   public static class MainPageSubscribeObject {
+    public Boolean likeStatus;
     public Long userId;
     public Long writerId;
     public Long seriesId;

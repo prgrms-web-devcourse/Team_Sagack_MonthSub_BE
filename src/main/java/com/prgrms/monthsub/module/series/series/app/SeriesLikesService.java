@@ -37,7 +37,7 @@ public class SeriesLikesService {
     return this.seriesLikesRepository
       .findSeriesLikesByUserIdAndSeriesId(userId, seriesId)
       .map(seriesLikes -> {
-          LikesStatus changeStatus = seriesLikes.changeLikeStatus();
+          LikesStatus changeStatus = seriesLikes.changeLikeStatus(LikesStatus.Like);
 
           seriesLikes.getSeries().changeLikesCount(changeStatus);
 
@@ -77,7 +77,7 @@ public class SeriesLikesService {
     return this.seriesLikesRepository
       .findSeriesLikesByUserIdAndSeriesId(userId, seriesId)
       .map(seriesLikes -> {
-          SeriesLikes.LikesStatus changeStatus = seriesLikes.changeLikeStatus();
+          SeriesLikes.LikesStatus changeStatus = seriesLikes.changeLikeStatus(LikesStatus.Nothing);
 
           seriesLikes.getSeries().changeLikesCount(changeStatus);
 
