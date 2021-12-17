@@ -122,6 +122,7 @@ public class SeriesConverter {
 
   public SeriesSubscribeList.SeriesListObject toResponse(Series series) {
     return SeriesSubscribeList.SeriesListObject.builder()
+      .likeStatus(series.isLikedStatus())
       .userId(series.getWriter().getUser().getId())
       .writerId(series.getWriter().getId())
       .nickname(series.getWriter().getUser().getNickname())
@@ -170,6 +171,7 @@ public class SeriesConverter {
 
   public MyChannel.MyChannelSubscribeObject toMyChannelSubscribeObject(Series series) {
     return MyChannel.MyChannelSubscribeObject.builder()
+      .likeStatus(series.isLikedStatus())
       .userId(series.getWriter().getUser().getId())
       .writerId(series.getWriter().getId())
       .nickname(series.getWriter().getUser().getNickname())
@@ -189,6 +191,7 @@ public class SeriesConverter {
 
   public MyChannel.MyChannelSeriesObject toMyChannelSeriesObject(Series series) {
     return MyChannel.MyChannelSeriesObject.builder()
+      .likeStatus(series.isLikedStatus())
       .userId(series.getWriter().getUser().getId())
       .writerId(series.getWriter().getId())
       .nickname(series.getWriter().getUser().getNickname())
