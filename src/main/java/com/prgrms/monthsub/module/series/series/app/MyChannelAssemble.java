@@ -67,11 +67,11 @@ public class MyChannelAssemble {
       .findAllMySubscribeByUserId(userId)
       .stream()
       .map(SeriesUser::getSeries)
-      .map(s -> {
-        if (likeSeriesList.contains(s.getId())) {
-          s.insertSeriesIsLiked(true);
+      .map(series -> {
+        if (likeSeriesList.contains(series.getId())) {
+          series.insertSeriesIsLiked(true);
         }
-        return s;
+        return series;
       })
       .collect(Collectors.toList());
 
