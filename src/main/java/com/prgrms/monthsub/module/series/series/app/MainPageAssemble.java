@@ -6,7 +6,10 @@ import com.prgrms.monthsub.module.series.series.converter.MainPageConverter;
 import com.prgrms.monthsub.module.series.series.domain.Series;
 import com.prgrms.monthsub.module.series.series.domain.Series.SeriesStatus;
 import com.prgrms.monthsub.module.series.series.dto.MainPage;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
@@ -24,18 +27,26 @@ public class MainPageAssemble {
   private final SeriesService seriesService;
   private final WriterService writerService;
   private final MainPageConverter mainPageConverter;
+  private final SeriesLikesService seriesLikesService;
 
   public MainPageAssemble(
     SeriesService seriesService,
     WriterService writerService,
-    MainPageConverter mainPageConverter
+    MainPageConverter mainPageConverter,
+    SeriesLikesService seriesLikesService
   ) {
     this.seriesService = seriesService;
     this.writerService = writerService;
     this.mainPageConverter = mainPageConverter;
+    this.seriesLikesService = seriesLikesService;
   }
 
-  public MainPage.Response getMainPage() {
+  public MainPage.Response getMainPage(
+    Optional<Long> userIdOrEmpty
+  ) {
+    List<Long> likeSeriesList =
+      userIdOrEmpty.isPresent() ? this.seriesLikesService.findAllByUserId(userIdOrEmpty.get())
+        : Collections.emptyList();
 
     List<Series> popularSeriesList = this.seriesService.findAll(PageRequest.of(
       PAGE_NUM,
@@ -49,12 +60,15 @@ public class MainPageAssemble {
     List<Series> recentSeriesList = this.seriesService.findBySubscribeStatus(
       SeriesStatus.SUBSCRIPTION_AVAILABLE,
       PageRequest.of(PAGE_NUM, PAGE_SIZE, Sort.by(Direction.DESC, "createdAt", "id"))
-    );
+    ).stream().peek(series -> {
+      if (likeSeriesList.contains(series.getId())) {
+        series.changeSeriesIsLiked(true);
+      }
+    }).collect(Collectors.toList());
 
     return this.mainPageConverter.toResponse(
       popularSeriesList, popularWriterList, recentSeriesList
     );
-
   }
 
 }

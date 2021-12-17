@@ -1,12 +1,11 @@
 package com.prgrms.monthsub.module.series.series.app;
 
-import static java.util.Optional.ofNullable;
-
 import com.prgrms.monthsub.common.s3.S3Client;
 import com.prgrms.monthsub.common.s3.config.S3.Bucket;
 import com.prgrms.monthsub.module.part.user.app.provider.UserProvider;
 import com.prgrms.monthsub.module.part.writer.app.provider.WriterProvider;
 import com.prgrms.monthsub.module.part.writer.domain.Writer;
+import com.prgrms.monthsub.module.payment.app.provider.PaymentProvider;
 import com.prgrms.monthsub.module.series.article.app.ArticleService;
 import com.prgrms.monthsub.module.series.article.domain.Article;
 import com.prgrms.monthsub.module.series.series.converter.ArticleUploadDateConverter;
@@ -59,8 +58,8 @@ public class SeriesAssemble {
   private final S3Client s3Client;
   private final SeriesConverter seriesConverter;
   private final ArticleUploadDateConverter articleUploadDateConverter;
-  private final SeriesUserService seriesUserService;
   private final SeriesLikesService seriesLikesService;
+  private final PaymentProvider paymentProvider;
 
   public SeriesAssemble(
     SeriesService seriesService,
@@ -71,8 +70,8 @@ public class SeriesAssemble {
     S3Client s3Client,
     SeriesConverter seriesConverter,
     ArticleUploadDateConverter articleUploadDateConverter,
-    SeriesUserService seriesUserService,
-    SeriesLikesService seriesLikesService
+    SeriesLikesService seriesLikesService,
+    PaymentProvider paymentProvider
   ) {
     this.seriesService = seriesService;
     this.articleService = articleService;
@@ -82,8 +81,8 @@ public class SeriesAssemble {
     this.s3Client = s3Client;
     this.seriesConverter = seriesConverter;
     this.articleUploadDateConverter = articleUploadDateConverter;
-    this.seriesUserService = seriesUserService;
     this.seriesLikesService = seriesLikesService;
+    this.paymentProvider = paymentProvider;
   }
 
   @Transactional
@@ -163,19 +162,25 @@ public class SeriesAssemble {
     return thumbnailKey;
   }
 
-
   public SeriesSubscribeOne.Response getSeriesBySeriesId(
     Long seriesId,
-    Optional<Long> userId
+    Optional<Long> userIdOrEmpty
   ) {
+    List<Long> likeSeriesList =
+      userIdOrEmpty.isPresent() ? this.seriesLikesService.findAllByUserId(userIdOrEmpty.get())
+        : Collections.emptyList();
+
     List<Article> articleList = this.articleService.getArticleListBySeriesId(seriesId);
     Series series = this.seriesService.getById(seriesId);
-
+    if (likeSeriesList.contains(series.getId())) {
+      series.changeSeriesIsLiked(true);
+    }
     List<ArticleUploadDate> uploadDateList = this.seriesService.getArticleUploadDate(seriesId);
 
-    return ofNullable(userId).map(user ->
+    return userIdOrEmpty
+      .map(userId ->
         this.seriesConverter.toSeriesOne(
-          series, articleList, uploadDateList, series.isMine(user.get())))
+          series, articleList, uploadDateList, series.isMine(userId)))
       .orElse(this.seriesConverter.toSeriesOne(series, articleList, uploadDateList, false));
   }
 
@@ -236,11 +241,11 @@ public class SeriesAssemble {
     List<Long> likeSeriesList = this.seriesLikesService.findAllByUserId(userId);
 
     return new SeriesSubscribeList.Response(
-      this.seriesUserService
+      this.paymentProvider
         .findAllMySubscribeByUserId(userId)
         .stream()
-        .map(seriesUser -> {
-          Series series = seriesUser.getSeries();
+        .map(payment -> {
+          Series series = payment.getSeries();
           if (likeSeriesList.contains(series.getId())) {
             series.changeSeriesIsLiked(true);
           }

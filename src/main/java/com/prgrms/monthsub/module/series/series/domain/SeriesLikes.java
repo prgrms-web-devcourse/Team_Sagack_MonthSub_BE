@@ -50,9 +50,8 @@ public class SeriesLikes extends BaseEntity {
     this.series = series;
   }
 
-  public LikesStatus changeLikeStatus() {
-    this.likesStatus =
-      this.likesStatus.equals(LikesStatus.Like) ? LikesStatus.Nothing : LikesStatus.Like;
+  public LikesStatus changeLikeStatus(LikesStatus likesStatus) {
+    this.likesStatus = likesStatus;
     return this.likesStatus;
   }
 
