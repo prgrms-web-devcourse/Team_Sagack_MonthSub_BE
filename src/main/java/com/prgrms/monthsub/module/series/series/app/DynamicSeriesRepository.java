@@ -5,7 +5,7 @@ import com.prgrms.monthsub.module.series.series.domain.Series.Category;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public interface ServiceRepositoryCustom {
+public interface DynamicSeriesRepository {
   List<Series> findAllByCategory(
     Long lastSeriesId,
     int size,

@@ -1,14 +1,9 @@
 package com.prgrms.monthsub.module.series.series.app;
 
-import static com.prgrms.monthsub.module.series.series.domain.Series.Category.getCategories;
-
 import com.prgrms.monthsub.module.series.series.domain.Series;
 import com.prgrms.monthsub.module.series.series.domain.Series.Category;
-import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeList;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -16,12 +11,10 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class SeriesRepositoryCustomImpl implements ServiceRepositoryCustom {
+public class SeriesRepositoryCustomImpl implements DynamicSeriesRepository {
   @PersistenceContext
   private final EntityManager em;
 

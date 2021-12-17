@@ -28,6 +28,7 @@ public class SeriesService implements SeriesProvider {
   private final SeriesRepositoryCustom seriesRepository;
   private final SeriesConverter seriesConverter;
   private final ArticleUploadDateRepository articleUploadDateRepository;
+  private final int PAGE_NUM = 0;
   private List<Category> categoryList;
 
   public SeriesService(
@@ -127,7 +128,7 @@ public class SeriesService implements SeriesProvider {
         }).orElse(
           this.seriesRepository.findAllByCategoryIn(
             categoryList, PageRequest.of(
-              0,
+              PAGE_NUM,
               size,
               Sort.by(Direction.DESC, "createdAt", "id"))
           ))
