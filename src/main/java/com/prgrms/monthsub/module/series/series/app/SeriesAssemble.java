@@ -1,5 +1,7 @@
 package com.prgrms.monthsub.module.series.series.app;
 
+import static com.prgrms.monthsub.module.series.series.domain.Series.Category.getCategories;
+
 import com.prgrms.monthsub.common.s3.S3Client;
 import com.prgrms.monthsub.common.s3.config.S3.Bucket;
 import com.prgrms.monthsub.module.part.user.app.provider.UserProvider;
@@ -30,14 +32,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceUnit;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
@@ -50,6 +44,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Transactional(readOnly = true)
 public class SeriesAssemble {
 
+  private final int PAGE_NUM = 0;
   private final SeriesService seriesService;
   private final ArticleService articleService;
   private final ExpulsionService expulsionService;
@@ -60,6 +55,7 @@ public class SeriesAssemble {
   private final ArticleUploadDateConverter articleUploadDateConverter;
   private final SeriesLikesService seriesLikesService;
   private final PaymentProvider paymentProvider;
+  private List<Category> categoryList;
 
   public SeriesAssemble(
     SeriesService seriesService,
@@ -272,6 +268,44 @@ public class SeriesAssemble {
         .map(seriesConverter::toResponse)
         .collect(Collectors.toList())
     );
+  }
+
+  public SeriesSubscribeList.Response getSeriesList(
+    Optional<Long> lastSeriesId,
+    Integer size,
+    List<Category> categories,
+    Optional<Long> userIdOrEmpty
+  ) {
+    List<Long> likeSeriesList =
+      userIdOrEmpty.isPresent() ? this.seriesLikesService.findAllByUserId(userIdOrEmpty.get())
+        : Collections.emptyList();
+
+    categoryList = (categories.contains(Category.ALL)) ? getCategories() : categories;
+    return new SeriesSubscribeList.Response(
+      lastSeriesId.map(id -> {
+          LocalDateTime createdAt = this.seriesService.getById(id).getCreatedAt();
+          return this.seriesService.findAllByCategory(
+            id,
+            size,
+            categoryList,
+            createdAt
+          );
+        }).orElse(
+          this.seriesService.findAllByCategoryIn(
+            categoryList, PageRequest.of(
+              PAGE_NUM,
+              size,
+              Sort.by(Direction.DESC, "createdAt", "id")
+            )
+          ))
+        .stream()
+        .peek(series -> {
+          if (likeSeriesList.contains(series.getId())) {
+            series.changeSeriesIsLiked(true);
+          }
+        })
+        .map(this.seriesConverter::toResponse)
+        .collect(Collectors.toList()));
   }
 
   public String uploadThumbnailImage(
