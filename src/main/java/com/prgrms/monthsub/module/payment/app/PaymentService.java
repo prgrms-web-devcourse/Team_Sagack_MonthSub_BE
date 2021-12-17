@@ -56,6 +56,12 @@ public class PaymentService implements PaymentProvider {
     return this.paymentConverter.toPaymentForm(series, uploadDateList);
   }
 
+  @Transactional
+  @Override
+  public List<Payment> findAllMySubscribeByUserId(Long userId) {
+    return this.paymentRepository.findAllByUserId(userId);
+  }
+
   @Retryable(maxAttempts = 3, value = ObjectOptimisticLockingFailureException.class)
   public PaymentPost.Response pay(
     Long id,
@@ -88,7 +94,6 @@ public class PaymentService implements PaymentProvider {
     this.paymentRepository.save(this.paymentConverter.toEntity(series, user));
 
     return this.paymentConverter.toPaymentPost(series, uploadDateList, user.getPoint());
-
   }
 
   @Override
