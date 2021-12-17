@@ -5,8 +5,8 @@ import com.prgrms.monthsub.module.series.series.domain.Series.Category;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public interface CustomServiceRepository {
-  List<Series> findAllByCategoryIn(
+public interface ServiceRepositoryCustom {
+  List<Series> findAllByCategory(
     Long lastSeriesId,
     int size,
     List<Category> categories,

@@ -187,33 +187,6 @@ public class SeriesAssemble {
       .collect(Collectors.toList()));
   }
 
-//  public SeriesSubscribeList.Response getSeriesList(
-//    Long lastSeriesId,
-//    Integer size,
-//    List<Category> categories
-//  ) {
-//    this.seriesService.findAll(lastSeriesId, size, categories);
-//
-//    PageRequest cursorPageable = PageRequest.of(
-//      0,
-//      size,
-//      Sort.by(Direction.DESC, "createdAt", "id")
-//    );
-//
-//    return new SeriesSubscribeList.Response((
-//      (lastSeriesId == null) ?
-//        categories.contains(Category.ALL) ? this.seriesService.findAll(cursorPageable)
-//          : this.seriesService.getSeriesByCategories(categories, cursorPageable)
-//        : categories.contains(Category.ALL) ?
-//          this.seriesService.getSeries(lastSeriesId, cursorPageable)
-//          : this.seriesService.getSeriesByCategoriesLessThanId(
-//            lastSeriesId, categories, cursorPageable))
-//      .stream()
-//      .map(this.seriesConverter::toResponse)
-//      .collect(Collectors.toList())
-//    );
-//  }
-
   private List<Series> getSeries(
     Long lastSeriesId,
     PageRequest cursorPageable

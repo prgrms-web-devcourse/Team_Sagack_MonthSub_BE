@@ -1,42 +1,39 @@
 package com.prgrms.monthsub.module.series.series.app;
 
+import static com.prgrms.monthsub.module.series.series.domain.Series.Category.getCategories;
+
 import com.prgrms.monthsub.module.series.series.domain.Series;
 import com.prgrms.monthsub.module.series.series.domain.Series.Category;
+import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeList;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class DefaultSeriesRepository implements CustomServiceRepository {
-
-  //@PersistenceUnit
-
-  private final EntityManagerFactory emf;
+public class SeriesRepositoryCustomImpl implements ServiceRepositoryCustom {
+  @PersistenceContext
   private final EntityManager em;
 
-  protected DefaultSeriesRepository(
-    EntityManagerFactory emf,
-    EntityManager em
-  ) {
-    this.emf = emf;
-    this.em = em;
-  }
+  public SeriesRepositoryCustomImpl(EntityManager em) {this.em = em;}
 
   @Override
-  public List<Series> findAllByCategoryIn(
+  public List<Series> findAllByCategory(
     Long lastSeriesId,
     int size,
     List<Category> categories,
     LocalDateTime createdAt
   ) {
-    EntityManager em = emf.createEntityManager();
     CriteriaBuilder builder = em.getCriteriaBuilder();
     CriteriaQuery<Series> criteria = builder.createQuery(Series.class);
     Root<Series> series = criteria.from(Series.class);
@@ -60,7 +57,10 @@ public class DefaultSeriesRepository implements CustomServiceRepository {
     };
 
     CriteriaQuery<Series> query = criteria.select(series).where(where).orderBy(orders);
-    return em.createQuery(query).setMaxResults(size).getResultList();
+
+    return em.createQuery(query)
+      .setMaxResults(size)
+      .getResultList();
   }
 
 }

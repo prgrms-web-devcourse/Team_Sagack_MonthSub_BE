@@ -1,5 +1,7 @@
 package com.prgrms.monthsub.module.series.series.app;
 
+import static com.prgrms.monthsub.module.series.series.domain.Series.Category.getCategories;
+
 import com.prgrms.monthsub.module.series.series.app.Provider.SeriesProvider;
 import com.prgrms.monthsub.module.series.series.converter.SeriesConverter;
 import com.prgrms.monthsub.module.series.series.domain.ArticleUploadDate;
@@ -12,7 +14,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import org.hibernate.criterion.Order;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -24,12 +25,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class SeriesService implements SeriesProvider {
 
-  private final SeriesRepository seriesRepository;
+  private final SeriesRepositoryCustom seriesRepository;
   private final SeriesConverter seriesConverter;
   private final ArticleUploadDateRepository articleUploadDateRepository;
+  private List<Category> categoryList;
 
   public SeriesService(
-    SeriesRepository seriesRepository,
+    SeriesRepositoryCustom seriesRepository,
     SeriesConverter seriesConverter,
     ArticleUploadDateRepository articleUploadDateRepository
   ) {
@@ -112,22 +114,23 @@ public class SeriesService implements SeriesProvider {
     Integer size,
     List<Category> categories
   ) {
+    categoryList = (categories.contains(Category.ALL)) ? getCategories() : categories;
     return new SeriesSubscribeList.Response(
       lastSeriesId.map(id -> {
-        LocalDateTime createdAt = this.seriesRepository.getById(id).getCreatedAt();
-        return this.seriesRepository.findAllByCategoryIn(
-          id,
-          size,
-          categories,
-          createdAt
-        );
-      }).orElse(
-        this.seriesRepository.findAllByCategoryIn(
-          categories, PageRequest.of(
-            0,
+          LocalDateTime createdAt = this.seriesRepository.getById(id).getCreatedAt();
+          return this.seriesRepository.findAllByCategory(
+            id,
+            size,
+            categoryList,
+            createdAt
+          );
+        }).orElse(
+          this.seriesRepository.findAllByCategoryIn(
+            categoryList, PageRequest.of(
+              0,
               size,
               Sort.by(Direction.DESC, "createdAt", "id"))
-        ))
+          ))
         .stream()
         .map(this.seriesConverter::toResponse)
         .collect(Collectors.toList()));
