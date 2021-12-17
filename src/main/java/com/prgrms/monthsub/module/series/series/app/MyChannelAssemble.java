@@ -7,10 +7,11 @@ import com.prgrms.monthsub.module.part.writer.app.WriterService;
 import com.prgrms.monthsub.module.part.writer.domain.Writer;
 import com.prgrms.monthsub.module.part.writer.domain.WriterLikes;
 import com.prgrms.monthsub.module.part.writer.domain.WriterLikes.LikesStatus;
+import com.prgrms.monthsub.module.payment.app.provider.PaymentProvider;
+import com.prgrms.monthsub.module.payment.domain.Payment;
 import com.prgrms.monthsub.module.series.series.converter.MyChannelConverter;
 import com.prgrms.monthsub.module.series.series.domain.Series;
 import com.prgrms.monthsub.module.series.series.domain.Series.SeriesStatus;
-import com.prgrms.monthsub.module.series.series.domain.SeriesUser;
 import com.prgrms.monthsub.module.series.series.dto.MyChannel;
 import java.util.List;
 import java.util.function.Function;
@@ -26,26 +27,26 @@ public class MyChannelAssemble {
   private final WriterLikesService writerLikesService;
   private final SeriesService seriesService;
   private final WriterService writerService;
-  private final SeriesUserService seriesUserService;
   private final MyChannelConverter myChannelConverter;
   private final SeriesLikesService seriesLikesService;
+  private final PaymentProvider paymentProvider;
 
   public MyChannelAssemble(
     UserService userService,
     WriterLikesService writerLikesService,
     SeriesService seriesService,
     WriterService writerService,
-    SeriesUserService seriesUserService,
     MyChannelConverter myChannelConverter,
-    SeriesLikesService seriesLikesService
+    SeriesLikesService seriesLikesService,
+    PaymentProvider paymentProvider
   ) {
     this.userService = userService;
     this.writerLikesService = writerLikesService;
     this.seriesService = seriesService;
     this.writerService = writerService;
-    this.seriesUserService = seriesUserService;
     this.myChannelConverter = myChannelConverter;
     this.seriesLikesService = seriesLikesService;
+    this.paymentProvider = paymentProvider;
   }
 
   public MyChannel.Response getMyChannel(Long userId) {
@@ -63,10 +64,10 @@ public class MyChannelAssemble {
       .collect(Collectors.toList());
 
     //3. 내가 구독한 시리즈 리스트 가져오기
-    List<Series> mySubscribeList = this.seriesUserService
+    List<Series> mySubscribeList = this.paymentProvider
       .findAllMySubscribeByUserId(userId)
       .stream()
-      .map(SeriesUser::getSeries)
+      .map(Payment::getSeries)
       .map(series -> {
         if (likeSeriesList.contains(series.getId())) {
           series.changeSeriesIsLiked(true);
