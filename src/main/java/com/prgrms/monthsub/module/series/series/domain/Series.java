@@ -6,6 +6,7 @@ import com.prgrms.monthsub.module.series.series.domain.SeriesLikes.LikesStatus;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeEdit;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -156,6 +157,18 @@ public class Series extends BaseEntity {
 
     public static Category of(String category) {
       return Category.valueOf(category.toUpperCase());
+    }
+
+    public static List<Category> getCategories() {
+      return List.of(
+        Category.ALL,
+        Category.POEM,
+        Category.NOVEL,
+        Category.INTERVIEW,
+        Category.ESSAY,
+        Category.CRITIQUE,
+        Category.ETC
+      );
     }
   }
 

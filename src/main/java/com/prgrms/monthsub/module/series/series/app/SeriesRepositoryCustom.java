@@ -7,7 +7,8 @@ import java.util.List;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface SeriesRepository extends JpaRepository<Series, Long> {
+public interface SeriesRepositoryCustom extends JpaRepository<Series, Long>,
+  DynamicSeriesRepository {
 
   boolean existsAllByWriterIdAndSubscribeStatus(
     Long writerId,

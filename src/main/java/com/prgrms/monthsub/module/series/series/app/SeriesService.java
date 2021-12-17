@@ -1,14 +1,23 @@
 package com.prgrms.monthsub.module.series.series.app;
 
+import static com.prgrms.monthsub.module.series.series.domain.Series.Category.getCategories;
+
 import com.prgrms.monthsub.module.series.series.app.Provider.SeriesProvider;
+import com.prgrms.monthsub.module.series.series.converter.SeriesConverter;
 import com.prgrms.monthsub.module.series.series.domain.ArticleUploadDate;
 import com.prgrms.monthsub.module.series.series.domain.Series;
 import com.prgrms.monthsub.module.series.series.domain.Series.Category;
 import com.prgrms.monthsub.module.series.series.domain.Series.SeriesStatus;
 import com.prgrms.monthsub.module.series.series.domain.exception.SeriesException.SeriesNotFound;
+import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeList;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,14 +25,19 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class SeriesService implements SeriesProvider {
 
-  private final SeriesRepository seriesRepository;
+  private final SeriesRepositoryCustom seriesRepository;
+  private final SeriesConverter seriesConverter;
   private final ArticleUploadDateRepository articleUploadDateRepository;
+  private final int PAGE_NUM = 0;
+  private List<Category> categoryList;
 
   public SeriesService(
-    SeriesRepository seriesRepository,
+    SeriesRepositoryCustom seriesRepository,
+    SeriesConverter seriesConverter,
     ArticleUploadDateRepository articleUploadDateRepository
   ) {
     this.seriesRepository = seriesRepository;
+    this.seriesConverter = seriesConverter;
     this.articleUploadDateRepository = articleUploadDateRepository;
   }
 
@@ -96,13 +110,31 @@ public class SeriesService implements SeriesProvider {
     return this.seriesRepository.findByIdLessThan(id, pageable);
   }
 
-
-  public List<Series> getSeriesByCategories(
-    List<Category> categories,
-    Pageable pageable
+  public SeriesSubscribeList.Response getSeriesList(
+    Optional<Long> lastSeriesId,
+    Integer size,
+    List<Category> categories
   ) {
-    return this.seriesRepository
-      .findAllByCategoryIn(categories, pageable);
+    categoryList = (categories.contains(Category.ALL)) ? getCategories() : categories;
+    return new SeriesSubscribeList.Response(
+      lastSeriesId.map(id -> {
+          LocalDateTime createdAt = this.seriesRepository.getById(id).getCreatedAt();
+          return this.seriesRepository.findAllByCategory(
+            id,
+            size,
+            categoryList,
+            createdAt
+          );
+        }).orElse(
+          this.seriesRepository.findAllByCategoryIn(
+            categoryList, PageRequest.of(
+              PAGE_NUM,
+              size,
+              Sort.by(Direction.DESC, "createdAt", "id"))
+          ))
+        .stream()
+        .map(this.seriesConverter::toResponse)
+        .collect(Collectors.toList()));
   }
 
 }

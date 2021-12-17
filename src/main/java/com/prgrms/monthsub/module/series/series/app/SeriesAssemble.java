@@ -24,12 +24,21 @@ import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.FileCategory
 import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.FileType;
 import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.Status;
 import com.prgrms.monthsub.module.worker.explusion.domain.ExpulsionService;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceUnit;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
@@ -176,31 +185,6 @@ public class SeriesAssemble {
       .stream()
       .map(this.seriesConverter::toResponse)
       .collect(Collectors.toList()));
-  }
-
-  public SeriesSubscribeList.Response getSeriesList(
-    Long lastSeriesId,
-    Integer size,
-    List<Category> categories
-  ) {
-    PageRequest cursorPageable = PageRequest.of(
-      0,
-      size,
-      Sort.by(Direction.DESC, "createdAt", "id")
-    );
-
-    return new SeriesSubscribeList.Response((
-      (lastSeriesId == null) ?
-        categories.contains(Category.ALL) ? this.seriesService.findAll(cursorPageable)
-          : this.seriesService.getSeriesByCategories(categories, cursorPageable)
-        : categories.contains(Category.ALL) ?
-          this.seriesService.getSeries(lastSeriesId, cursorPageable)
-          : this.seriesService.getSeriesByCategoriesLessThanId(
-            lastSeriesId, categories, cursorPageable))
-      .stream()
-      .map(this.seriesConverter::toResponse)
-      .collect(Collectors.toList())
-    );
   }
 
   private List<Series> getSeries(
