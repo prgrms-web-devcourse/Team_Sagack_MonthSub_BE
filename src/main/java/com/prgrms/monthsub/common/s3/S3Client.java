@@ -33,7 +33,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public class S3Client {
 
-  private static final List<String> imageExtensions = Arrays.asList("jpeg", "png", "jpg");
+  private static final List<String> imageExtensions = Arrays.asList("jpeg", "png", "jpg", "gif");
 
   private final AWS aws;
   private final S3 s3;
