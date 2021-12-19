@@ -34,6 +34,7 @@
   <img src="https://img.shields.io/badge/Husky-232F3E?style=flat-square&logoColor=white&style=flat"/></a>
 </p>
 
+---
 ## 🏗️ 설계
 
 ### CICD
