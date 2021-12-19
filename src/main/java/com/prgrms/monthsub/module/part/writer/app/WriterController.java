@@ -48,6 +48,8 @@ public class WriterController {
   }
 
   @GetMapping("/likes")
+  @Operation(summary = "내 채널 작가 팔로우 리스트(무한스크롤)")
+  @Tag(name = "[기능]-작가 팔로우 리스트")
   public WriterLikesList.Response getWritersLikesList(
     @AuthenticationPrincipal JwtAuthentication authentication,
     @RequestParam(required = false) Long lastId,
@@ -61,6 +63,8 @@ public class WriterController {
   }
 
   @GetMapping("/likes/others/{userId}")
+  @Operation(summary = "다른 채널 작가 팔로우 리스트(무한스크롤)")
+  @Tag(name = "[기능]-작가 팔로우 리스트")
   public WriterLikesList.Response getOtherUserWriterLikesList(
     @PathVariable Long userId,
     @RequestParam(required = false) Long lastId,
