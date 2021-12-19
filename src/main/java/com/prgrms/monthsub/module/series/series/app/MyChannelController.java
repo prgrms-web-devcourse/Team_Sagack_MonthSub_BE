@@ -26,7 +26,7 @@ public class MyChannelController {
 
   @GetMapping("/me")
   @Operation(summary = "내 채널 조회")
-  @Tag(name = "[화면]-내 채널")
+  @Tag(name = "[화면]-채널")
   public MyChannel.Response getMyChannel(
     @AuthenticationPrincipal JwtAuthentication authentication
   ) {
@@ -35,13 +35,14 @@ public class MyChannelController {
 
   @GetMapping("/users/{userId}/other")
   @Operation(summary = "다른 유저 채널 조회")
-  @Tag(name = "[화면]-다른 유저 채널")
+  @Tag(name = "[화면]-채널")
   public MyChannel.OtherResponse getOtherChannel(
     @AuthenticationPrincipal JwtAuthentication authentication,
     @PathVariable Long userId
   ) {
     return ofNullable(authentication)
-      .map(authenticate -> this.channelAssemble.getOtherChannel(userId,
+      .map(authenticate -> this.channelAssemble.getOtherChannel(
+        userId,
         ofNullable(authenticate.userId)
       ))
       .orElse(this.channelAssemble.getOtherChannel(userId, Optional.empty()));

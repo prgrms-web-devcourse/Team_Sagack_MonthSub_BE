@@ -65,6 +65,13 @@ public class WriterLikesService {
         .collect(Collectors.toList()));
   }
 
+  public List<WriterLikes> getFollowWriterList(
+    Long userId,
+    LikesStatus likesStatus
+  ) {
+    return this.writerLikesRepository.findAllByUserIdAndLikesStatus(userId, likesStatus);
+  }
+
   private List<WriterLikes> getWriterLikes(
     Long userId,
     Long lastId,

@@ -30,6 +30,8 @@ public class MyChannelConverter {
   }
 
   public MyChannel.Response toResponse(
+    Boolean isFollowed,
+    Boolean isMine,
     User user,
     Writer writer,
     List<Writer> followingWriterList,
@@ -37,6 +39,8 @@ public class MyChannelConverter {
     List<Series> seriesPostList
   ) {
     return new MyChannel.Response(
+      isFollowed,
+      isMine,
       userConverter.toSeriesOneWithUser(user),
       followingWriterList.size(),
       followingWriterList.stream()
@@ -53,11 +57,15 @@ public class MyChannelConverter {
   }
 
   public MyChannel.Response toResponseWithoutWriter(
+    Boolean isFollowed,
+    Boolean isMine,
     User user,
     List<Writer> followingWriterList,
     List<Series> seriesSubscribeList
   ) {
     return new MyChannel.Response(
+      isFollowed,
+      isMine,
       userConverter.toSeriesOneWithUser(user),
       followingWriterList.size(),
       followingWriterList.stream()
@@ -72,12 +80,16 @@ public class MyChannelConverter {
   }
 
   public MyChannel.OtherResponse toResponse(
+    Boolean isFollowed,
+    Boolean isMine,
     User user,
     Writer writer,
     List<Writer> followingWriterList,
     List<Series> seriesPostList
   ) {
     return new OtherResponse(
+      isFollowed,
+      isMine,
       userConverter.toSeriesOneWithUser(user),
       followingWriterList.size(),
       followingWriterList.stream()
@@ -91,10 +103,14 @@ public class MyChannelConverter {
   }
 
   public MyChannel.OtherResponse toResponseWithoutWriter(
+    Boolean isFollowed,
+    Boolean isMine,
     User user,
     List<Writer> followingWriterList
   ) {
     return new MyChannel.OtherResponse(
+      isFollowed,
+      isMine,
       userConverter.toSeriesOneWithUser(user),
       followingWriterList.size(),
       followingWriterList.stream()

@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.experimental.Accessors;
 
 public class SeriesSubscribeList {
 
@@ -44,8 +45,9 @@ public class SeriesSubscribeList {
 
   @Getter
   @Builder
+  @Accessors(fluent = true, prefix = "is")
   public static class SeriesListObject {
-    public Boolean likeStatus;
+    public Boolean isLiked;
     public Long userId;
     public Long writerId;
     public Long seriesId;

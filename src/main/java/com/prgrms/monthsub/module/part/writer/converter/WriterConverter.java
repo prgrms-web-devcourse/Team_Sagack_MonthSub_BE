@@ -76,5 +76,4 @@ public class WriterConverter {
       .followCount(writer.getFollowCount())
       .build();
   }
-
 }
