@@ -36,6 +36,12 @@
 
 ## 🏗️ 설계
 
+### CICD
+<img width="1200" alt="cicd" src="https://user-images.githubusercontent.com/81504103/146681744-26746d10-558d-41f0-ba86-1c8814af6130.png">
+
+### Infra Architecture​
+<img width="1200" alt="architecture" src="https://user-images.githubusercontent.com/81504103/146681427-21e24399-ac82-4434-a3f4-a90e04ab2896.png">
+
 ### ERD
 <img width="1200" alt="erd" src="https://user-images.githubusercontent.com/81504103/146680870-366a3912-9380-4489-8293-5d537e52526b.png">
 
