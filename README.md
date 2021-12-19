@@ -1,5 +1,5 @@
 # Monthsub
-    
+[Monthsub 바로가기](https://monthsub.netlify.app)
 
 ## ♨️ 프로젝트 소개
     프로젝트 기간 : 2021/11/26 ~ 
@@ -48,7 +48,7 @@
 
 
 ### API 문서
-[포스트맨 API 문서](https://monthsub.com/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#)
+[Swagger API 문서](https://monthsub.com/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#)
 
 ---
 ## 💻 개발 환경 설정 
