@@ -1,11 +1,13 @@
 package com.prgrms.monthsub.module.part.user.dto;
 
+import com.prgrms.monthsub.module.part.user.dto.UserMe.Response;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Builder;
 
-public class UserMe {
+public sealed interface UserMe permits Response {
 
   @Schema(name = "UserMe.Response")
-  public record Response(
+  record Response(
     Long userId,
     String email,
     String userName,
@@ -13,7 +15,11 @@ public class UserMe {
     String profileKey,
     String profileIntroduce,
     String group
-  ) {
+  ) implements UserMe {
+
+    @Builder
+    public Response {
+    }
   }
 
 }

@@ -11,7 +11,7 @@ import com.prgrms.monthsub.module.series.series.domain.Series.Category;
 import com.prgrms.monthsub.module.series.series.domain.Series.SeriesStatus;
 import com.prgrms.monthsub.module.series.series.dto.MyChannel;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeList;
-import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeList.SeriesOneWithWriterResponse;
+import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeList.SeriesWriterResponse;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeList.SubscribeObject;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeList.UploadObject;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeList.WriterObject;
@@ -72,7 +72,7 @@ public class SeriesConverter {
     List<ArticleUploadDate> uploadDateList,
     Boolean isMine
   ) {
-    SeriesOneWithWriterResponse writerResponse = writerConverter.toSeriesOneWithWriter(
+    SeriesWriterResponse writerResponse = writerConverter.toSeriesOneWithWriter(
       series.getWriter());
     return new Response(
       series.isLikedStatus(),
@@ -122,7 +122,7 @@ public class SeriesConverter {
 
   public SeriesSubscribeList.SeriesListObject toResponse(Series series) {
     return SeriesSubscribeList.SeriesListObject.builder()
-      .liked(series.isLikedStatus())
+      .isLiked(series.isLikedStatus())
       .userId(series.getWriter().getUser().getId())
       .writerId(series.getWriter().getId())
       .nickname(series.getWriter().getUser().getNickname())
@@ -171,7 +171,7 @@ public class SeriesConverter {
 
   public MyChannel.SubscribeObject toMyChannelSubscribeObject(Series series) {
     return MyChannel.SubscribeObject.builder()
-      .liked(series.isLikedStatus())
+      .isLiked(series.isLikedStatus())
       .userId(series.getWriter().getUser().getId())
       .writerId(series.getWriter().getId())
       .nickname(series.getWriter().getUser().getNickname())
@@ -191,7 +191,7 @@ public class SeriesConverter {
 
   public MyChannel.SeriesObject toMyChannelSeriesObject(Series series) {
     return MyChannel.SeriesObject.builder()
-      .liked(series.isLikedStatus())
+      .isLiked(series.isLikedStatus())
       .userId(series.getWriter().getUser().getId())
       .writerId(series.getWriter().getId())
       .nickname(series.getWriter().getUser().getNickname())

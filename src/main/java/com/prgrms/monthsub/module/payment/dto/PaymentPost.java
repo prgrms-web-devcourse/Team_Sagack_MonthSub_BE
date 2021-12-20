@@ -14,24 +14,34 @@ public class PaymentPost {
   ) {
   }
 
-  @Builder
-  public static class PaymentSeries {
-    public String email;
-    public String nickname;
-    public String title;
-    public String thumbnail;
-    public Category category;
-    public int price;
-    public int articleCount;
-    public LocalDate startDate;
-    public LocalDate endDate;
-    public String[] date;
-    public LocalTime time;
+  @Schema(name = "PaymentPost.PaymentSeries")
+  record PaymentSeries(
+    String email,
+    String nickname,
+    String title,
+    String thumbnail,
+    Category category,
+    int price,
+    int articleCount,
+    LocalDate startDate,
+    LocalDate endDate,
+    String[] date,
+    LocalTime time
+  ) {
+
+    @Builder()
+    public PaymentSeries {
+    }
   }
 
-  @Builder
-  public static class UserPoint {
-    public int point;
+  @Schema(name = "PaymentPost.UserPoint")
+  record UserPoint(
+    int point
+  ) {
+
+    @Builder
+    public UserPoint {
+    }
   }
 
 }

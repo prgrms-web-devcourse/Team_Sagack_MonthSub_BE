@@ -1,12 +1,15 @@
 package com.prgrms.monthsub.module.series.series.dto;
 
+import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeEdit.Request;
+import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeEdit.Response;
 import io.swagger.v3.oas.annotations.media.Schema;
 import javax.validation.constraints.NotBlank;
+import lombok.Builder;
 
-public class SeriesSubscribeEdit {
+public sealed interface SeriesSubscribeEdit permits Request, Response {
 
   @Schema(name = "SeriesSubscribeEdit.Request")
-  public record Request(
+  record Request(
     Long writerId,
 
     @NotBlank(message = "제목이 비어있습니다.")
@@ -22,14 +25,22 @@ public class SeriesSubscribeEdit {
 
     @NotBlank(message = "업로드 시간이 비어있습니다.")
     String uploadTime
-  ) {
+  ) implements SeriesSubscribeEdit {
+
+    @Builder
+    public Request {
+    }
   }
 
   @Schema(name = "SeriesSubscribeEdit.Response")
-  public record Response(
+  record Response(
     Long seriesId,
     Boolean isMine
-  ) {
+  ) implements SeriesSubscribeEdit {
+
+    @Builder
+    public Response {
+    }
   }
 
 }

@@ -1,108 +1,156 @@
 package com.prgrms.monthsub.module.series.series.dto;
 
 import com.prgrms.monthsub.module.series.series.domain.Series;
+import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeList.BriefArticleResponse;
+import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeList.Response;
+import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeList.SeriesListObject;
+import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeList.SeriesObject;
+import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeList.SeriesUserResponse;
+import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeList.SeriesWriterResponse;
+import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeList.SubscribeObject;
+import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeList.UploadObject;
+import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeList.WriterObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.Builder;
-import lombok.Getter;
-import lombok.experimental.Accessors;
 
-public class SeriesSubscribeList {
+public sealed interface SeriesSubscribeList permits Response, SeriesUserResponse,
+  SeriesWriterResponse, BriefArticleResponse, SeriesListObject, SeriesObject,
+  UploadObject, SubscribeObject, WriterObject {
 
   @Schema(name = "SeriesSubscribeList.Response")
-  public record Response(
+  record Response(
     List<SeriesListObject> seriesList
-  ) {
+  ) implements SeriesSubscribeList {
+
+    @Builder
+    public Response {
+    }
   }
 
-  @Schema(name = "SeriesSubscribeList.SeriesOneWithUserResponse")
-  public record SeriesOneWithUserResponse(
+  @Schema(name = "SeriesSubscribeList.SeriesUserResponse")
+  record SeriesUserResponse(
     Long userId,
     Long writerId,
     String email,
     String profileImage,
     String profileIntroduce,
     String nickname
-  ) {
+  ) implements SeriesSubscribeList {
+
+    @Builder
+    public SeriesUserResponse {
+    }
   }
 
-  @Schema(name = "SeriesSubScribeList.SeriesOneWithWriterResponse")
-  public record SeriesOneWithWriterResponse(
+  @Schema(name = "SeriesSubScribeList.SeriesWriterResponse")
+  record SeriesWriterResponse(
     Long writerId,
     int followCount,
-    SeriesOneWithUserResponse user
-  ) {
+    SeriesUserResponse user
+  ) implements SeriesSubscribeList {
+
+    @Builder
+    public SeriesWriterResponse {
+    }
   }
 
-  @Schema(name = "SeriesSubScribeList.BriefArticleBySeriesIdResponse")
-  public record BriefArticleResponse(
+  @Schema(name = "SeriesSubScribeList.BriefArticleResponse")
+  record BriefArticleResponse(
     Long articleId,
     String title,
     Integer round,
     LocalDate date
-  ) {
+  ) implements SeriesSubscribeList {
+
+    @Builder
+    public BriefArticleResponse {
+    }
   }
 
-  @Getter
-  @Builder
-  @Accessors(fluent = true, prefix = "is")
-  public static class SeriesListObject {
-    public Boolean isLiked;
-    public Long userId;
-    public Long writerId;
-    public Long seriesId;
-    public String nickname;
-    public String thumbnail;
-    public String title;
-    public String introduceSentence;
-    public LocalDate seriesStartDate;
-    public LocalDate seriesEndDate;
-    public String subscribeStatus;
-    public LocalDate subscribeStartDate;
-    public LocalDate subscribeEndDate;
-    public int likes;
-    public Series.Category category;
+  @Schema(name = "SeriesSubScribeList.SeriesListObject")
+  record SeriesListObject(
+    Boolean isLiked,
+    Long userId,
+    Long writerId,
+    Long seriesId,
+    String nickname,
+    String thumbnail,
+    String title,
+    String introduceSentence,
+    LocalDate seriesStartDate,
+    LocalDate seriesEndDate,
+    String subscribeStatus,
+    LocalDate subscribeStartDate,
+    LocalDate subscribeEndDate,
+    int likes,
+    Series.Category category
+  ) implements SeriesSubscribeList {
+
+    @Builder
+    public SeriesListObject {
+    }
   }
 
-  @Builder
-  public static class SeriesObject {
-    public Long id;
-    public String thumbnail;
-    public String title;
-    public String introduceText;
-    public String introduceSentence;
-    public int price;
-    public LocalDate startDate;
-    public LocalDate endDate;
-    public int articleCount;
-    public int likes;
-    public LocalDate createdDate;
-    public LocalDate updatedDate;
+  @Schema(name = "SeriesSubScribeList.SeriesObject")
+  record SeriesObject(
+    Long id,
+    String thumbnail,
+    String title,
+    String introduceText,
+    String introduceSentence,
+    int price,
+    LocalDate startDate,
+    LocalDate endDate,
+    int articleCount,
+    int likes,
+    LocalDate createdDate,
+    LocalDate updatedDate
+  ) implements SeriesSubscribeList {
+
+    @Builder
+    public SeriesObject {
+    }
   }
 
-  @Builder
-  public static class UploadObject {
-    public String[] date;
-    public String time;
+  @Schema(name = "SeriesSubScribeList.UploadObject")
+  record UploadObject(
+    String[] date,
+    String time
+  ) implements SeriesSubscribeList {
+
+    @Builder
+    public UploadObject {
+    }
   }
 
-  @Builder
-  public static class SubscribeObject {
-    public LocalDate startDate;
-    public LocalDate endDate;
-    public String status;
+  @Schema(name = "SeriesSubScribeList.SubscribeObject")
+  record SubscribeObject(
+    LocalDate startDate,
+    LocalDate endDate,
+    String status
+  ) implements SeriesSubscribeList {
+
+    @Builder
+    public SubscribeObject {
+    }
   }
 
-  @Builder
-  public static class WriterObject {
-    public Long id;
-    public Long userId;
-    public int followCount;
-    public String email;
-    public String profileImage;
-    public String profileIntroduce;
-    public String nickname;
+  @Schema(name = "SeriesSubScribeList.WriterObject")
+  record WriterObject(
+    Long id,
+    Long userId,
+    int followCount,
+    String email,
+    String profileImage,
+    String profileIntroduce,
+    String nickname
+  ) implements SeriesSubscribeList {
+
+    @Builder
+    public WriterObject {
+    }
   }
 
 }

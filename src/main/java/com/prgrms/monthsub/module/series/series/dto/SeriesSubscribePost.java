@@ -1,14 +1,17 @@
 package com.prgrms.monthsub.module.series.series.dto;
 
+import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribePost.Request;
+import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribePost.Response;
 import io.swagger.v3.oas.annotations.media.Schema;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
+import lombok.Builder;
 
-public class SeriesSubscribePost {
+public sealed interface SeriesSubscribePost permits Request, Response {
 
   @Schema(name = "SeriesSubscribePost.Request")
-  public record Request(
+  record Request(
     @NotBlank(message = "제목이 비어있습니다.")
     String title,
 
@@ -43,13 +46,21 @@ public class SeriesSubscribePost {
 
     @PositiveOrZero
     int price
-  ) {
+  ) implements SeriesSubscribePost {
+
+    @Builder
+    public Request {
+    }
   }
 
   @Schema(name = "SeriesSubscribePost.Response")
-  public record Response(
+  record Response(
     Long seriesId
-  ) {
+  ) implements SeriesSubscribePost {
+
+    @Builder
+    public Response {
+    }
   }
 
 }

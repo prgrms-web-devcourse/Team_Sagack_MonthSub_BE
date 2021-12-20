@@ -1,91 +1,113 @@
 package com.prgrms.monthsub.module.series.series.dto;
 
 import com.prgrms.monthsub.module.series.series.domain.Series;
-import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeList.SeriesOneWithUserResponse;
+import com.prgrms.monthsub.module.series.series.dto.MyChannel.FollowWriterObject;
+import com.prgrms.monthsub.module.series.series.dto.MyChannel.OtherResponse;
+import com.prgrms.monthsub.module.series.series.dto.MyChannel.Response;
+import com.prgrms.monthsub.module.series.series.dto.MyChannel.SeriesObject;
+import com.prgrms.monthsub.module.series.series.dto.MyChannel.SubscribeObject;
+import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeList.SeriesUserResponse;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.Builder;
-import lombok.Getter;
-import lombok.experimental.Accessors;
 
-public class MyChannel {
+public sealed interface MyChannel permits Response, OtherResponse, FollowWriterObject,
+  SubscribeObject, SeriesObject {
 
   @Schema(name = "MyChannel.Response")
-  public record Response(
+  record Response(
     Boolean isFollowed,
     Boolean isMine,
-    SeriesOneWithUserResponse user,
+    SeriesUserResponse user,
     int followIngCount,
     List<MyChannel.FollowWriterObject> followWriterList,
     List<MyChannel.SubscribeObject> subscribeList,
     int followCount,
     List<MyChannel.SeriesObject> seriesPostList
-  ) {
+  ) implements MyChannel {
+
+    @Builder
+    public Response {
+    }
   }
 
   @Schema(name = "MyChannel.OtherResponse")
-  public record OtherResponse(
+  record OtherResponse(
     Boolean isFollowed,
     Boolean isMine,
-    SeriesOneWithUserResponse user,
+    SeriesUserResponse user,
     int followIngCount,
     List<MyChannel.FollowWriterObject> followWriterList,
     int followCount,
     List<MyChannel.SeriesObject> seriesPostList
-  ) {
+  ) implements MyChannel {
+
+    @Builder
+    public OtherResponse {
+    }
   }
 
-  @Builder
-  @Getter
-  public static class FollowWriterObject {
-    Long userId;
-    Long writerId;
-    String nickname;
-    String profileImage;
-    String subscribeStatus;
+  @Schema(name = "MyChannel.FollowWriterObject")
+  record FollowWriterObject(
+    Long userId,
+    Long writerId,
+    String nickname,
+    String profileImage,
+    String subscribeStatus
+  ) implements MyChannel {
+
+    @Builder
+    public FollowWriterObject {
+    }
   }
 
-  @Builder
-  @Getter
-  @Accessors(fluent = true, prefix = "is")
-  public static class SubscribeObject {
-    public Boolean isLiked;
-    public Long userId;
-    public Long writerId;
-    public Long seriesId;
-    public String nickname;
-    public String thumbnail;
-    public String title;
-    public String introduceSentence;
-    public LocalDate seriesStartDate;
-    public LocalDate seriesEndDate;
-    public String subscribeStatus;
-    public LocalDate subscribeStartDate;
-    public LocalDate subscribeEndDate;
-    public int likes;
-    public Series.Category category;
+  @Schema(name = "MyChannel.SubscribeObject")
+  record SubscribeObject(
+    Boolean isLiked,
+    Long userId,
+    Long writerId,
+    Long seriesId,
+    String nickname,
+    String thumbnail,
+    String title,
+    String introduceSentence,
+    LocalDate seriesStartDate,
+    LocalDate seriesEndDate,
+    String subscribeStatus,
+    LocalDate subscribeStartDate,
+    LocalDate subscribeEndDate,
+    int likes,
+    Series.Category category
+  ) implements MyChannel {
+
+    @Builder
+    public SubscribeObject {
+    }
   }
 
-  @Builder
-  @Getter
-  @Accessors(fluent = true, prefix = "is")
-  public static class SeriesObject {
-    public Boolean isLiked;
-    public Long userId;
-    public Long writerId;
-    public Long seriesId;
-    public String nickname;
-    public String thumbnail;
-    public String title;
-    public String introduceSentence;
-    public LocalDate seriesStartDate;
-    public LocalDate seriesEndDate;
-    public String subscribeStatus;
-    public LocalDate subscribeStartDate;
-    public LocalDate subscribeEndDate;
-    public int likes;
-    public Series.Category category;
+  @Schema(name = "MyChannel.SeriesObject")
+  record SeriesObject(
+    Boolean isLiked,
+    Long userId,
+    Long writerId,
+    Long seriesId,
+    String nickname,
+    String thumbnail,
+    String title,
+    String introduceSentence,
+    LocalDate seriesStartDate,
+    LocalDate seriesEndDate,
+    String subscribeStatus,
+    LocalDate subscribeStartDate,
+    LocalDate subscribeEndDate,
+    int likes,
+    Series.Category category
+  ) implements MyChannel {
+
+    @Builder
+    public SeriesObject {
+    }
   }
 
 }

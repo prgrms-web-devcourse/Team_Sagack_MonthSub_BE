@@ -46,20 +46,19 @@ public class ArticleConverter {
     Long articleCount,
     User user
   ) {
-    return new ArticleOne.Response(
-      isMine,
-      article.getTitle(),
-      article.getContents(),
-      this.toThumbnailEndpoint(article.getThumbnailKey()),
-      articleCount.intValue(),
-      user.getNickname(),
-      (user.getProfileKey() == null
-        ? null
-        : this.s3.getDomain() + "/" + user.getProfileKey()),
-      user.getProfileIntroduce(),
-      article.getCreatedAt().toLocalDate(),
-      article.getUpdateAt().toLocalDate()
-    );
+    return ArticleOne.Response.builder()
+      .isMine(isMine)
+      .title(article.getTitle())
+      .contents(article.getContents())
+      .thumbnailKey(this.toThumbnailEndpoint(article.getThumbnailKey()))
+      .round(articleCount.intValue())
+      .nickname(user.getNickname())
+      .profileKey(
+        user.getProfileKey() == null ? null : this.s3.getDomain() + "/" + user.getProfileKey())
+      .profileIntroduce(user.getProfileIntroduce())
+      .createdDate(article.getCreatedAt().toLocalDate())
+      .updatedDate(article.getUpdateAt().toLocalDate())
+      .build();
   }
 
   public String toThumbnailEndpoint(String thumbnailKey) {
