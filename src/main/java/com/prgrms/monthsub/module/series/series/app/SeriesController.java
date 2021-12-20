@@ -59,6 +59,26 @@ public class SeriesController {
     return this.seriesAssemble.createSeries(authentication.userId, file, request);
   }
 
+  @GetMapping("/popular")
+  @Operation(summary = "인기 시리즈 리스트 조회")
+  @Tag(name = "[화면]-메인 페이지")
+  public SeriesSubscribeList.Response getPopulatSeriesList() {
+    return this.seriesAssemble.getPopularSeriesList();
+  }
+
+  @GetMapping("/recent")
+  @Operation(summary = "최신 시리즈 리스트 조회")
+  @Tag(name = "[화면]-메인 페이지")
+  public SeriesSubscribeList.Response getRecentSeriesList(
+    @AuthenticationPrincipal JwtAuthentication authentication
+  ) {
+    return ofNullable(authentication)
+      .map(authenticate -> this.seriesAssemble.getRecentSeriesList(
+        of(authenticate.userId)
+      ))
+      .orElse(this.seriesAssemble.getRecentSeriesList(Optional.empty()));
+  }
+
   @GetMapping("/{id}")
   @Operation(summary = "시리즈 공고 게시글 단건 조회")
   @Tag(name = "[화면]-시리즈")
