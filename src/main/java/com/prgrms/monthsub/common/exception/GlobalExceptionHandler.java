@@ -119,7 +119,7 @@ public class GlobalExceptionHandler {
     final ErrorResponse response = ErrorResponse.of(errorCode, e.getClass());
 
     return ResponseEntity
-      .status(HttpStatus.NOT_FOUND)
+      .status(errorCode.errorCode().getStatus())
       .body(response);
   }
 
