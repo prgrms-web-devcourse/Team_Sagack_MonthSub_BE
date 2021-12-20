@@ -7,12 +7,12 @@ public class WriterList {
 
   @Schema(name = "WriterList.Response")
   public record Response(
-    List<WriterRes> popularWriterList
+    List<WriterResponse> popularWriterList
   ) {
   }
 
   @Schema(name = "WriterList.WriterRes")
-  public record WriterRes(
+  public record WriterResponse(
     Long userId,
     Long writerId,
     String nickname,

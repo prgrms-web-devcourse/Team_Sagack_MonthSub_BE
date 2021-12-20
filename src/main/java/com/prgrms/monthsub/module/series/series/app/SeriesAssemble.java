@@ -170,7 +170,8 @@ public class SeriesAssemble {
       Sort.by(Direction.DESC, "likes")
     ));
 
-    return new Response(popularSeriesList.stream().map(seriesConverter::toResponse)
+    return new Response(popularSeriesList.stream()
+      .map(seriesConverter::toResponse)
       .collect(Collectors.toList())
     );
   }
@@ -193,8 +194,10 @@ public class SeriesAssemble {
       })
       .collect(Collectors.toList());
 
-    return new Response(recentSeriesList.stream().map(seriesConverter::toResponse).collect(
-      Collectors.toList()));
+    return new Response(recentSeriesList.stream()
+      .map(seriesConverter::toResponse).collect(
+        Collectors.toList())
+    );
   }
 
   public SeriesSubscribeOne.Response getSeriesOne(

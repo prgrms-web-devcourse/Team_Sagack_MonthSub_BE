@@ -5,7 +5,7 @@ import com.prgrms.monthsub.module.part.user.converter.UserConverter;
 import com.prgrms.monthsub.module.part.user.domain.User;
 import com.prgrms.monthsub.module.part.writer.domain.Writer;
 import com.prgrms.monthsub.module.part.writer.dto.WriterLikesList.LikesObject;
-import com.prgrms.monthsub.module.part.writer.dto.WriterList;
+import com.prgrms.monthsub.module.part.writer.dto.WriterList.WriterResponse;
 import com.prgrms.monthsub.module.series.series.dto.MyChannel;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeList.SeriesOneWithWriterResponse;
 import java.util.Optional;
@@ -49,8 +49,8 @@ public class WriterConverter {
       .build();
   }
 
-  public WriterList.WriterRes writerToWriterRes(Writer writer) {
-    return new WriterList.WriterRes(
+  public WriterResponse writerToWriterRes(Writer writer) {
+    return new WriterResponse(
       writer.getUser().getId(),
       writer.getId(),
       writer.getUser().getNickname(),
