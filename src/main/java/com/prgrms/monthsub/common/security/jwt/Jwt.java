@@ -42,7 +42,7 @@ public class Jwt {
       builder.withExpiresAt(new Date(now.getTime() + expirySeconds * 1_000L));
     }
 
-    builder.withClaim("username", claims.username);
+    builder.withClaim("email", claims.email);
     builder.withArrayClaim("roles", claims.roles);
 
     return builder.sign(algorithm);
@@ -53,7 +53,7 @@ public class Jwt {
   }
 
   static public class Claims {
-    String username;
+    String email;
     String[] roles;
     Date iat;
     Date exp;
@@ -61,10 +61,10 @@ public class Jwt {
     private Claims() {/*no-op*/}
 
     Claims(DecodedJWT decodedJWT) {
-      Claim username = decodedJWT.getClaim("username");
+      Claim email = decodedJWT.getClaim("email");
 
-      if (!username.isNull()) {
-        this.username = username.asString();
+      if (!email.isNull()) {
+        this.email = email.asString();
       }
 
       Claim roles = decodedJWT.getClaim("roles");
@@ -78,11 +78,11 @@ public class Jwt {
     }
 
     public static Claims from(
-      String username,
+      String email,
       String[] roles
     ) {
       Claims claims = new Claims();
-      claims.username = username;
+      claims.email = email;
       claims.roles = roles;
 
       return claims;
@@ -90,7 +90,7 @@ public class Jwt {
 
     public Map<String, Object> asMap() {
       Map<String, Object> map = new HashMap<>();
-      map.put("username", username);
+      map.put("email", email);
       map.put("roles", roles);
       map.put("iat", iat());
       map.put("exp", exp());

@@ -15,10 +15,10 @@ public class AuthenticationService {
     this.userRepository = userRepository;
   }
 
-  public User findByUserName(String username) {
+  public User findByEmail(String email) {
     return this.userRepository
-      .findByUsername(username)
-      .orElseThrow(() -> new UserNotExist("username=" + username));
+      .findByEmail(email)
+      .orElseThrow(() -> new UserNotExist("email=" + email));
   }
 
 }

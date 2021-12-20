@@ -19,7 +19,7 @@ public class UserLogin {
   public record Response(
     Long userId,
     String token,
-    String username,
+    String email,
     String group
   ) {
   }

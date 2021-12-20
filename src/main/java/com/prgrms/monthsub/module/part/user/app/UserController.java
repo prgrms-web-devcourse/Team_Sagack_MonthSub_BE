@@ -57,7 +57,7 @@ public class UserController {
 
     return new UserLogin.Response(
       user.getId(),
-      authentication.token, authentication.username,
+      authentication.token, authentication.email,
       user.getPart().getName()
     );
   }
