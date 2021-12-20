@@ -51,14 +51,14 @@ public class WriterLikesService {
 
   @Transactional
   public WriterLikesList.Response getWriterLikesList(
-    Long userId,
+    Long channelOwnerUserId,
     Long lastId,
     Integer size
   ) {
     PageRequest cursorPageable = getPageRequest(size);
 
     return new WriterLikesList.Response(
-      this.getWriterLikes(userId, lastId, cursorPageable)
+      this.getWriterLikes(channelOwnerUserId, lastId, cursorPageable)
         .stream()
         .map(WriterLikes::getWriter)
         .map(this.writerConverter::toWriterLikesList)
