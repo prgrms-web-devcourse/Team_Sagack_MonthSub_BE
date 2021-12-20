@@ -23,7 +23,7 @@ public sealed interface WriterLikesList permits Response, LikesResponse {
     Long writerId,
     int followCount,
     String nickname,
-    String profileKey,
+    String profileImage,
     String profileIntroduce
   ) implements WriterLikesList {
 
