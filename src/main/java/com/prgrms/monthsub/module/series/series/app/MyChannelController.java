@@ -40,12 +40,10 @@ public class MyChannelController {
     @AuthenticationPrincipal JwtAuthentication authentication,
     @PathVariable Long userId
   ) {
-    return ofNullable(authentication)
-      .map(authenticate -> this.channelAssemble.getOtherChannel(
-        userId,
-        ofNullable(authenticate.userId)
-      ))
-      .orElse(this.channelAssemble.getOtherChannel(userId, Optional.empty()));
+    return this.channelAssemble.getOtherChannel(
+      userId,
+      Optional.ofNullable(authentication.userId)
+    );
   }
 
 }
