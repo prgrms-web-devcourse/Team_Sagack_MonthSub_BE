@@ -9,6 +9,7 @@ import com.prgrms.monthsub.module.series.series.dto.MyChannel;
 import com.prgrms.monthsub.module.series.series.dto.MyChannel.OtherResponse;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
@@ -41,7 +42,7 @@ public class MyChannelConverter {
     return new MyChannel.Response(
       isFollowed,
       isMine,
-      userConverter.toSeriesOneWithUser(user),
+      userConverter.toSeriesOneWithUser(user, Optional.of(writer.getId())),
       followingWriterList.size(),
       followingWriterList.stream()
         .map(writerConverter::toMyChannelFollowWriterObject)
@@ -66,7 +67,7 @@ public class MyChannelConverter {
     return new MyChannel.Response(
       isFollowed,
       isMine,
-      userConverter.toSeriesOneWithUser(user),
+      userConverter.toSeriesOneWithUser(user, Optional.empty()),
       followingWriterList.size(),
       followingWriterList.stream()
         .map(writerConverter::toMyChannelFollowWriterObject)
@@ -90,7 +91,7 @@ public class MyChannelConverter {
     return new OtherResponse(
       isFollowed,
       isMine,
-      userConverter.toSeriesOneWithUser(user),
+      userConverter.toSeriesOneWithUser(user, Optional.of(writer.getId())),
       followingWriterList.size(),
       followingWriterList.stream()
         .map(writerConverter::toMyChannelFollowWriterObject)
@@ -111,7 +112,7 @@ public class MyChannelConverter {
     return new MyChannel.OtherResponse(
       isFollowed,
       isMine,
-      userConverter.toSeriesOneWithUser(user),
+      userConverter.toSeriesOneWithUser(user, Optional.empty()),
       followingWriterList.size(),
       followingWriterList.stream()
         .map(writerConverter::toMyChannelFollowWriterObject)

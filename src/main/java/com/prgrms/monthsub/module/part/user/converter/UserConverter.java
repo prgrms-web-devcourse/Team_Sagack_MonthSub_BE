@@ -9,6 +9,7 @@ import com.prgrms.monthsub.module.part.user.dto.UserMe;
 import com.prgrms.monthsub.module.part.user.dto.UserMe.Response;
 import com.prgrms.monthsub.module.part.user.dto.UserSignUp;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeList.SeriesOneWithUserResponse;
+import java.util.Optional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -29,12 +30,13 @@ public class UserConverter {
     this.bCryptEncoder = bCryptEncoder;
   }
 
-  public SeriesOneWithUserResponse toSeriesOneWithUser(User user) {
+  public SeriesOneWithUserResponse toSeriesOneWithUser(User user, Optional<Long> writerId) {
     String profileImage =
       user.getProfileKey() == null ? null : this.s3.getDomain() + "/" + user.getProfileKey();
 
     return new SeriesOneWithUserResponse(
       user.getId(),
+      writerId.orElse(null),
       user.getEmail(),
       profileImage,
       user.getProfileIntroduce(),

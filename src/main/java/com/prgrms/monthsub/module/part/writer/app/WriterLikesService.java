@@ -103,7 +103,7 @@ public class WriterLikesService {
         writerLikes.getWriter().updateFollowCount(INCREASE_NUM);
 
         return new WriterFollowEvent.Response(
-          this.writerLikesRepository.save(writerLikes).getId(),
+          this.writerLikesRepository.save(writerLikes).getUserId(),
           likeStatus
         );
       })
@@ -117,7 +117,7 @@ public class WriterLikesService {
                 .likesStatus(LikesStatus.Like)
                 .writer(writer)
                 .userId(userId)
-                .build()).getId(),
+                .build()).getUserId(),
             String.valueOf(LikesStatus.Like)
           );
         }

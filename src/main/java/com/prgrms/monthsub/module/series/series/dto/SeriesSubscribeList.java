@@ -19,6 +19,7 @@ public class SeriesSubscribeList {
   @Schema(name = "SeriesSubscribeList.SeriesOneWithUserResponse")
   public record SeriesOneWithUserResponse(
     Long userId,
+    Long writerId,
     String email,
     String profileImage,
     String profileIntroduce,
