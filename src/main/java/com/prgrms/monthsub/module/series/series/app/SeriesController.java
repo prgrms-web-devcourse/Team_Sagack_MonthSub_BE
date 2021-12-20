@@ -36,16 +36,13 @@ import org.springframework.web.multipart.MultipartFile;
 public class SeriesController {
 
   private final SeriesAssemble seriesAssemble;
-  private final SeriesService seriesService;
   private final SeriesLikesService seriesLikesService;
 
   public SeriesController(
     SeriesAssemble seriesAssemble,
-    SeriesService seriesService,
     SeriesLikesService seriesLikesService
   ) {
     this.seriesAssemble = seriesAssemble;
-    this.seriesService = seriesService;
     this.seriesLikesService = seriesLikesService;
   }
 

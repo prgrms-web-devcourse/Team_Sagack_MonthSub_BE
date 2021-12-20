@@ -21,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class MainPageAssemble {
 
   private final int PAGE_NUM = 0;
-  private final int PAGE_SIZE = 8;
+  private final int POPULAR_SERIES_SIZE = 10;
   private final int PAGE_WRITER_NUM = 10;
 
   private final SeriesService seriesService;
@@ -50,7 +50,7 @@ public class MainPageAssemble {
 
     List<Series> popularSeriesList = this.seriesService.findAll(PageRequest.of(
       PAGE_NUM,
-      PAGE_SIZE,
+      POPULAR_SERIES_SIZE,
       Sort.by(Direction.DESC, "likes")
     ));
 
@@ -59,7 +59,7 @@ public class MainPageAssemble {
 
     List<Series> recentSeriesList = this.seriesService.findBySubscribeStatus(
       SeriesStatus.SUBSCRIPTION_AVAILABLE,
-      PageRequest.of(PAGE_NUM, PAGE_SIZE, Sort.by(Direction.DESC, "createdAt", "id"))
+      PageRequest.of(PAGE_NUM, POPULAR_SERIES_SIZE, Sort.by(Direction.DESC, "createdAt", "id"))
     ).stream().peek(series -> {
       if (likeSeriesList.contains(series.getId())) {
         series.changeSeriesIsLiked(true);
