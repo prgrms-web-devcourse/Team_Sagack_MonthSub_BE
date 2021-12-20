@@ -29,7 +29,7 @@ public class WriterController {
 
   @PostMapping("/{id}/follow")
   @Operation(summary = "작가 팔로우 클릭 이벤트")
-  @Tag(name = "[기능]-작가 팔로우")
+  @Tag(name = "[화면]-작가 채널")
   public WriterFollowEvent.Response followWriter(
     @AuthenticationPrincipal JwtAuthentication authentication,
     @PathVariable Long id
@@ -39,7 +39,7 @@ public class WriterController {
 
   @DeleteMapping("/{id}/follow")
   @Operation(summary = "작가 팔로우 취소 클릭 이벤트")
-  @Tag(name = "[기능]-작가 팔로우")
+  @Tag(name = "[화면]-작가 채널")
   public WriterFollowEvent.Response cancelFollowWriter(
     @AuthenticationPrincipal JwtAuthentication authentication,
     @PathVariable Long id

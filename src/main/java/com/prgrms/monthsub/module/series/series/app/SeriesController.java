@@ -171,7 +171,7 @@ public class SeriesController {
     return this.seriesAssemble.getSeriesListSort(sort);
   }
 
-  @GetMapping("users/subscribe")
+  @GetMapping("/subscribe")
   @Operation(summary = "사용자 시리즈 구독 리스트 조회")
   @Tags({
     @Tag(name = "[화면]-시리즈"),

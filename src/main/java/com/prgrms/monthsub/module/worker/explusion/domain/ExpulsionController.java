@@ -5,13 +5,13 @@ import com.prgrms.monthsub.common.security.jwt.JwtAuthentication;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/expulsion")
+@RequestMapping("/execute")
 public class ExpulsionController {
 
   private final ExpulsionService expulsionService;
@@ -20,9 +20,9 @@ public class ExpulsionController {
     this.expulsionService = expulsionService;
   }
 
-  @DeleteMapping
-  @Operation(summary = "어드민 API")
-  @Tag(name = "[화면]-없음")
+  @PostMapping
+  @Operation(summary = "S3 expulsion 벌크 실행")
+  @Tag(name = "[화면]- 어드민")
   public void deleteBulk(
     @AuthenticationPrincipal JwtAuthentication authentication,
     @RequestParam(value = "bucket", required = true) String bucket

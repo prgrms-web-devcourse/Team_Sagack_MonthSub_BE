@@ -71,7 +71,7 @@ security:
       - /swagger-ui/**
       # endpoint
       - /health
-      - /main
+      - /
       - /series
       - /series/sort
       - /series/{id}

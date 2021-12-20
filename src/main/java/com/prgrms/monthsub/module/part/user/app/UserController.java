@@ -44,7 +44,7 @@ public class UserController {
     this.userConverter = userConverter;
   }
 
-  @PostMapping(path = "/login")
+  @PostMapping(path = "/signin")
   @Operation(summary = "로그인")
   @Tag(name = "[화면]-로그인")
   public UserLogin.Response login(@Valid @RequestBody UserLogin.Request request) {
