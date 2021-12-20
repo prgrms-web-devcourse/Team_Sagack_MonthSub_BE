@@ -62,7 +62,8 @@ public class WriterLikesService {
         .stream()
         .map(WriterLikes::getWriter)
         .map(this.writerConverter::toWriterLikesList)
-        .collect(Collectors.toList()));
+        .collect(Collectors.toList())
+    );
   }
 
   public List<WriterLikes> getFollowWriterList(

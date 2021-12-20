@@ -67,6 +67,7 @@ public class WriterConverter {
     User user = writer.getUser();
 
     return WriterLikesObject.builder()
+      .writerId(writer.getId())
       .nickname(user.getNickname())
       .profileIntroduce(user.getProfileIntroduce())
       .profileKey(
@@ -76,4 +77,5 @@ public class WriterConverter {
       .followCount(writer.getFollowCount())
       .build();
   }
+
 }
