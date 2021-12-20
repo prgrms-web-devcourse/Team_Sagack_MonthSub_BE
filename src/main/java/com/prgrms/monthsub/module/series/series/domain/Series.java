@@ -136,7 +136,7 @@ public class Series extends BaseEntity {
       && this.seriesEndDate.compareTo(today) >= 0) {
       this.subscribeStatus = SeriesStatus.SERIALIZATION_AVAILABLE;
     } else {
-      this.subscribeStatus = SeriesStatus.SUBSCRIPTION_UNAVAILABLE;
+      this.subscribeStatus = SeriesStatus.SUBSCRIPTION_AVAILABLE;
     }
   }
 
