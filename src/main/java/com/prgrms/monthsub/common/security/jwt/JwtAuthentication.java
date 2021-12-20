@@ -4,16 +4,16 @@ public class JwtAuthentication {
 
   public final String token;
   public final Long userId;
-  public final String username;
+  public final String email;
 
   JwtAuthentication(
     String token,
     Long userId,
-    String username
+    String email
   ) {
     this.token = token;
     this.userId = userId;
-    this.username = username;
+    this.email = email;
   }
 
 }
