@@ -10,7 +10,8 @@ public class WriterLikesList {
   @Schema(name = "WriterLikes.Response")
   public record Response(
     List<LikesObject> writerLikesList
-  ) {}
+  ) {
+  }
 
   @Getter
   @Builder

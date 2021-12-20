@@ -5,7 +5,7 @@ import com.prgrms.monthsub.module.part.user.converter.UserConverter;
 import com.prgrms.monthsub.module.part.user.domain.User;
 import com.prgrms.monthsub.module.part.writer.domain.Writer;
 import com.prgrms.monthsub.module.part.writer.dto.WriterLikesList.LikesObject;
-import com.prgrms.monthsub.module.series.series.dto.MainPage;
+import com.prgrms.monthsub.module.part.writer.dto.WriterList;
 import com.prgrms.monthsub.module.series.series.dto.MyChannel;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeList.SeriesOneWithWriterResponse;
 import java.util.Optional;
@@ -49,18 +49,15 @@ public class WriterConverter {
       .build();
   }
 
-  public MainPage.FollowWriterObject toMainPageFollowWriterObject(Writer writer) {
-    return MainPage.FollowWriterObject.builder()
-      .userId(writer.getUser().getId())
-      .writerId(writer.getId())
-      .nickname(writer.getUser().getNickname())
-      .profileImage(
-        writer.getUser().getProfileKey() == null
-          ? null
-          : this.s3.getDomain() + "/" + writer.getUser().getProfileKey()
-      )
-      .subscribeStatus(String.valueOf(writer.getSubScribeStatus()))
-      .build();
+  public WriterList.WriterRes writerToWriterRes(Writer writer) {
+    return new WriterList.WriterRes(
+      writer.getUser().getId(),
+      writer.getId(),
+      writer.getUser().getNickname(),
+      writer.getUser().getProfileKey() == null ? null
+        : this.s3.getDomain() + "/" + writer.getUser().getProfileKey(),
+      String.valueOf(writer.getSubScribeStatus())
+    );
   }
 
   public LikesObject toWriterLikesList(Writer writer) {

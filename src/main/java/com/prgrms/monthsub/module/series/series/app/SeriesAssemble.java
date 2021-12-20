@@ -20,8 +20,8 @@ import com.prgrms.monthsub.module.series.series.domain.Series.SeriesStatus;
 import com.prgrms.monthsub.module.series.series.domain.type.SortType;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeEdit;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeList;
+import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeList.Response;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeOne;
-import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeOne.UsageEditResponse;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribePost;
 import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.DomainType;
 import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.FileCategory;
@@ -49,6 +49,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class SeriesAssemble {
 
   private final int PAGE_NUM = 0;
+  private final int POPULAR_SERIES_SIZE = 10;
   private final SeriesService seriesService;
   private final ArticleService articleService;
   private final ExpulsionService expulsionService;
@@ -160,6 +161,40 @@ public class SeriesAssemble {
     series.changeThumbnailKey(thumbnailKey);
 
     return thumbnailKey;
+  }
+
+  public SeriesSubscribeList.Response getPopularSeriesList() {
+    List<Series> popularSeriesList = this.seriesService.findAll(PageRequest.of(
+      PAGE_NUM,
+      POPULAR_SERIES_SIZE,
+      Sort.by(Direction.DESC, "likes")
+    ));
+
+    return new Response(popularSeriesList.stream().map(seriesConverter::toResponse)
+      .collect(Collectors.toList())
+    );
+  }
+
+  public SeriesSubscribeList.Response getRecentSeriesList(Optional<Long> userIdOrEmpty) {
+    List<Long> likeSeriesList = userIdOrEmpty.map(
+        this.seriesLikesService::findAllByUserId
+      )
+      .orElse(Collections.emptyList());
+
+    List<Series> recentSeriesList = this.seriesService.findBySubscribeStatus(
+        SeriesStatus.SUBSCRIPTION_AVAILABLE,
+        PageRequest.of(PAGE_NUM, POPULAR_SERIES_SIZE, Sort.by(Direction.DESC, "createdAt", "id"))
+      )
+      .stream()
+      .peek(series -> {
+        if (likeSeriesList.contains(series.getId())) {
+          series.changeSeriesIsLiked(true);
+        }
+      })
+      .collect(Collectors.toList());
+
+    return new Response(recentSeriesList.stream().map(seriesConverter::toResponse).collect(
+      Collectors.toList()));
   }
 
   public SeriesSubscribeOne.Response getSeriesOne(

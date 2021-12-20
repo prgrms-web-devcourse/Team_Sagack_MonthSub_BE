@@ -11,7 +11,6 @@ import com.prgrms.monthsub.module.series.series.dto.SeriesLikesEvent;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeEdit;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeList;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeOne;
-import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeOne.UsageEditResponse;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribePost;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -58,6 +57,26 @@ public class SeriesController {
     @Valid @RequestPart SeriesSubscribePost.Request request
   ) {
     return this.seriesAssemble.createSeries(authentication.userId, file, request);
+  }
+
+  @GetMapping("/popular")
+  @Operation(summary = "인기 시리즈 리스트 조회")
+  @Tag(name = "[화면]-메인 페이지")
+  public SeriesSubscribeList.Response getPopulatSeriesList() {
+    return this.seriesAssemble.getPopularSeriesList();
+  }
+
+  @GetMapping("/recent")
+  @Operation(summary = "최신 시리즈 리스트 조회")
+  @Tag(name = "[화면]-메인 페이지")
+  public SeriesSubscribeList.Response getRecentSeriesList(
+    @AuthenticationPrincipal JwtAuthentication authentication
+  ) {
+    return ofNullable(authentication)
+      .map(authenticate -> this.seriesAssemble.getRecentSeriesList(
+        of(authenticate.userId)
+      ))
+      .orElse(this.seriesAssemble.getRecentSeriesList(Optional.empty()));
   }
 
   @GetMapping("/{id}")
