@@ -29,7 +29,7 @@ public class WriterController {
 
   @PostMapping("/{id}/follow")
   @Operation(summary = "작가 팔로우 클릭 이벤트")
-  @Tag(name = "[기능]-작가 팔로우")
+  @Tag(name = "[화면]-작가 채널")
   public WriterFollowEvent.Response followWriter(
     @AuthenticationPrincipal JwtAuthentication authentication,
     @PathVariable Long id
@@ -39,7 +39,7 @@ public class WriterController {
 
   @DeleteMapping("/{id}/follow")
   @Operation(summary = "작가 팔로우 취소 클릭 이벤트")
-  @Tag(name = "[기능]-작가 팔로우")
+  @Tag(name = "[화면]-작가 채널")
   public WriterFollowEvent.Response cancelFollowWriter(
     @AuthenticationPrincipal JwtAuthentication authentication,
     @PathVariable Long id
@@ -48,30 +48,16 @@ public class WriterController {
   }
 
   @GetMapping("/likes")
-  @Operation(summary = "내 채널 작가 팔로우 리스트(무한스크롤)")
-  @Tag(name = "[기능]-작가 팔로우 리스트")
+  @Operation(summary = "작가 팔로우 리스트(무한스크롤)")
+  @Tag(name = "[화면]-채널")
   public WriterLikesList.Response getWritersLikesList(
     @AuthenticationPrincipal JwtAuthentication authentication,
+    @RequestParam(required = false) Long userId,
     @RequestParam(required = false) Long lastId,
     @RequestParam @Positive Integer size
   ) {
     return this.writerLikesService.getWriterLikesList(
-      authentication.userId,
-      lastId,
-      size
-    );
-  }
-
-  @GetMapping("/likes/others/{userId}")
-  @Operation(summary = "다른 채널 작가 팔로우 리스트(무한스크롤)")
-  @Tag(name = "[기능]-작가 팔로우 리스트")
-  public WriterLikesList.Response getOtherUserWriterLikesList(
-    @PathVariable Long userId,
-    @RequestParam(required = false) Long lastId,
-    @RequestParam @Positive Integer size
-  ) {
-    return this.writerLikesService.getWriterLikesList(
-      userId,
+      (userId == null ? authentication.userId : userId),
       lastId,
       size
     );

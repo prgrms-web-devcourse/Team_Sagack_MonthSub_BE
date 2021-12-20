@@ -1,6 +1,7 @@
 package com.prgrms.monthsub.module.series.series.app;
 
 import static com.prgrms.monthsub.module.series.series.domain.Series.Category.getCategories;
+import static com.prgrms.monthsub.module.series.series.domain.Series.SeriesStatus.getAllStatus;
 
 import com.prgrms.monthsub.common.s3.S3Client;
 import com.prgrms.monthsub.common.s3.config.S3.Bucket;
@@ -15,6 +16,7 @@ import com.prgrms.monthsub.module.series.series.converter.SeriesConverter;
 import com.prgrms.monthsub.module.series.series.domain.ArticleUploadDate;
 import com.prgrms.monthsub.module.series.series.domain.Series;
 import com.prgrms.monthsub.module.series.series.domain.Series.Category;
+import com.prgrms.monthsub.module.series.series.domain.Series.SeriesStatus;
 import com.prgrms.monthsub.module.series.series.domain.type.SortType;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeEdit;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeList;
@@ -25,6 +27,7 @@ import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.FileCategory
 import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.FileType;
 import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.Status;
 import com.prgrms.monthsub.module.worker.explusion.domain.ExpulsionService;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
@@ -274,8 +277,13 @@ public class SeriesAssemble {
     Optional<Long> lastSeriesId,
     Integer size,
     List<Category> categories,
-    Optional<Long> userIdOrEmpty
+    Optional<Long> userIdOrEmpty,
+    List<SeriesStatus> status
   ) {
+    LocalDate today = LocalDate.now();
+
+    List<SeriesStatus> finalStatus = (status.contains(SeriesStatus.ALL)) ? getAllStatus() : status;
+
     List<Long> likeSeriesList =
       userIdOrEmpty.isPresent() ? this.seriesLikesService.findAllByUserId(userIdOrEmpty.get())
         : Collections.emptyList();
@@ -304,6 +312,7 @@ public class SeriesAssemble {
             series.changeSeriesIsLiked(true);
           }
         })
+        .filter(series -> finalStatus.contains(series.getSubscribeStatus()))
         .map(this.seriesConverter::toResponse)
         .collect(Collectors.toList()));
   }

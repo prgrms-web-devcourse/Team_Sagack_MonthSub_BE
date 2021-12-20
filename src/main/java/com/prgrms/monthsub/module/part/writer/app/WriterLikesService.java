@@ -51,14 +51,14 @@ public class WriterLikesService {
 
   @Transactional
   public WriterLikesList.Response getWriterLikesList(
-    Long userId,
+    Long channelOwnerUserId,
     Long lastId,
     Integer size
   ) {
     PageRequest cursorPageable = getPageRequest(size);
 
     return new WriterLikesList.Response(
-      this.getWriterLikes(userId, lastId, cursorPageable)
+      this.getWriterLikes(channelOwnerUserId, lastId, cursorPageable)
         .stream()
         .map(WriterLikes::getWriter)
         .map(this.writerConverter::toWriterLikesList)
@@ -103,7 +103,7 @@ public class WriterLikesService {
         writerLikes.getWriter().updateFollowCount(INCREASE_NUM);
 
         return new WriterFollowEvent.Response(
-          this.writerLikesRepository.save(writerLikes).getId(),
+          this.writerLikesRepository.save(writerLikes).getUserId(),
           likeStatus
         );
       })
@@ -112,12 +112,13 @@ public class WriterLikesService {
           writer.updateFollowCount(INCREASE_NUM);
 
           return new WriterFollowEvent.Response(
-            this.writerLikesRepository.save(WriterLikes.builder()
+            this.writerLikesRepository.save(
+              WriterLikes.builder()
                 .likesStatus(LikesStatus.Like)
                 .writer(writer)
                 .userId(userId)
-                .build())
-              .getId(), String.valueOf(LikesStatus.Like)
+                .build()).getUserId(),
+            String.valueOf(LikesStatus.Like)
           );
         }
       );

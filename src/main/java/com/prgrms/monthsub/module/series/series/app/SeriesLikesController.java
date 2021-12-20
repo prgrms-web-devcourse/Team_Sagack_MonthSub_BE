@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/likes")
+@RequestMapping("/series/likes")
 @Tag(name = "Likes")
 public class SeriesLikesController {
 
@@ -22,7 +22,7 @@ public class SeriesLikesController {
 
   @GetMapping
   @Operation(summary = "내가 좋아요한 시리즈 리스트 조회")
-  @Tag(name = "[화면]-좋아요 시리즈")
+  @Tag(name = "[화면]- 내가 좋아한 시리즈 페이지")
   public SeriesLikesList.Response getSeriesLikesList(
     @AuthenticationPrincipal JwtAuthentication authentication
   ) {
