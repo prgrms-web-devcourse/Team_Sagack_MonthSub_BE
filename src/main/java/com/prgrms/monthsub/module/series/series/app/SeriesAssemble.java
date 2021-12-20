@@ -309,8 +309,8 @@ public class SeriesAssemble {
     Optional<Long> userIdOrEmpty,
     List<SeriesStatus> status
   ) {
-    categoryList = status.isEmpty() ? getCategories() : categories;
-    List<SeriesStatus> finalStatus = categories.isEmpty() ? getAllStatus() : status;
+    categoryList = categories.isEmpty() ? getCategories() : categories;
+    List<SeriesStatus> finalStatus = status.isEmpty() ? getAllStatus() : status;
     List<Long> likeSeriesList = userIdOrEmpty.map(
         this.seriesLikesService::findAllByUserId
       )
