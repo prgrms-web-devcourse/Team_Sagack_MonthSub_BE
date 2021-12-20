@@ -15,6 +15,7 @@ public class WriterLikesList {
   @Getter
   @Builder
   public static class WriterLikesObject {
+    public Long writerId;
     public int followCount;
     public String nickname;
     public String profileKey;
