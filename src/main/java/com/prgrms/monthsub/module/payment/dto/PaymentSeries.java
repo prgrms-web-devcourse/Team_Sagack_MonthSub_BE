@@ -1,13 +1,15 @@
 package com.prgrms.monthsub.module.payment.dto;
 
+import com.prgrms.monthsub.module.payment.dto.PaymentSeries.Response;
 import com.prgrms.monthsub.module.series.series.domain.Series.Category;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
+import lombok.Builder;
 
-public class PaymentSeries {
+public sealed interface PaymentSeries permits Response {
 
   @Schema(name = "PaymentSeries.Response")
-  public record Response(
+  record Response(
     String email,
     String nickname,
     String title,
@@ -19,6 +21,10 @@ public class PaymentSeries {
     LocalDate endDate,
     String[] date,
     String time
-  ) {}
+  ) implements PaymentSeries {
+    @Builder
+    public Response {
+    }
+  }
 
 }

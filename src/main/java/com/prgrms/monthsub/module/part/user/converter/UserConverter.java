@@ -4,13 +4,12 @@ import static com.prgrms.monthsub.module.part.user.domain.User.POINT;
 
 import com.prgrms.monthsub.common.s3.config.S3;
 import com.prgrms.monthsub.module.part.user.app.PartService;
-import com.prgrms.monthsub.module.part.user.domain.Part;
 import com.prgrms.monthsub.module.part.user.domain.Part.Name;
 import com.prgrms.monthsub.module.part.user.domain.User;
 import com.prgrms.monthsub.module.part.user.dto.UserMe;
 import com.prgrms.monthsub.module.part.user.dto.UserMe.Response;
 import com.prgrms.monthsub.module.part.user.dto.UserSignUp;
-import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeList.SeriesOneWithUserResponse;
+import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeList.SeriesUserResponse;
 import java.util.Optional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -32,11 +31,14 @@ public class UserConverter {
     this.bCryptEncoder = bCryptEncoder;
   }
 
-  public SeriesOneWithUserResponse toSeriesOneWithUser(User user, Optional<Long> writerId) {
+  public SeriesUserResponse toSeriesOneWithUser(
+    User user,
+    Optional<Long> writerId
+  ) {
     String profileImage =
       user.getProfileKey() == null ? null : this.s3.getDomain() + "/" + user.getProfileKey();
 
-    return new SeriesOneWithUserResponse(
+    return new SeriesUserResponse(
       user.getId(),
       writerId.orElse(null),
       user.getEmail(),
