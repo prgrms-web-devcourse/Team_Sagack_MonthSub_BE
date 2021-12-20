@@ -168,7 +168,6 @@ public class Series extends BaseEntity {
   }
 
   public enum Category {
-    ALL,
     POEM,
     NOVEL,
     INTERVIEW,
@@ -182,7 +181,6 @@ public class Series extends BaseEntity {
 
     public static List<Category> getCategories() {
       return List.of(
-        Category.ALL,
         Category.POEM,
         Category.NOVEL,
         Category.INTERVIEW,
@@ -194,7 +192,6 @@ public class Series extends BaseEntity {
   }
 
   public enum SeriesStatus {
-    ALL,
     SERIALIZATION_AVAILABLE,
     SUBSCRIPTION_UNAVAILABLE,
     SUBSCRIPTION_AVAILABLE;
@@ -205,7 +202,6 @@ public class Series extends BaseEntity {
 
     public static List<SeriesStatus> getAllStatus() {
       return List.of(
-        SeriesStatus.ALL,
         SeriesStatus.SERIALIZATION_AVAILABLE,
         SeriesStatus.SUBSCRIPTION_UNAVAILABLE,
         SeriesStatus.SUBSCRIPTION_AVAILABLE

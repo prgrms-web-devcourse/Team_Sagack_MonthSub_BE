@@ -11,7 +11,6 @@ import com.prgrms.monthsub.module.series.series.dto.SeriesLikesEvent;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeEdit;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeList;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeOne;
-import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeOne.UsageEditResponse;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribePost;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -150,27 +149,27 @@ public class SeriesController {
   @Tag(name = "[화면]-시리즈")
   public SeriesSubscribeList.Response getSeriesList(
     @AuthenticationPrincipal JwtAuthentication authentication,
-    @RequestParam(required = false) Long lastSeriesId,
     @RequestParam @Positive Integer size,
-    @RequestParam(required = false, defaultValue = "ALL")
-      Category[] categories,
-    @RequestParam(required = false, defaultValue = "ALL")
-      SeriesStatus[] status
+    @RequestParam(required = false) Long lastSeriesId,
+    @RequestParam(required = false) List<Category> categories,
+    @RequestParam(required = false) List<SeriesStatus> status
   ) {
     return ofNullable(authentication)
-      .map(authenticate -> this.seriesAssemble.getSeriesList(ofNullable(lastSeriesId), size,
-        List.of(categories), of(authenticate.userId), List.of(status)
+      .map(authenticate -> this.seriesAssemble.getSeriesList(
+        ofNullable(lastSeriesId), size, categories,
+        of(authenticate.userId), status
       ))
-      .orElse(this.seriesAssemble.getSeriesList(ofNullable(lastSeriesId), size, List.of(categories),
-        Optional.empty(), List.of(status)
+      .orElse(this.seriesAssemble.getSeriesList(
+        ofNullable(lastSeriesId), size, categories,
+        Optional.empty(), status
       ));
   }
 
   @GetMapping("/sort")
-  //@Operation(summary = "인기순/최신순 시리즈 리스트 조회")
+  //@Operation(summary = "인기순/최신순 시리즈 리스트 조회") //추후에 쓸 기능
   @Operation(hidden = true)
   @Tag(name = "[화면]-시리즈")
-  public SeriesSubscribeList.Response getSeriesListOrderBySort(
+  public SeriesSubscribeList.Response getSeriesList(
     @RequestParam(value = "sort", required = true) SortType sort
   ) {
     return this.seriesAssemble.getSeriesListSort(sort);
