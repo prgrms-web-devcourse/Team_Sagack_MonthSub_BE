@@ -6,9 +6,9 @@ import com.prgrms.monthsub.module.payment.app.provider.PaymentProvider;
 import com.prgrms.monthsub.module.payment.converter.PaymentConverter;
 import com.prgrms.monthsub.module.payment.domain.Payment;
 import com.prgrms.monthsub.module.payment.domain.exception.PaymentException.PaymentDuplicated;
-import com.prgrms.monthsub.module.payment.dto.PaymentForm;
 import com.prgrms.monthsub.module.payment.dto.PaymentPost;
 import com.prgrms.monthsub.module.payment.dto.PaymentPost.Response;
+import com.prgrms.monthsub.module.payment.dto.PaymentSeries;
 import com.prgrms.monthsub.module.series.series.app.Provider.SeriesProvider;
 import com.prgrms.monthsub.module.series.series.domain.ArticleUploadDate;
 import com.prgrms.monthsub.module.series.series.domain.Series;
@@ -49,7 +49,7 @@ public class PaymentService implements PaymentProvider {
   }
 
   @Transactional
-  public PaymentForm.Response getSeriesById(Long seriesId) {
+  public PaymentSeries.Response getSeriesById(Long seriesId) {
     Series series = this.seriesProvider.getById(seriesId);
     List<ArticleUploadDate> uploadDateList = this.seriesProvider.getArticleUploadDate(seriesId);
 

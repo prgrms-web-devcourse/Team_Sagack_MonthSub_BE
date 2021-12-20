@@ -1,8 +1,8 @@
 package com.prgrms.monthsub.module.payment.app;
 
 import com.prgrms.monthsub.common.security.jwt.JwtAuthentication;
-import com.prgrms.monthsub.module.payment.dto.PaymentForm;
 import com.prgrms.monthsub.module.payment.dto.PaymentPost;
+import com.prgrms.monthsub.module.payment.dto.PaymentSeries;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -28,7 +28,7 @@ public class PaymentController {
   @GetMapping("/series/{id}")
   @Operation(summary = "결제 요청 시 시리즈 단건 조회")
   @Tag(name = "[화면]-결제")
-  public PaymentForm.Response getSeriesById(
+  public PaymentSeries.Response getSeriesById(
     @AuthenticationPrincipal JwtAuthentication authentication,
     @PathVariable Long id
   ) {
