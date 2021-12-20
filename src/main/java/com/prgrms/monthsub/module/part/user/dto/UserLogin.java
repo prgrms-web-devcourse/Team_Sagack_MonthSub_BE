@@ -15,7 +15,7 @@ public class UserLogin {
   ) {
   }
 
-  @Schema(name = "UserLogin.Response")
+  @Schema(name = "Login.Response")
   public record Response(
     Long userId,
     String token,
