@@ -171,17 +171,17 @@ public class SeriesController {
     @AuthenticationPrincipal JwtAuthentication authentication,
     @RequestParam @Positive Integer size,
     @RequestParam(required = false) Long lastSeriesId,
-    @RequestParam(required = false) List<Category> categories,
-    @RequestParam(required = false) List<SeriesStatus> status
+    @RequestParam(required = false) Category[] categories,
+    @RequestParam(required = false) SeriesStatus[] status
   ) {
     return ofNullable(authentication)
       .map(authenticate -> this.seriesAssemble.getSeriesList(
-        ofNullable(lastSeriesId), size, categories,
-        of(authenticate.userId), status
+        ofNullable(lastSeriesId), size, List.of(categories),
+        of(authenticate.userId), List.of(status)
       ))
       .orElse(this.seriesAssemble.getSeriesList(
-        ofNullable(lastSeriesId), size, categories,
-        Optional.empty(), status
+        ofNullable(lastSeriesId), size, List.of(categories),
+        Optional.empty(), List.of(status)
       ));
   }
 
