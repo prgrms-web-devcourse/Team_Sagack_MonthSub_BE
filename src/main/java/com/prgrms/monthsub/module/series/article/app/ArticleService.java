@@ -20,8 +20,7 @@ public class ArticleService {
 
   @Transactional
   public Long save(Article article) {
-    return this.articleRepository.save(article)
-      .getId();
+    return this.articleRepository.save(article).getId();
   }
 
   public Article find(Long id) {

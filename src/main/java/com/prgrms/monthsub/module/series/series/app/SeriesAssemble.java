@@ -161,20 +161,20 @@ public class SeriesAssemble {
     return thumbnailKey;
   }
 
-  public SeriesSubscribeOne.Response getSeriesBySeriesId(
-    Long seriesId,
+  public SeriesSubscribeOne.Response getSeriesOne(
+    Long id,
     Optional<Long> userIdOrEmpty
   ) {
     List<Long> likeSeriesList =
       userIdOrEmpty.isPresent() ? this.seriesLikesService.findAllByUserId(userIdOrEmpty.get())
         : Collections.emptyList();
 
-    List<Article> articleList = this.articleService.getArticleListBySeriesId(seriesId);
-    Series series = this.seriesService.getById(seriesId);
+    List<Article> articleList = this.articleService.getArticleListBySeriesId(id);
+    Series series = this.seriesService.getById(id);
     if (likeSeriesList.contains(series.getId())) {
       series.changeSeriesIsLiked(true);
     }
-    List<ArticleUploadDate> uploadDateList = this.seriesService.getArticleUploadDate(seriesId);
+    List<ArticleUploadDate> uploadDateList = this.seriesService.getArticleUploadDate(id);
 
     return userIdOrEmpty
       .map(userId ->
@@ -192,15 +192,6 @@ public class SeriesAssemble {
       .stream()
       .map(this.seriesConverter::toResponse)
       .collect(Collectors.toList()));
-  }
-
-  private List<Series> getSeries(
-    Long lastSeriesId,
-    PageRequest cursorPageable
-  ) {
-    return Optional.ofNullable(lastSeriesId)
-      .map(lastId -> this.seriesService.getSeries(lastId, cursorPageable))
-      .orElse(this.seriesService.findAll(cursorPageable));
   }
 
   public SeriesSubscribeOne.ResponseUsageEdit getSeriesUsageEdit(Long seriesId) {

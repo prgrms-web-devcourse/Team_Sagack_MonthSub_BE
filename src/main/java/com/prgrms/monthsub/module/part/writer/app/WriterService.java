@@ -53,9 +53,7 @@ public class WriterService implements WriterProvider {
   }
 
   public List<Writer> findAll(Pageable pageable) {
-    return this.writerRepository
-      .findAll(pageable)
-      .getContent();
+    return this.writerRepository.findAll(pageable).getContent();
   }
 
   private Writer becameWriter(Long userId) {
@@ -64,14 +62,14 @@ public class WriterService implements WriterProvider {
 
     user.changePart(part);
 
-    Writer entity = Writer.builder()
+    Writer writer = Writer.builder()
       .followCount(DEFAULT_FOLLOW_COUNT)
       .user(user)
       .build();
 
-    this.writerRepository.save(entity);
+    this.writerRepository.save(writer);
 
-    return entity;
+    return writer;
   }
 
 }

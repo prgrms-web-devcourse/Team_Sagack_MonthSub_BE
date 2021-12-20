@@ -12,11 +12,13 @@ public class UserEdit {
 
     @NotBlank(message = "소개글이 비어있습니다.")
     String profileIntroduce
-  ) {}
+  ) {
+  }
 
   @Schema(name = "UserEdit.Response")
   public record Response(
     Long userId
-  ) {}
+  ) {
+  }
 
 }

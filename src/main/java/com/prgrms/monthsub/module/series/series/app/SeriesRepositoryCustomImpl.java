@@ -18,7 +18,9 @@ public class SeriesRepositoryCustomImpl implements DynamicSeriesRepository {
   @PersistenceContext
   private final EntityManager em;
 
-  public SeriesRepositoryCustomImpl(EntityManager em) {this.em = em;}
+  public SeriesRepositoryCustomImpl(EntityManager em) {
+    this.em = em;
+  }
 
   @Override
   public List<Series> findAllByCategory(

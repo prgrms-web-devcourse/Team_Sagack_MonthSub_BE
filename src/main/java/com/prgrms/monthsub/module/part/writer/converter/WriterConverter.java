@@ -4,10 +4,9 @@ import com.prgrms.monthsub.common.s3.config.S3;
 import com.prgrms.monthsub.module.part.user.converter.UserConverter;
 import com.prgrms.monthsub.module.part.user.domain.User;
 import com.prgrms.monthsub.module.part.writer.domain.Writer;
-import com.prgrms.monthsub.module.part.writer.dto.WriterLikesList.WriterLikesObject;
+import com.prgrms.monthsub.module.part.writer.dto.WriterLikesList.LikesObject;
 import com.prgrms.monthsub.module.series.series.dto.MainPage;
 import com.prgrms.monthsub.module.series.series.dto.MyChannel;
-import com.prgrms.monthsub.module.series.series.dto.MyChannel.MyChannelFollowWriterObject;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeList.SeriesOneWithWriterResponse;
 import java.util.Optional;
 import org.springframework.stereotype.Component;
@@ -34,10 +33,10 @@ public class WriterConverter {
     );
   }
 
-  public MyChannel.MyChannelFollowWriterObject toMyChannelFollowWriterObject(
+  public MyChannel.FollowWriterObject toMyChannelFollowWriterObject(
     Writer writer
   ) {
-    return MyChannelFollowWriterObject.builder()
+    return MyChannel.FollowWriterObject.builder()
       .userId(writer.getUser().getId())
       .writerId(writer.getId())
       .nickname(writer.getUser().getNickname())
@@ -50,8 +49,8 @@ public class WriterConverter {
       .build();
   }
 
-  public MainPage.MainPageFollowWriterObject toMainPageFollowWriterObject(Writer writer) {
-    return MainPage.MainPageFollowWriterObject.builder()
+  public MainPage.FollowWriterObject toMainPageFollowWriterObject(Writer writer) {
+    return MainPage.FollowWriterObject.builder()
       .userId(writer.getUser().getId())
       .writerId(writer.getId())
       .nickname(writer.getUser().getNickname())
@@ -64,10 +63,10 @@ public class WriterConverter {
       .build();
   }
 
-  public WriterLikesObject toWriterLikesList(Writer writer) {
+  public LikesObject toWriterLikesList(Writer writer) {
     User user = writer.getUser();
 
-    return WriterLikesObject.builder()
+    return LikesObject.builder()
       .writerId(writer.getId())
       .nickname(user.getNickname())
       .profileIntroduce(user.getProfileIntroduce())

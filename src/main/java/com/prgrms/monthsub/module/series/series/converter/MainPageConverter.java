@@ -41,10 +41,10 @@ public class MainPageConverter {
     );
   }
 
-  public MainPage.MainPageSubscribeObject toMainPageSubscribeObject(
+  public MainPage.SubscribeObject toMainPageSubscribeObject(
     Series series
   ) {
-    return MainPage.MainPageSubscribeObject.builder()
+    return MainPage.SubscribeObject.builder()
       .liked(series.isLikedStatus())
       .userId(series.getWriter().getUser().getId())
       .writerId(series.getWriter().getId())

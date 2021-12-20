@@ -44,9 +44,10 @@ public class MainPageAssemble {
   public MainPage.Response getMainPage(
     Optional<Long> userIdOrEmpty
   ) {
-    List<Long> likeSeriesList =
-      userIdOrEmpty.isPresent() ? this.seriesLikesService.findAllByUserId(userIdOrEmpty.get())
-        : Collections.emptyList();
+    List<Long> likeSeriesList = userIdOrEmpty.map(
+        this.seriesLikesService::findAllByUserId
+      )
+      .orElse(Collections.emptyList());
 
     List<Series> popularSeriesList = this.seriesService.findAll(PageRequest.of(
       PAGE_NUM,
@@ -58,13 +59,16 @@ public class MainPageAssemble {
       PageRequest.of(PAGE_NUM, PAGE_WRITER_NUM, Sort.by(Direction.DESC, "followCount")));
 
     List<Series> recentSeriesList = this.seriesService.findBySubscribeStatus(
-      SeriesStatus.SUBSCRIPTION_AVAILABLE,
-      PageRequest.of(PAGE_NUM, POPULAR_SERIES_SIZE, Sort.by(Direction.DESC, "createdAt", "id"))
-    ).stream().peek(series -> {
-      if (likeSeriesList.contains(series.getId())) {
-        series.changeSeriesIsLiked(true);
-      }
-    }).collect(Collectors.toList());
+        SeriesStatus.SUBSCRIPTION_AVAILABLE,
+        PageRequest.of(PAGE_NUM, POPULAR_SERIES_SIZE, Sort.by(Direction.DESC, "createdAt", "id"))
+      )
+      .stream()
+      .peek(series -> {
+        if (likeSeriesList.contains(series.getId())) {
+          series.changeSeriesIsLiked(true);
+        }
+      })
+      .collect(Collectors.toList());
 
     return this.mainPageConverter.toResponse(
       popularSeriesList, popularWriterList, recentSeriesList

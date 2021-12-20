@@ -15,7 +15,7 @@ public class SeriesSubscribeOne {
   public record Response(
     Boolean isLiked,
     Boolean isMine,
-    SeriesObject series,
+    SeriesSubscribeList.SeriesObject series,
     UploadObject upload,
     SubscribeObject subscribe,
     Category category,
@@ -26,7 +26,7 @@ public class SeriesSubscribeOne {
 
   @Schema(name = "SeriesSubscribeOne.ResponseUsageEdit")
   public record ResponseUsageEdit(
-    SeriesObject series,
+    SeriesSubscribeList.SeriesObject series,
     Category category,
     UploadObject upload,
     SubscribeObject subscribe

@@ -78,7 +78,7 @@ public class SeriesConverter {
     return new Response(
       series.isLikedStatus(),
       isMine,
-      SeriesObject.builder()
+      SeriesSubscribeList.SeriesObject.builder()
         .id(series.getId())
         .thumbnail(this.toThumbnailEndpoint(series.getThumbnailKey()))
         .title(series.getTitle())
@@ -146,7 +146,7 @@ public class SeriesConverter {
     List<ArticleUploadDate> uploadDateList
   ) {
     return new ResponseUsageEdit(
-      SeriesObject.builder()
+      SeriesSubscribeList.SeriesObject.builder()
         .id(series.getId())
         .title(series.getTitle())
         .introduceSentence(series.getIntroduceSentence())
@@ -170,8 +170,8 @@ public class SeriesConverter {
     );
   }
 
-  public MyChannel.MyChannelSubscribeObject toMyChannelSubscribeObject(Series series) {
-    return MyChannel.MyChannelSubscribeObject.builder()
+  public MyChannel.SubscribeObject toMyChannelSubscribeObject(Series series) {
+    return MyChannel.SubscribeObject.builder()
       .liked(series.isLikedStatus())
       .userId(series.getWriter().getUser().getId())
       .writerId(series.getWriter().getId())
@@ -190,8 +190,8 @@ public class SeriesConverter {
       .build();
   }
 
-  public MyChannel.MyChannelSeriesObject toMyChannelSeriesObject(Series series) {
-    return MyChannel.MyChannelSeriesObject.builder()
+  public MyChannel.SeriesObject toMyChannelSeriesObject(Series series) {
+    return MyChannel.SeriesObject.builder()
       .liked(series.isLikedStatus())
       .userId(series.getWriter().getUser().getId())
       .writerId(series.getWriter().getId())

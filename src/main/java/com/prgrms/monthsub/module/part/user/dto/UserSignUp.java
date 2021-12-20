@@ -23,6 +23,7 @@ public class UserSignUp {
   @Schema(name = "UserSignUp.Response")
   public record Response(
     Long userId
-  ) {}
+  ) {
+  }
 
 }

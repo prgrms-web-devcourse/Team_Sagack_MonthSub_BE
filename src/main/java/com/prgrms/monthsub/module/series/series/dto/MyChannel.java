@@ -17,10 +17,10 @@ public class MyChannel {
     Boolean isMine,
     SeriesOneWithUserResponse user,
     int followIngCount,
-    List<MyChannelFollowWriterObject> followWriterList,
-    List<MyChannelSubscribeObject> subscribeList,
+    List<MyChannel.FollowWriterObject> followWriterList,
+    List<MyChannel.SubscribeObject> subscribeList,
     int followCount,
-    List<MyChannelSeriesObject> seriesPostList
+    List<MyChannel.SeriesObject> seriesPostList
   ) {
   }
 
@@ -30,15 +30,15 @@ public class MyChannel {
     Boolean isMine,
     SeriesOneWithUserResponse user,
     int followIngCount,
-    List<MyChannelFollowWriterObject> followWriterList,
+    List<MyChannel.FollowWriterObject> followWriterList,
     int followCount,
-    List<MyChannelSeriesObject> seriesPostList
+    List<MyChannel.SeriesObject> seriesPostList
   ) {
   }
 
   @Builder
   @Getter
-  public static class MyChannelFollowWriterObject {
+  public static class FollowWriterObject {
     Long userId;
     Long writerId;
     String nickname;
@@ -49,7 +49,7 @@ public class MyChannel {
   @Builder
   @Getter
   @Accessors(fluent = true, prefix = "is")
-  public static class MyChannelSubscribeObject {
+  public static class SubscribeObject {
     public Boolean isLiked;
     public Long userId;
     public Long writerId;
@@ -70,7 +70,7 @@ public class MyChannel {
   @Builder
   @Getter
   @Accessors(fluent = true, prefix = "is")
-  public static class MyChannelSeriesObject {
+  public static class SeriesObject {
     public Boolean isLiked;
     public Long userId;
     public Long writerId;

@@ -1,5 +1,6 @@
 package com.prgrms.monthsub.module.series.series.app;
 
+import static java.util.Optional.of;
 import static java.util.Optional.ofNullable;
 
 import com.prgrms.monthsub.common.security.jwt.JwtAuthentication;
@@ -66,10 +67,10 @@ public class SeriesController {
     @PathVariable Long id
   ) {
     return ofNullable(authentication)
-      .map(authenticate -> this.seriesAssemble.getSeriesBySeriesId(
-        id, ofNullable(authenticate.userId)
+      .map(authenticate -> this.seriesAssemble.getSeriesOne(
+        id, of(authenticate.userId)
       ))
-      .orElse(this.seriesAssemble.getSeriesBySeriesId(id, Optional.empty()));
+      .orElse(this.seriesAssemble.getSeriesOne(id, Optional.empty()));
   }
 
   @PostMapping("/{id}/likes")
@@ -157,7 +158,7 @@ public class SeriesController {
   ) {
     return ofNullable(authentication)
       .map(authenticate -> this.seriesAssemble.getSeriesList(ofNullable(lastSeriesId), size,
-        List.of(categories), ofNullable(authenticate.userId), List.of(status)
+        List.of(categories), of(authenticate.userId), List.of(status)
       ))
       .orElse(this.seriesAssemble.getSeriesList(ofNullable(lastSeriesId), size, List.of(categories),
         Optional.empty(), List.of(status)

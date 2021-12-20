@@ -9,12 +9,12 @@ public class WriterLikesList {
 
   @Schema(name = "WriterLikes.Response")
   public record Response(
-    List<WriterLikesObject> writerLikesList
+    List<LikesObject> writerLikesList
   ) {}
 
   @Getter
   @Builder
-  public static class WriterLikesObject {
+  public static class LikesObject {
     public Long writerId;
     public int followCount;
     public String nickname;
