@@ -71,16 +71,16 @@ security:
       - /swagger-ui/**
       # endpoint
       - /health
-      - /main
+      - /
       - /series
       - /series/sort
       - /series/{id}
       - /series/search/title
       - /series/search/nickname
-      - /channel/users/{userId}/other
+      - /channel
     post:
-      - /users/login
-      - /users/signup
+      - /signin
+      - /signup
 #    put:
 #    patch:
 
