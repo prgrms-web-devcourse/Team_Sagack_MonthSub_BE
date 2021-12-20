@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/execute")
+@RequestMapping("/expulsion/execute")
 public class ExpulsionController {
 
   private final ExpulsionService expulsionService;
@@ -22,7 +22,7 @@ public class ExpulsionController {
 
   @PostMapping
   @Operation(summary = "S3 expulsion 벌크 실행")
-  @Tag(name = "[화면]- 어드민")
+  @Tag(name = "[어드민]")
   public void deleteBulk(
     @AuthenticationPrincipal JwtAuthentication authentication,
     @RequestParam(value = "bucket", required = true) String bucket

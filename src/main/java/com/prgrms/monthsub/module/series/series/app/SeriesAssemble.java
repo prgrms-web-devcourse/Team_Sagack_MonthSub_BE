@@ -21,14 +21,12 @@ import com.prgrms.monthsub.module.series.series.domain.type.SortType;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeEdit;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeList;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeOne;
-import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeOne.UsageEditResponse;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribePost;
 import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.DomainType;
 import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.FileCategory;
 import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.FileType;
 import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.Status;
 import com.prgrms.monthsub.module.worker.explusion.domain.ExpulsionService;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
@@ -166,9 +164,10 @@ public class SeriesAssemble {
     Long id,
     Optional<Long> userIdOrEmpty
   ) {
-    List<Long> likeSeriesList =
-      userIdOrEmpty.isPresent() ? this.seriesLikesService.findAllByUserId(userIdOrEmpty.get())
-        : Collections.emptyList();
+    List<Long> likeSeriesList = userIdOrEmpty.map(
+        this.seriesLikesService::findAllByUserId
+      )
+      .orElse(Collections.emptyList());
 
     List<Article> articleList = this.articleService.getArticleListBySeriesId(id);
     Series series = this.seriesService.getById(id);
@@ -254,11 +253,10 @@ public class SeriesAssemble {
       this.seriesService
         .findAllByWriterId(this.writerProvider.findByUserId(userId).getId())
         .stream()
-        .map(series -> {
+        .peek(series -> {
           if (likeSeriesList.contains(series.getId())) {
             series.changeSeriesIsLiked(true);
           }
-          return series;
         })
         .map(seriesConverter::toResponse)
         .collect(Collectors.toList())
@@ -272,15 +270,13 @@ public class SeriesAssemble {
     Optional<Long> userIdOrEmpty,
     List<SeriesStatus> status
   ) {
-    LocalDate today = LocalDate.now();
+    categoryList = status.isEmpty() ? getCategories() : categories;
+    List<SeriesStatus> finalStatus = categories.isEmpty() ? getAllStatus() : status;
+    List<Long> likeSeriesList = userIdOrEmpty.map(
+        this.seriesLikesService::findAllByUserId
+      )
+      .orElse(Collections.emptyList());
 
-    List<SeriesStatus> finalStatus = (status.contains(SeriesStatus.ALL)) ? getAllStatus() : status;
-
-    List<Long> likeSeriesList =
-      userIdOrEmpty.isPresent() ? this.seriesLikesService.findAllByUserId(userIdOrEmpty.get())
-        : Collections.emptyList();
-
-    categoryList = (categories.contains(Category.ALL)) ? getCategories() : categories;
     return new SeriesSubscribeList.Response(
       lastSeriesId.map(id -> {
           LocalDateTime createdAt = this.seriesService.getById(id).getCreatedAt();
