@@ -41,7 +41,6 @@ public class ArticleUploadDate {
   }
 
   public enum UploadDate {
-
     SUNDAY,
     MONDAY,
     TUESDAY,

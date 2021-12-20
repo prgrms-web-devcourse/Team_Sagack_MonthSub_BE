@@ -3,6 +3,7 @@ package com.prgrms.monthsub.module.series.series.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 
 public class SeriesSubscribePost {
 
@@ -40,7 +41,7 @@ public class SeriesSubscribePost {
     @Positive
     int articleCount,
 
-    @Positive
+    @PositiveOrZero
     int price
   ) {
   }

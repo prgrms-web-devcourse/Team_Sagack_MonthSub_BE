@@ -11,6 +11,7 @@ import com.prgrms.monthsub.module.series.series.dto.SeriesLikesEvent;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeEdit;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeList;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeOne;
+import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeOne.UsageEditResponse;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribePost;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -96,7 +97,7 @@ public class SeriesController {
   @GetMapping("/{id}/edit")
   @Operation(summary = "수정 요청시 시리즈 공고 단건 조회")
   @Tag(name = "[화면]-시리즈")
-  public SeriesSubscribeOne.ResponseUsageEdit getSeriesByIdUsageEdit(
+  public SeriesSubscribeOne.UsageEditResponse getSeriesByIdUsageEdit(
     @AuthenticationPrincipal JwtAuthentication authentication,
     @PathVariable Long id
   ) {

@@ -21,6 +21,7 @@ import com.prgrms.monthsub.module.series.series.domain.type.SortType;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeEdit;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeList;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeOne;
+import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeOne.UsageEditResponse;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribePost;
 import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.DomainType;
 import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.FileCategory;
@@ -194,7 +195,7 @@ public class SeriesAssemble {
       .collect(Collectors.toList()));
   }
 
-  public SeriesSubscribeOne.ResponseUsageEdit getSeriesUsageEdit(Long seriesId) {
+  public SeriesSubscribeOne.UsageEditResponse getSeriesUsageEdit(Long seriesId) {
     Series series = this.seriesService.getById(seriesId);
     List<ArticleUploadDate> uploadDateList = this.seriesService.getArticleUploadDate(seriesId);
 

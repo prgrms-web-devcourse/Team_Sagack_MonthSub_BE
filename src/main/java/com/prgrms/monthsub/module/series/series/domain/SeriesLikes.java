@@ -56,14 +56,12 @@ public class SeriesLikes extends BaseEntity {
   }
 
   public enum LikesStatus {
-
     Like,
     Nothing;
 
     public static LikesStatus of(String likesStatus) {
       return LikesStatus.valueOf(likesStatus.toUpperCase());
     }
-
   }
 
 }

@@ -25,7 +25,7 @@ public class SeriesSubscribeOne {
   }
 
   @Schema(name = "SeriesSubscribeOne.ResponseUsageEdit")
-  public record ResponseUsageEdit(
+  public record UsageEditResponse(
     SeriesSubscribeList.SeriesObject series,
     Category category,
     UploadObject upload,
