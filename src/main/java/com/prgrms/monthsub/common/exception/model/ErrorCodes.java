@@ -57,6 +57,10 @@ public record ErrorCodes(ErrorCode errorCode, String message) {
     return new ErrorCodes(ErrorCode.DUPLICATED_PAYMENT, message);
   }
 
+  public static ErrorCodes VIEW_UN_AUTHORIZE(String message) {
+    return new ErrorCodes(ErrorCode.VIEW_UN_AUTHORIZED, message);
+  }
+
   @Getter
   public enum ErrorCode {
 
@@ -81,6 +85,7 @@ public record ErrorCodes(ErrorCode errorCode, String message) {
 
     //403
     HANDLE_ACCESS_DENIED("A001", HttpStatus.FORBIDDEN),
+    VIEW_UN_AUTHORIZED("A007", HttpStatus.FORBIDDEN),
 
     //404
     ENTITY_NOT_FOUND("A002", HttpStatus.NOT_FOUND);

@@ -7,6 +7,7 @@ import com.prgrms.monthsub.module.part.user.domain.User;
 import com.prgrms.monthsub.module.payment.app.provider.PaymentProvider;
 import com.prgrms.monthsub.module.series.article.converter.ArticleConverter;
 import com.prgrms.monthsub.module.series.article.domain.Article;
+import com.prgrms.monthsub.module.series.article.domain.exception.ArticleException.ViewUnAuthorize;
 import com.prgrms.monthsub.module.series.article.dto.ArticleEdit;
 import com.prgrms.monthsub.module.series.article.dto.ArticleOne;
 import com.prgrms.monthsub.module.series.article.dto.ArticlePost;
@@ -110,7 +111,7 @@ public class ArticleAssemble {
 
     if (!article.isMine(userId)) {
       this.paymentProvider.find(userId, seriesId)
-        .orElseThrow(() -> new AccessDeniedException("결제 후 이용해주세요."));
+        .orElseThrow(() -> new ViewUnAuthorize("결제 후 이용해주세요."));
     }
 
     Long articleCount = this.articleService.countBySeriesId(seriesId);
