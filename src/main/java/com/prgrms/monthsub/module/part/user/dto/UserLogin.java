@@ -16,7 +16,6 @@ public sealed interface UserLogin permits Request, Response {
     @NotBlank(message = "비밀번호가 비어있습니다.")
     String password
   ) implements UserLogin {
-
     @Builder
     public Request {
     }
@@ -29,7 +28,6 @@ public sealed interface UserLogin permits Request, Response {
     String email,
     String group
   ) implements UserLogin {
-
     @Builder
     public Response {
     }

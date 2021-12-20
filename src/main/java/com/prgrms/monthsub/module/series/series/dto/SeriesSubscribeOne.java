@@ -24,7 +24,6 @@ public sealed interface SeriesSubscribeOne permits Response, UsageEditResponse {
     WriterObject writer,
     List<BriefArticleResponse> articleList
   ) implements SeriesSubscribeOne {
-
     @Builder
     public Response {
     }
@@ -37,7 +36,6 @@ public sealed interface SeriesSubscribeOne permits Response, UsageEditResponse {
     UploadObject upload,
     SubscribeObject subscribe
   ) implements SeriesSubscribeOne {
-
     @Builder
     public UsageEditResponse {
     }

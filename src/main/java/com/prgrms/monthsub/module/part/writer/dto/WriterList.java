@@ -12,7 +12,6 @@ public sealed interface WriterList permits Response, WriterResponse {
   record Response(
     List<WriterResponse> popularWriterList
   ) implements WriterList {
-
     @Builder
     public Response {
     }
@@ -26,7 +25,6 @@ public sealed interface WriterList permits Response, WriterResponse {
     String profileImage,
     String subscribeStatus
   ) implements WriterList {
-
     @Builder
     public WriterResponse {
     }

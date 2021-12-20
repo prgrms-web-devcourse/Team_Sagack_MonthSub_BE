@@ -18,7 +18,6 @@ public sealed interface ArticleEdit permits ChangeRequest, ChangeResponse {
 
     Long seriesId
   ) implements ArticleEdit {
-
     @Builder
     public ChangeRequest {
     }
@@ -29,7 +28,6 @@ public sealed interface ArticleEdit permits ChangeRequest, ChangeResponse {
     Long id,
     Boolean isMine
   ) implements ArticleEdit {
-
     @Builder
     public ChangeResponse {
     }

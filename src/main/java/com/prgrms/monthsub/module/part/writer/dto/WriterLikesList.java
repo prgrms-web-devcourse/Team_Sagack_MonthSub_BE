@@ -12,7 +12,6 @@ public sealed interface WriterLikesList permits Response, LikesResponse {
   record Response(
     List<LikesResponse> writerLikesList
   ) implements WriterLikesList {
-
     @Builder
     public Response {
     }
@@ -26,7 +25,6 @@ public sealed interface WriterLikesList permits Response, LikesResponse {
     String profileImage,
     String profileIntroduce
   ) implements WriterLikesList {
-
     @Builder
     public LikesResponse {
     }

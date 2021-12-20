@@ -16,7 +16,6 @@ public sealed interface UserEdit permits Request, Response {
     @NotBlank(message = "소개글이 비어있습니다.")
     String profileIntroduce
   ) implements UserEdit {
-
     @Builder
     public Request {
     }
@@ -26,7 +25,6 @@ public sealed interface UserEdit permits Request, Response {
   record Response(
     Long userId
   ) implements UserEdit {
-
     @Builder
     public Response {
     }

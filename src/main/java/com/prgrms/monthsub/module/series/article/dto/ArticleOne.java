@@ -20,7 +20,6 @@ public sealed interface ArticleOne permits Response {
     LocalDate createdDate,
     LocalDate updatedDate
   ) implements ArticleOne {
-
     @Builder
     public Response {
     }

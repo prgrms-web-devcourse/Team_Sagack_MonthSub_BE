@@ -26,7 +26,6 @@ public sealed interface MyChannel permits Response, OtherResponse, FollowWriterO
     int followCount,
     List<MyChannel.SeriesObject> seriesPostList
   ) implements MyChannel {
-
     @Builder
     public Response {
     }
@@ -42,7 +41,6 @@ public sealed interface MyChannel permits Response, OtherResponse, FollowWriterO
     int followCount,
     List<MyChannel.SeriesObject> seriesPostList
   ) implements MyChannel {
-
     @Builder
     public OtherResponse {
     }
@@ -56,7 +54,6 @@ public sealed interface MyChannel permits Response, OtherResponse, FollowWriterO
     String profileImage,
     String subscribeStatus
   ) implements MyChannel {
-
     @Builder
     public FollowWriterObject {
     }
@@ -80,7 +77,6 @@ public sealed interface MyChannel permits Response, OtherResponse, FollowWriterO
     int likes,
     Series.Category category
   ) implements MyChannel {
-
     @Builder
     public SubscribeObject {
     }
@@ -104,7 +100,6 @@ public sealed interface MyChannel permits Response, OtherResponse, FollowWriterO
     int likes,
     Series.Category category
   ) implements MyChannel {
-
     @Builder
     public SeriesObject {
     }

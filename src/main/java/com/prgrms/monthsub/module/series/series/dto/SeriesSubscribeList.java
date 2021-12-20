@@ -23,7 +23,6 @@ public sealed interface SeriesSubscribeList permits Response, SeriesUserResponse
   record Response(
     List<SeriesListObject> seriesList
   ) implements SeriesSubscribeList {
-
     @Builder
     public Response {
     }
@@ -38,7 +37,6 @@ public sealed interface SeriesSubscribeList permits Response, SeriesUserResponse
     String profileIntroduce,
     String nickname
   ) implements SeriesSubscribeList {
-
     @Builder
     public SeriesUserResponse {
     }
@@ -50,7 +48,6 @@ public sealed interface SeriesSubscribeList permits Response, SeriesUserResponse
     int followCount,
     SeriesUserResponse user
   ) implements SeriesSubscribeList {
-
     @Builder
     public SeriesWriterResponse {
     }
@@ -63,7 +60,6 @@ public sealed interface SeriesSubscribeList permits Response, SeriesUserResponse
     Integer round,
     LocalDate date
   ) implements SeriesSubscribeList {
-
     @Builder
     public BriefArticleResponse {
     }
@@ -87,7 +83,6 @@ public sealed interface SeriesSubscribeList permits Response, SeriesUserResponse
     int likes,
     Series.Category category
   ) implements SeriesSubscribeList {
-
     @Builder
     public SeriesListObject {
     }
@@ -108,7 +103,6 @@ public sealed interface SeriesSubscribeList permits Response, SeriesUserResponse
     LocalDate createdDate,
     LocalDate updatedDate
   ) implements SeriesSubscribeList {
-
     @Builder
     public SeriesObject {
     }
@@ -119,7 +113,6 @@ public sealed interface SeriesSubscribeList permits Response, SeriesUserResponse
     String[] date,
     String time
   ) implements SeriesSubscribeList {
-
     @Builder
     public UploadObject {
     }
@@ -131,7 +124,6 @@ public sealed interface SeriesSubscribeList permits Response, SeriesUserResponse
     LocalDate endDate,
     String status
   ) implements SeriesSubscribeList {
-
     @Builder
     public SubscribeObject {
     }
@@ -147,7 +139,6 @@ public sealed interface SeriesSubscribeList permits Response, SeriesUserResponse
     String profileIntroduce,
     String nickname
   ) implements SeriesSubscribeList {
-
     @Builder
     public WriterObject {
     }

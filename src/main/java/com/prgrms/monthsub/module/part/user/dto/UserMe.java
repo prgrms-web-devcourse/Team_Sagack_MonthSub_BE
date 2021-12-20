@@ -16,7 +16,6 @@ public sealed interface UserMe permits Response {
     String profileIntroduce,
     String group
   ) implements UserMe {
-
     @Builder
     public Response {
     }

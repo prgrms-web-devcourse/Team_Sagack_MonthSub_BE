@@ -22,7 +22,6 @@ public sealed interface PaymentSeries permits Response {
     String[] date,
     String time
   ) implements PaymentSeries {
-
     @Builder
     public Response {
     }

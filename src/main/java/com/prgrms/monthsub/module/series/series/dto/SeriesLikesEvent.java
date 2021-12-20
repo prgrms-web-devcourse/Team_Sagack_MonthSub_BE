@@ -11,10 +11,8 @@ public sealed interface SeriesLikesEvent permits Response {
     Long id,
     String likeStatus
   ) implements SeriesLikesEvent {
-
     @Builder
     public Response {
-
     }
   }
 

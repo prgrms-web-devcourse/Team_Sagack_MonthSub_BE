@@ -18,7 +18,6 @@ public sealed interface ArticlePost permits Request, Response {
     @NotBlank
     String contents
   ) implements ArticlePost {
-
     @Builder
     public Request {
     }
@@ -29,7 +28,6 @@ public sealed interface ArticlePost permits Request, Response {
     Long id,
     Boolean isMine
   ) implements ArticlePost {
-
     @Builder
     public Response {
     }

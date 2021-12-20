@@ -22,7 +22,6 @@ public sealed interface UserSignUp permits Request, Response {
     @NotBlank(message = "닉네임이 비어있습니다.")
     String nickName
   ) implements UserSignUp {
-
     @Builder
     public Request {
     }
@@ -32,7 +31,6 @@ public sealed interface UserSignUp permits Request, Response {
   record Response(
     Long userId
   ) implements UserSignUp {
-
     @Builder
     public Response {
     }

@@ -11,7 +11,6 @@ public sealed interface WriterFollowEvent permits Response {
     Long userId,
     String followStatus
   ) implements WriterFollowEvent {
-
     @Builder
     public Response {
     }

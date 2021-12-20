@@ -67,7 +67,7 @@ public class WriterConverter {
       .writerId(writer.getId())
       .nickname(user.getNickname())
       .profileIntroduce(user.getProfileIntroduce())
-      .profileKey(
+      .profileImage(
         user.getProfileKey() == null
           ? null
           : this.s3.getDomain() + "/" + user.getProfileKey())

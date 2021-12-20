@@ -47,7 +47,6 @@ public sealed interface SeriesSubscribePost permits Request, Response {
     @PositiveOrZero
     int price
   ) implements SeriesSubscribePost {
-
     @Builder
     public Request {
     }
@@ -57,7 +56,6 @@ public sealed interface SeriesSubscribePost permits Request, Response {
   record Response(
     Long seriesId
   ) implements SeriesSubscribePost {
-
     @Builder
     public Response {
     }

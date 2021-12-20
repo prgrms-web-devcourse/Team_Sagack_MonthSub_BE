@@ -26,7 +26,6 @@ public sealed interface SeriesSubscribeEdit permits Request, Response {
     @NotBlank(message = "업로드 시간이 비어있습니다.")
     String uploadTime
   ) implements SeriesSubscribeEdit {
-
     @Builder
     public Request {
     }
@@ -37,7 +36,6 @@ public sealed interface SeriesSubscribeEdit permits Request, Response {
     Long seriesId,
     Boolean isMine
   ) implements SeriesSubscribeEdit {
-
     @Builder
     public Response {
     }

@@ -12,7 +12,6 @@ public sealed interface SeriesLikesList permits Response {
   record Response(
     List<SeriesListObject> seriesList
   ) implements SeriesLikesList {
-
     @Builder
     public Response {
     }

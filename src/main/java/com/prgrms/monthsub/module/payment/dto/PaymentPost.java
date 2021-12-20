@@ -1,17 +1,20 @@
 package com.prgrms.monthsub.module.payment.dto;
 
+import com.prgrms.monthsub.module.payment.dto.PaymentPost.PaymentSeries;
+import com.prgrms.monthsub.module.payment.dto.PaymentPost.Response;
+import com.prgrms.monthsub.module.payment.dto.PaymentPost.UserPoint;
 import com.prgrms.monthsub.module.series.series.domain.Series.Category;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import lombok.Builder;
 
-public class PaymentPost {
+public sealed interface PaymentPost permits PaymentSeries, Response, UserPoint {
   @Schema(name = "PaymentPost.Response")
-  public record Response(
+  record Response(
     PaymentSeries series,
     UserPoint user
-  ) {
+  ) implements PaymentPost {
   }
 
   @Schema(name = "PaymentPost.PaymentSeries")
@@ -27,9 +30,8 @@ public class PaymentPost {
     LocalDate endDate,
     String[] date,
     LocalTime time
-  ) {
-
-    @Builder()
+  ) implements PaymentPost {
+    @Builder
     public PaymentSeries {
     }
   }
@@ -37,8 +39,7 @@ public class PaymentPost {
   @Schema(name = "PaymentPost.UserPoint")
   record UserPoint(
     int point
-  ) {
-
+  ) implements PaymentPost {
     @Builder
     public UserPoint {
     }
