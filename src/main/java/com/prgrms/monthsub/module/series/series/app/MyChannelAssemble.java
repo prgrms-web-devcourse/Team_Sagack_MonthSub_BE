@@ -117,7 +117,8 @@ public class MyChannelAssemble {
         .stream()
         .map(writerLikes -> writerLikes.getWriter().getUser().getId())
         .collect(
-          Collectors.toList())).orElse(Collections.emptyList());
+          Collectors.toList())).orElse(Collections.emptyList()
+      );
 
     Boolean isMine = userIdOrEmpty.isPresent() && otherUserId.equals(userIdOrEmpty.get());
 
@@ -143,15 +144,17 @@ public class MyChannelAssemble {
           seriesService.findAllByWriterId(writer.getId())
             .stream()
             .peek(series -> {
-              if (likeSeriesList.contains(series.getId())) {
-                series.changeSeriesIsLiked(true);
+                if (likeSeriesList.contains(series.getId())) {
+                  series.changeSeriesIsLiked(true);
+                }
               }
-            }).collect(Collectors.toList())
+            ).collect(Collectors.toList())
         )
       )
       .orElseGet(
         () -> myChannelConverter.toResponseWithoutWriter(
-          false, isMine, userEntity, writerLikesList));
+          false, isMine, userEntity, writerLikesList)
+      );
   }
 
   private Function<WriterLikes, Writer> getWriterLikesWriterFunction() {
