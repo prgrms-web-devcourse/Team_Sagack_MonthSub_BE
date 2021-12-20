@@ -77,7 +77,7 @@ security:
       - /series/{id}
       - /series/search/title
       - /series/search/nickname
-      - /channel/users/{userId}/other
+      - /channel
     post:
       - /signin
       - /signup
