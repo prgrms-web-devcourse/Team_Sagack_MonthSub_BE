@@ -107,13 +107,17 @@ public class MyChannelAssemble {
     Long otherUserId,
     Optional<Long> userIdOrEmpty
   ) {
-    List<Long> likeSeriesList =
-      userIdOrEmpty.isPresent() ? this.seriesLikesService.findAllByUserId(userIdOrEmpty.get())
-        : Collections.emptyList();
+    List<Long> likeSeriesList = userIdOrEmpty.map(
+        this.seriesLikesService::findAllByUserId
+      )
+      .orElse(
+        Collections.emptyList()
+      );
 
     List<Long> followWriterList =
-      userIdOrEmpty.map(aLong -> this.writerLikesService.getFollowWriterList(
-          aLong, LikesStatus.Like)
+      userIdOrEmpty.map(userId -> this.writerLikesService.getFollowWriterList(
+          userId, LikesStatus.Like
+        )
         .stream()
         .map(writerLikes -> writerLikes.getWriter().getUser().getId())
         .collect(
@@ -168,6 +172,5 @@ public class MyChannelAssemble {
       return writerLikes.getWriter();
     };
   }
-
 
 }

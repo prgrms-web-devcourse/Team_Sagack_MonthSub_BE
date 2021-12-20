@@ -6,7 +6,7 @@ public class WriterFollowEvent {
 
   @Schema(name = "WriterFollowEvent.Response")
   public record Response(
-    Long id,
+    Long userId,
     String followStatus
   ) {
   }

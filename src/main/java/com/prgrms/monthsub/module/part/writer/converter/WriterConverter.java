@@ -9,6 +9,7 @@ import com.prgrms.monthsub.module.series.series.dto.MainPage;
 import com.prgrms.monthsub.module.series.series.dto.MyChannel;
 import com.prgrms.monthsub.module.series.series.dto.MyChannel.MyChannelFollowWriterObject;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeList.SeriesOneWithWriterResponse;
+import java.util.Optional;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -29,7 +30,7 @@ public class WriterConverter {
     return new SeriesOneWithWriterResponse(
       writer.getId(),
       writer.getFollowCount(),
-      this.userConverter.toSeriesOneWithUser(writer.getUser())
+      this.userConverter.toSeriesOneWithUser(writer.getUser(), Optional.of(writer.getId()))
     );
   }
 
