@@ -45,7 +45,7 @@ public class MainPageConverter {
     Series series
   ) {
     return MainPage.MainPageSubscribeObject.builder()
-      .likeStatus(series.isLikedStatus())
+      .liked(series.isLikedStatus())
       .userId(series.getWriter().getUser().getId())
       .writerId(series.getWriter().getId())
       .nickname(series.getWriter().getUser().getNickname())

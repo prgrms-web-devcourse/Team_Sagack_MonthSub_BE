@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.experimental.Accessors;
 
 public class MainPage {
 
@@ -29,8 +30,9 @@ public class MainPage {
 
   @Getter
   @Builder
+  @Accessors(fluent = true, prefix = "is")
   public static class MainPageSubscribeObject {
-    public Boolean likeStatus;
+    public Boolean isLiked;
     public Long userId;
     public Long writerId;
     public Long seriesId;

@@ -81,6 +81,8 @@ public class MyChannelAssemble {
     return this.writerService
       .findByUserIdOrEmpty(userId)
       .map(writer -> myChannelConverter.toResponse(
+        true,
+        true,
         userEntity,
         writer,
         writerLikesList,
@@ -93,6 +95,8 @@ public class MyChannelAssemble {
           }).collect(Collectors.toList())
       ))
       .orElseGet(() -> myChannelConverter.toResponseWithoutWriter(
+        true,
+        true,
         userEntity,
         writerLikesList,
         mySubscribeList
@@ -100,40 +104,57 @@ public class MyChannelAssemble {
   }
 
   public MyChannel.OtherResponse getOtherChannel(
-    Long userId,
+    Long otherUserId,
     Optional<Long> userIdOrEmpty
   ) {
     List<Long> likeSeriesList =
       userIdOrEmpty.isPresent() ? this.seriesLikesService.findAllByUserId(userIdOrEmpty.get())
         : Collections.emptyList();
 
+    List<Long> followWriterList =
+      userIdOrEmpty.map(aLong -> this.writerLikesService.getFollowWriterList(
+          aLong, LikesStatus.Like)
+        .stream()
+        .map(writerLikes -> writerLikes.getWriter().getUser().getId())
+        .collect(
+          Collectors.toList())).orElse(Collections.emptyList()
+      );
+
+    Boolean isMine = userIdOrEmpty.isPresent() && otherUserId.equals(userIdOrEmpty.get());
+
     //1. 유저 객체 가져오기
-    User userEntity = this.userService.findById(userId);
+    User userEntity = this.userService.findById(otherUserId);
 
     //2. 내가 팔로잉한 작가 리스트 가져오기
     List<Writer> writerLikesList = this.writerLikesService
-      .findAllByUserIdAndAndLikesStatus(userId, LikesStatus.Like)
+      .findAllByUserIdAndAndLikesStatus(otherUserId, LikesStatus.Like)
       .stream()
       .map(this.getWriterLikesWriterFunction())
       .collect(Collectors.toList());
 
     return this.writerService
-      .findByUserIdOrEmpty(userId)
+      .findByUserIdOrEmpty(otherUserId)
       .map(writer ->
         myChannelConverter.toResponse(
+          followWriterList.contains(otherUserId),
+          isMine,
           userEntity,
           writer,
           writerLikesList,
           seriesService.findAllByWriterId(writer.getId())
             .stream()
             .peek(series -> {
-              if (likeSeriesList.contains(series.getId())) {
-                series.changeSeriesIsLiked(true);
+                if (likeSeriesList.contains(series.getId())) {
+                  series.changeSeriesIsLiked(true);
+                }
               }
-            }).collect(Collectors.toList())
+            ).collect(Collectors.toList())
         )
       )
-      .orElseGet(() -> myChannelConverter.toResponseWithoutWriter(userEntity, writerLikesList));
+      .orElseGet(
+        () -> myChannelConverter.toResponseWithoutWriter(
+          false, isMine, userEntity, writerLikesList)
+      );
   }
 
   private Function<WriterLikes, Writer> getWriterLikesWriterFunction() {

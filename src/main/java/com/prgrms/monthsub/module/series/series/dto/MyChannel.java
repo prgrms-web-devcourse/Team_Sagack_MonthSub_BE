@@ -7,11 +7,14 @@ import java.time.LocalDate;
 import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.experimental.Accessors;
 
 public class MyChannel {
 
   @Schema(name = "MyChannel.Response")
   public record Response(
+    Boolean isFollowed,
+    Boolean isMine,
     SeriesOneWithUserResponse user,
     int followIngCount,
     List<MyChannelFollowWriterObject> followWriterList,
@@ -23,6 +26,8 @@ public class MyChannel {
 
   @Schema(name = "MyChannel.OtherResponse")
   public record OtherResponse(
+    Boolean isFollowed,
+    Boolean isMine,
     SeriesOneWithUserResponse user,
     int followIngCount,
     List<MyChannelFollowWriterObject> followWriterList,
@@ -43,8 +48,9 @@ public class MyChannel {
 
   @Builder
   @Getter
+  @Accessors(fluent = true, prefix = "is")
   public static class MyChannelSubscribeObject {
-    public Boolean likeStatus;
+    public Boolean isLiked;
     public Long userId;
     public Long writerId;
     public Long seriesId;
@@ -63,8 +69,9 @@ public class MyChannel {
 
   @Builder
   @Getter
+  @Accessors(fluent = true, prefix = "is")
   public static class MyChannelSeriesObject {
-    public Boolean likeStatus;
+    public Boolean isLiked;
     public Long userId;
     public Long writerId;
     public Long seriesId;
