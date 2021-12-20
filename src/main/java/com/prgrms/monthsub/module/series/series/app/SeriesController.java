@@ -4,6 +4,7 @@ import static java.util.Optional.ofNullable;
 
 import com.prgrms.monthsub.common.security.jwt.JwtAuthentication;
 import com.prgrms.monthsub.module.series.series.domain.Series.Category;
+import com.prgrms.monthsub.module.series.series.domain.Series.SeriesStatus;
 import com.prgrms.monthsub.module.series.series.domain.type.SortType;
 import com.prgrms.monthsub.module.series.series.dto.SeriesLikesEvent;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeEdit;
@@ -153,14 +154,16 @@ public class SeriesController {
     @RequestParam(required = false) Long lastSeriesId,
     @RequestParam @Positive Integer size,
     @RequestParam(required = false, defaultValue = "ALL")
-      Category[] categories
+      Category[] categories,
+    @RequestParam(required = false, defaultValue = "ALL")
+      SeriesStatus[] status
   ) {
     return ofNullable(authentication)
       .map(authenticate -> this.seriesAssemble.getSeriesList(ofNullable(lastSeriesId), size,
-        List.of(categories), ofNullable(authenticate.userId)
+        List.of(categories), ofNullable(authenticate.userId), List.of(status)
       ))
       .orElse(this.seriesAssemble.getSeriesList(ofNullable(lastSeriesId), size, List.of(categories),
-        Optional.empty()
+        Optional.empty(), List.of(status)
       ));
   }
 

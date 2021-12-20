@@ -56,7 +56,7 @@ public class MainPageConverter {
       .introduceSentence(series.getIntroduceSentence())
       .seriesStartDate(series.getSeriesStartDate())
       .seriesEndDate(series.getSeriesEndDate())
-      .subscribeStartDate(series.getSeriesStartDate())
+      .subscribeStartDate(series.getSubscribeStartDate())
       .subscribeEndDate(series.getSubscribeEndDate())
       .likes(series.getLikes())
       .category(series.getCategory())
