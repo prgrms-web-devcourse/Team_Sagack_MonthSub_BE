@@ -20,6 +20,11 @@ public interface WriterLikesRepository extends JpaRepository<WriterLikes, Long> 
     Pageable pageable
   );
 
+  List<WriterLikes> findAllByUserIdAndLikesStatus(
+    Long userId,
+    LikesStatus likesStatus
+  );
+
   List<WriterLikes> findByIdGreaterThanAndUserIdAndLikesStatus(
     Long id,
     Long userId,
