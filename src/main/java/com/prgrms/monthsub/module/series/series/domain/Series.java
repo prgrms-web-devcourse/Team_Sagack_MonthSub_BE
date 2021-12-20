@@ -126,6 +126,20 @@ public class Series extends BaseEntity {
     this.writer = writer;
   }
 
+  public void changeSeriesStatus(
+    LocalDate today
+  ) {
+    if (this.subscribeStartDate.compareTo(today) <= 0
+      && this.subscribeEndDate.compareTo(today) >= 0) {
+      this.subscribeStatus = SeriesStatus.SUBSCRIPTION_AVAILABLE;
+    } else if (this.seriesStartDate.compareTo(today) <= 0
+      && this.seriesEndDate.compareTo(today) >= 0) {
+      this.subscribeStatus = SeriesStatus.SERIALIZATION_AVAILABLE;
+    } else {
+      this.subscribeStatus = SeriesStatus.SUBSCRIPTION_AVAILABLE;
+    }
+  }
+
   public void editSeries(
     SeriesSubscribeEdit.Request request
   ) {
@@ -182,12 +196,24 @@ public class Series extends BaseEntity {
 
   public enum SeriesStatus {
 
+    ALL,
+    SERIALIZATION_AVAILABLE,
     SUBSCRIPTION_UNAVAILABLE,
     SUBSCRIPTION_AVAILABLE;
 
     public static SeriesStatus of(String seriesStatus) {
       return SeriesStatus.valueOf(seriesStatus.toUpperCase());
     }
+
+    public static List<SeriesStatus> getAllStatus() {
+      return List.of(
+        SeriesStatus.ALL,
+        SeriesStatus.SERIALIZATION_AVAILABLE,
+        SeriesStatus.SUBSCRIPTION_UNAVAILABLE,
+        SeriesStatus.SUBSCRIPTION_AVAILABLE
+      );
+    }
+
   }
 
 }
