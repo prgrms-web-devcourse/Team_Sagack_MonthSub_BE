@@ -12,14 +12,16 @@ public class UserLogin {
 
     @NotBlank(message = "비밀번호가 비어있습니다.")
     String password
-  ) {}
+  ) {
+  }
 
   @Schema(name = "UserLogin.Response")
   public record Response(
     Long userId,
     String token,
-    String username,
+    String email,
     String group
-  ) {}
+  ) {
+  }
 
 }

@@ -168,7 +168,6 @@ public class Series extends BaseEntity {
   }
 
   public enum Category {
-
     ALL,
     POEM,
     NOVEL,
@@ -195,7 +194,6 @@ public class Series extends BaseEntity {
   }
 
   public enum SeriesStatus {
-
     ALL,
     SERIALIZATION_AVAILABLE,
     SUBSCRIPTION_UNAVAILABLE,
@@ -213,7 +211,6 @@ public class Series extends BaseEntity {
         SeriesStatus.SUBSCRIPTION_AVAILABLE
       );
     }
-
   }
 
 }

@@ -107,13 +107,6 @@ public class SeriesService implements SeriesProvider, ScheduledHandler {
     return this.seriesRepository.findAllByCategoryIn(categories, pageable);
   }
 
-  public List<Series> getSeries(
-    Long id,
-    Pageable pageable
-  ) {
-    return this.seriesRepository.findByIdLessThan(id, pageable);
-  }
-
   @Transactional
   @Override
   public void changeSeriesStatus() {
@@ -135,4 +128,5 @@ public class SeriesService implements SeriesProvider, ScheduledHandler {
     logger.info("확인 된 Series 갯 수 : {}", editCount);
     this.seriesRepository.saveAll(seriesList);
   }
+
 }

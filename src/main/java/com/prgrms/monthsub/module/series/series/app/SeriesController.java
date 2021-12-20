@@ -1,5 +1,6 @@
 package com.prgrms.monthsub.module.series.series.app;
 
+import static java.util.Optional.of;
 import static java.util.Optional.ofNullable;
 
 import com.prgrms.monthsub.common.security.jwt.JwtAuthentication;
@@ -10,6 +11,7 @@ import com.prgrms.monthsub.module.series.series.dto.SeriesLikesEvent;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeEdit;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeList;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeOne;
+import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeOne.UsageEditResponse;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribePost;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -66,10 +68,10 @@ public class SeriesController {
     @PathVariable Long id
   ) {
     return ofNullable(authentication)
-      .map(authenticate -> this.seriesAssemble.getSeriesBySeriesId(
-        id, ofNullable(authenticate.userId)
+      .map(authenticate -> this.seriesAssemble.getSeriesOne(
+        id, of(authenticate.userId)
       ))
-      .orElse(this.seriesAssemble.getSeriesBySeriesId(id, Optional.empty()));
+      .orElse(this.seriesAssemble.getSeriesOne(id, Optional.empty()));
   }
 
   @PostMapping("/{id}/likes")
@@ -95,7 +97,7 @@ public class SeriesController {
   @GetMapping("/{id}/edit")
   @Operation(summary = "수정 요청시 시리즈 공고 단건 조회")
   @Tag(name = "[화면]-시리즈")
-  public SeriesSubscribeOne.ResponseUsageEdit getSeriesByIdUsageEdit(
+  public SeriesSubscribeOne.UsageEditResponse getSeriesByIdUsageEdit(
     @AuthenticationPrincipal JwtAuthentication authentication,
     @PathVariable Long id
   ) {
@@ -157,7 +159,7 @@ public class SeriesController {
   ) {
     return ofNullable(authentication)
       .map(authenticate -> this.seriesAssemble.getSeriesList(ofNullable(lastSeriesId), size,
-        List.of(categories), ofNullable(authenticate.userId), List.of(status)
+        List.of(categories), of(authenticate.userId), List.of(status)
       ))
       .orElse(this.seriesAssemble.getSeriesList(ofNullable(lastSeriesId), size, List.of(categories),
         Optional.empty(), List.of(status)

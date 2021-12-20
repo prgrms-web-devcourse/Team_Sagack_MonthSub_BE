@@ -44,4 +44,5 @@ public class PaymentController {
   ) {
     return this.paymentService.pay(id, authentication.userId);
   }
+
 }

@@ -1,6 +1,7 @@
 package com.prgrms.monthsub.module.series.series.app;
 
 
+import static java.util.Optional.of;
 import static java.util.Optional.ofNullable;
 
 import com.prgrms.monthsub.common.security.jwt.JwtAuthentication;
@@ -32,7 +33,7 @@ public class MainPageController {
   ) {
     return ofNullable(authentication)
       .map(authenticate -> this.mainPageAssemble.getMainPage(
-        ofNullable(authenticate.userId)
+        of(authenticate.userId)
       ))
       .orElse(this.mainPageAssemble.getMainPage(Optional.empty()));
   }

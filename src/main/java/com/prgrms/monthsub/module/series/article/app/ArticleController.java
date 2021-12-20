@@ -54,7 +54,8 @@ public class ArticleController {
     @Valid @RequestPart ArticleEdit.ChangeRequest request
   ) {
     return this.articleAssemble.editArticle(
-      id, request, Optional.ofNullable(file), authentication.userId);
+      id, request, Optional.ofNullable(file), authentication.userId
+    );
   }
 
   @GetMapping(path = "/{id}")

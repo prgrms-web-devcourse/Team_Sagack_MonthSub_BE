@@ -11,14 +11,13 @@ import com.prgrms.monthsub.module.series.series.domain.Series.Category;
 import com.prgrms.monthsub.module.series.series.domain.Series.SeriesStatus;
 import com.prgrms.monthsub.module.series.series.dto.MyChannel;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeList;
-import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeList.SeriesObject;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeList.SeriesOneWithWriterResponse;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeList.SubscribeObject;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeList.UploadObject;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeList.WriterObject;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeOne;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeOne.Response;
-import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeOne.ResponseUsageEdit;
+import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeOne.UsageEditResponse;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribePost;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -78,7 +77,7 @@ public class SeriesConverter {
     return new Response(
       series.isLikedStatus(),
       isMine,
-      SeriesObject.builder()
+      SeriesSubscribeList.SeriesObject.builder()
         .id(series.getId())
         .thumbnail(this.toThumbnailEndpoint(series.getThumbnailKey()))
         .title(series.getTitle())
@@ -141,12 +140,12 @@ public class SeriesConverter {
       .build();
   }
 
-  public SeriesSubscribeOne.ResponseUsageEdit toResponseUsageEdit(
+  public UsageEditResponse toResponseUsageEdit(
     Series series,
     List<ArticleUploadDate> uploadDateList
   ) {
-    return new ResponseUsageEdit(
-      SeriesObject.builder()
+    return new UsageEditResponse(
+      SeriesSubscribeList.SeriesObject.builder()
         .id(series.getId())
         .title(series.getTitle())
         .introduceSentence(series.getIntroduceSentence())
@@ -170,8 +169,8 @@ public class SeriesConverter {
     );
   }
 
-  public MyChannel.MyChannelSubscribeObject toMyChannelSubscribeObject(Series series) {
-    return MyChannel.MyChannelSubscribeObject.builder()
+  public MyChannel.SubscribeObject toMyChannelSubscribeObject(Series series) {
+    return MyChannel.SubscribeObject.builder()
       .liked(series.isLikedStatus())
       .userId(series.getWriter().getUser().getId())
       .writerId(series.getWriter().getId())
@@ -190,8 +189,8 @@ public class SeriesConverter {
       .build();
   }
 
-  public MyChannel.MyChannelSeriesObject toMyChannelSeriesObject(Series series) {
-    return MyChannel.MyChannelSeriesObject.builder()
+  public MyChannel.SeriesObject toMyChannelSeriesObject(Series series) {
+    return MyChannel.SeriesObject.builder()
       .liked(series.isLikedStatus())
       .userId(series.getWriter().getUser().getId())
       .writerId(series.getWriter().getId())

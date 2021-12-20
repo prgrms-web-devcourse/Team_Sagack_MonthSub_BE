@@ -56,14 +56,12 @@ public class Comment extends BaseEntity {
   }
 
   public enum CommentStatus {
-
     CREATED,
     DELETED;
 
     public static CommentStatus of(String commentStatus) {
       return CommentStatus.valueOf(commentStatus.toUpperCase());
     }
-
   }
 
 }

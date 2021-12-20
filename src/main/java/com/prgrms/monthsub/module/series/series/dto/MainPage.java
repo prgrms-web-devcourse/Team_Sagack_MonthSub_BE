@@ -12,15 +12,15 @@ public class MainPage {
 
   @Schema(name = "MainPage.Response")
   public record Response(
-    List<MainPageSubscribeObject> popularSeriesList,
-    List<MainPageFollowWriterObject> popularWriterList,
-    List<MainPageSubscribeObject> recentSeriesList
+    List<SubscribeObject> popularSeriesList,
+    List<FollowWriterObject> popularWriterList,
+    List<SubscribeObject> recentSeriesList
   ) {
   }
 
   @Getter
   @Builder
-  public static class MainPageFollowWriterObject {
+  public static class FollowWriterObject {
     Long userId;
     Long writerId;
     String nickname;
@@ -31,7 +31,7 @@ public class MainPage {
   @Getter
   @Builder
   @Accessors(fluent = true, prefix = "is")
-  public static class MainPageSubscribeObject {
+  public static class SubscribeObject {
     public Boolean isLiked;
     public Long userId;
     public Long writerId;

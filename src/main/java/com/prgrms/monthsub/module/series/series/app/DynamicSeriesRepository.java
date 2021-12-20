@@ -6,10 +6,12 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface DynamicSeriesRepository {
+
   List<Series> findAllByCategory(
     Long lastSeriesId,
     int size,
     List<Category> categories,
     LocalDateTime createdAt
   );
+
 }

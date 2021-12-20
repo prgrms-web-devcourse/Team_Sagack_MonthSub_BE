@@ -78,9 +78,9 @@ public class UserService implements UserProvider {
   public UserSignUp.Response signUp(UserSignUp.Request request) {
     checkEmail(request.email());
     checkNickName(request.nickName());
-    User entity = this.userRepository.save(this.userConverter.toEntity(request));
+    User user = this.userRepository.save(this.userConverter.toEntity(request));
 
-    return new UserSignUp.Response(entity.getId());
+    return new UserSignUp.Response(user.getId());
   }
 
   @Transactional
@@ -89,7 +89,6 @@ public class UserService implements UserProvider {
     UserEdit.Request request,
     Optional<MultipartFile> image
   ) {
-
     checkNickName(request.nickName(), id);
     User user = this.findById(id);
 

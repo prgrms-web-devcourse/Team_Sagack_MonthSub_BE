@@ -9,7 +9,7 @@ import lombok.Builder;
 public class PaymentPost {
   @Schema(name = "PaymentPost.Response")
   public record Response(
-    PaymentPost.PaymentSeries series,
+    PaymentSeries series,
     UserPoint user
   ) {
   }

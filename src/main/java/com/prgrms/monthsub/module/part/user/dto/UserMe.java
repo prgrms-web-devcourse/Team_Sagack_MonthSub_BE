@@ -13,6 +13,7 @@ public class UserMe {
     String profileKey,
     String profileIntroduce,
     String group
-  ) {}
+  ) {
+  }
 
 }

@@ -96,7 +96,8 @@ public class ArticleAssemble {
     }
 
     thumbnail.map(
-      multipartFile -> this.changeThumbnail(multipartFile, request.seriesId(), article, userId));
+      multipartFile -> this.changeThumbnail(multipartFile, request.seriesId(), article, userId)
+    );
     article.changeWriting(request.title(), request.contents());
 
     return new ArticleEdit.ChangeResponse(article.getId(), true);

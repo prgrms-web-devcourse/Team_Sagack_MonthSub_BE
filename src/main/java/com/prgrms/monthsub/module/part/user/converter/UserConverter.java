@@ -4,6 +4,8 @@ import static com.prgrms.monthsub.module.part.user.domain.User.POINT;
 
 import com.prgrms.monthsub.common.s3.config.S3;
 import com.prgrms.monthsub.module.part.user.app.PartService;
+import com.prgrms.monthsub.module.part.user.domain.Part;
+import com.prgrms.monthsub.module.part.user.domain.Part.Name;
 import com.prgrms.monthsub.module.part.user.domain.User;
 import com.prgrms.monthsub.module.part.user.dto.UserMe;
 import com.prgrms.monthsub.module.part.user.dto.UserMe.Response;
@@ -67,7 +69,7 @@ public class UserConverter {
       .password(this.bCryptEncoder.encode(request.password()))
       .point(POINT)
       .username(request.userName())
-      .part(this.partService.findByName("USER_GROUP"))
+      .part(this.partService.findByName(Name.USER_GROUP.name()))
       .build();
   }
 
