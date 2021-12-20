@@ -61,7 +61,7 @@ public class SeriesSubscribeList {
     public LocalDate subscribeStartDate;
     public LocalDate subscribeEndDate;
     public int likes;
-    Series.Category category;
+    public Series.Category category;
   }
 
   @Builder
