@@ -3,6 +3,7 @@ package com.prgrms.monthsub.module.part.writer.app;
 import com.prgrms.monthsub.common.security.jwt.JwtAuthentication;
 import com.prgrms.monthsub.module.part.writer.dto.WriterFollowEvent;
 import com.prgrms.monthsub.module.part.writer.dto.WriterLikesList;
+import com.prgrms.monthsub.module.part.writer.dto.WriterList;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import javax.validation.constraints.Positive;
@@ -20,11 +21,14 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Writer")
 public class WriterController {
   private final WriterLikesService writerLikesService;
+  private final WriterService writerService;
 
   public WriterController(
-    WriterLikesService writerLikesService
+    WriterLikesService writerLikesService,
+    WriterService writerService
   ) {
     this.writerLikesService = writerLikesService;
+    this.writerService = writerService;
   }
 
   @PostMapping("/{id}/follow")
@@ -45,6 +49,13 @@ public class WriterController {
     @PathVariable Long id
   ) {
     return this.writerLikesService.cancelLikesEvent(authentication.userId, id);
+  }
+
+  @GetMapping("/popular")
+  @Operation(summary = "인기 작가 리스트")
+  @Tag(name = "[화면]-메인 페이지")
+  public WriterList.Response getPopularWriterList() {
+    return this.writerService.findAll();
   }
 
   @GetMapping("/likes")
