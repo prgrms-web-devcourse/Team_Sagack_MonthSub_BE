@@ -20,7 +20,7 @@ public class UserSignUp {
     String nickName
   ) {}
 
-  @Schema(name = "UserSignUp.Response")
+  @Schema(name = "SignUp.Response")
   public record Response(
     Long userId
   ) {
