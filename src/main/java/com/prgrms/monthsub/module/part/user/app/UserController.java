@@ -20,13 +20,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping("/users")
 @Tag(name = "Users")
 public class UserController {
 
@@ -64,7 +62,7 @@ public class UserController {
     );
   }
 
-  @GetMapping(path = "/me")
+  @GetMapping(path = "/users/me")
   @Operation(summary = "내 정보 확인")
   @Tag(name = "[화면]-마이페이지")
   public UserMe.Response me(
@@ -74,7 +72,7 @@ public class UserController {
     return this.userConverter.toUserMe(user);
   }
 
-  @PutMapping(path = "/me", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+  @PutMapping(path = "/users/me", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
   @Operation(summary = "내 정보 수정")
   @Tag(name = "[화면]-마이페이지")
   public UserEdit.Response edit(

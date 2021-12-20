@@ -79,8 +79,8 @@ security:
       - /series/search/nickname
       - /channel/users/{userId}/other
     post:
-      - /users/login
-      - /users/signup
+      - /signin
+      - /signup
 #    put:
 #    patch:
 
