@@ -1,6 +1,7 @@
 package com.prgrms.monthsub.module.part.writer.app.provider;
 
 import com.prgrms.monthsub.module.part.writer.domain.Writer;
+import java.util.Optional;
 
 public interface WriterProvider {
 
@@ -8,4 +9,6 @@ public interface WriterProvider {
 
   Writer findById(Long id);
 
-}
+  Optional<Writer> findByUserIdOrEmpty(Long userId);
+
+  }
