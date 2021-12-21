@@ -25,4 +25,10 @@ public class UserException {
     }
   }
 
+  public static class NoPoint extends BusinessException {
+    public NoPoint(String... message) {
+      super(ErrorCodes.NO_POINT(Arrays.stream(message).toList().toString()));
+    }
+  }
+
 }

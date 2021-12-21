@@ -286,20 +286,26 @@ public class SeriesAssemble {
   }
 
   public SeriesSubscribeList.Response getSeriesPostList(Long userId) {
-    List<Long> likeSeriesList = this.seriesLikesService.findAllByUserId(userId);
-
-    return new SeriesSubscribeList.Response(
-      this.seriesService
-        .findAllByWriterId(this.writerProvider.findByUserId(userId).getId())
-        .stream()
-        .peek(series -> {
-          if (likeSeriesList.contains(series.getId())) {
-            series.changeSeriesIsLiked(true);
-          }
-        })
-        .map(seriesConverter::toResponse)
-        .collect(Collectors.toList())
-    );
+    //TODO user table part id로 part 확인해야함.
+    return writerProvider.findByUserIdOrEmpty(userId).map(writer -> {
+          List<Long> likeSeriesList = this.seriesLikesService.findAllByUserId(userId);
+          return new SeriesSubscribeList.Response(
+            this.seriesService
+              .findAllByWriterId(this.writerProvider.findByUserId(userId).getId())
+              .stream()
+              .peek(series -> {
+                if (likeSeriesList.contains(series.getId())) {
+                  series.changeSeriesIsLiked(true);
+                }
+              })
+              .map(seriesConverter::toResponse)
+              .collect(Collectors.toList())
+          );
+        }
+      )
+      .orElse(
+        new SeriesSubscribeList.Response(Collections.emptyList())
+      );
   }
 
   public SeriesSubscribeList.Response getSeriesList(
