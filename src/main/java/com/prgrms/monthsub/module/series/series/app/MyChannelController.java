@@ -1,5 +1,6 @@
 package com.prgrms.monthsub.module.series.series.app;
 
+import static java.util.Optional.of;
 import static java.util.Optional.ofNullable;
 
 import com.prgrms.monthsub.common.security.jwt.JwtAuthentication;
@@ -40,10 +41,13 @@ public class MyChannelController {
     @AuthenticationPrincipal JwtAuthentication authentication,
     @RequestParam(value = "user") Long userId
   ) {
-    return this.channelAssemble.getOtherChannel(
-      userId,
-      Optional.ofNullable(authentication.userId)
-    );
+    return ofNullable(authentication)
+      .map(authenticate -> this.channelAssemble.getOtherChannel(
+        userId, of(authenticate.userId)
+      ))
+      .orElse(this.channelAssemble.getOtherChannel(
+        userId, Optional.empty()
+      ));
   }
 
 }
