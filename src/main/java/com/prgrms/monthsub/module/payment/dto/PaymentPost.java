@@ -1,6 +1,5 @@
 package com.prgrms.monthsub.module.payment.dto;
 
-import com.prgrms.monthsub.module.payment.dto.PaymentPost.PaymentSeries;
 import com.prgrms.monthsub.module.payment.dto.PaymentPost.Response;
 import com.prgrms.monthsub.module.payment.dto.PaymentPost.UserPoint;
 import com.prgrms.monthsub.module.series.series.domain.Series.Category;
@@ -9,16 +8,9 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import lombok.Builder;
 
-public sealed interface PaymentPost permits PaymentSeries, Response, UserPoint {
+public sealed interface PaymentPost permits Response, UserPoint {
   @Schema(name = "PaymentPost.Response")
   record Response(
-    PaymentSeries series,
-    UserPoint user
-  ) implements PaymentPost {
-  }
-
-  @Schema(name = "PaymentPost.PaymentSeries")
-  record PaymentSeries(
     String email,
     String nickname,
     String title,
@@ -29,11 +21,13 @@ public sealed interface PaymentPost permits PaymentSeries, Response, UserPoint {
     LocalDate startDate,
     LocalDate endDate,
     String[] date,
-    LocalTime time
+    LocalTime time,
+    UserPoint user
   ) implements PaymentPost {
     @Builder
-    public PaymentSeries {
+    public Response {
     }
+
   }
 
   @Schema(name = "PaymentPost.UserPoint")

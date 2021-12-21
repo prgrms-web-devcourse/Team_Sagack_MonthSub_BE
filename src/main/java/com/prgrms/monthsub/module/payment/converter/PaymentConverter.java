@@ -54,26 +54,28 @@ public class PaymentConverter {
     List<ArticleUploadDate> uploadDateList,
     int point
   ) {
-    return new PaymentPost.Response(
-      PaymentPost.PaymentSeries.builder()
-        .email(series.getWriter().getUser().getEmail())
-        .nickname(series.getWriter().getUser().getNickname())
-        .title(series.getTitle())
-        .thumbnail(this.s3.getDomain() + "/" + series.getThumbnailKey())
-        .category(series.getCategory())
-        .price(series.getPrice())
-        .articleCount(series.getArticleCount())
-        .startDate(series.getSubscribeStartDate())
-        .endDate(series.getSubscribeEndDate())
-        .date(uploadDateList.stream().map(uploadDate ->
-          uploadDate.getUploadDate().toString().toLowerCase()).toArray(String[]::new)
+    return PaymentPost.Response.builder()
+      .email(series.getWriter().getUser().getEmail())
+      .nickname(series.getWriter().getUser().getNickname())
+      .title(series.getTitle())
+      .thumbnail(this.s3.getDomain() + "/" + series.getThumbnailKey())
+      .category(series.getCategory())
+      .price(series.getPrice())
+      .articleCount(series.getArticleCount())
+      .startDate(series.getSubscribeStartDate())
+      .endDate(series.getSubscribeEndDate())
+      .date(uploadDateList.stream()
+        .map(uploadDate ->
+          uploadDate
+            .getUploadDate()
+            .toString()
+            .toLowerCase()
         )
-        .time(series.getUploadTime())
-        .build(),
-      UserPoint.builder()
-        .point(point)
-        .build()
-    );
+        .toArray(String[]::new)
+      )
+      .time(series.getUploadTime())
+      .user(UserPoint.builder().point(point).build())
+      .build();
   }
 
 }
