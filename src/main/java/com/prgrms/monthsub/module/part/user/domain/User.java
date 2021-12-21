@@ -1,6 +1,7 @@
 package com.prgrms.monthsub.module.part.user.domain;
 
 import com.prgrms.monthsub.common.domain.BaseEntity;
+import com.prgrms.monthsub.module.part.user.domain.exception.UserException.NoPoint;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -118,7 +119,7 @@ public class User extends BaseEntity {
 
   public int decreasePoint(int point) {
     if (this.point - point < 0) {
-      throw new IllegalArgumentException("포인트가 부족합니다.");
+      throw new NoPoint("포인트가 부족합니다.");
     }
 
     return this.point -= point;
