@@ -1,6 +1,6 @@
-package com.prgrms.monthsub.module.payment.app;
+package com.prgrms.monthsub.module.payment.bill.app;
 
-import com.prgrms.monthsub.module.payment.domain.Payment;
+import com.prgrms.monthsub.module.payment.bill.domain.Payment;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;

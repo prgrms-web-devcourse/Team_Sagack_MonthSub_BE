@@ -1,6 +1,6 @@
-package com.prgrms.monthsub.module.payment.app.provider;
+package com.prgrms.monthsub.module.payment.bill.app.provider;
 
-import com.prgrms.monthsub.module.payment.domain.Payment;
+import com.prgrms.monthsub.module.payment.bill.domain.Payment;
 import java.util.List;
 import java.util.Optional;
 

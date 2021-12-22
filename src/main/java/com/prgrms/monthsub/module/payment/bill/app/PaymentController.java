@@ -1,8 +1,8 @@
-package com.prgrms.monthsub.module.payment.app;
+package com.prgrms.monthsub.module.payment.bill.app;
 
 import com.prgrms.monthsub.common.security.jwt.JwtAuthentication;
-import com.prgrms.monthsub.module.payment.dto.PaymentPost;
-import com.prgrms.monthsub.module.payment.dto.PaymentSeries;
+import com.prgrms.monthsub.module.payment.bill.dto.PaymentPost;
+import com.prgrms.monthsub.module.payment.bill.dto.PaymentSeries;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

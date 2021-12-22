@@ -1,4 +1,4 @@
-package com.prgrms.monthsub.module.payment.domain.exception;
+package com.prgrms.monthsub.module.payment.bill.domain.exception;
 
 import com.prgrms.monthsub.common.exception.base.InvalidInputException;
 import com.prgrms.monthsub.common.exception.model.ErrorCodes;

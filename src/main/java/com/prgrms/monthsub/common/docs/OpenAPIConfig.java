@@ -29,30 +29,31 @@ public class OpenAPIConfig {
   @Bean
   public OpenApiCustomiser customOpenAPI(BuildProperties buildProperties) {
     return openAPI -> {
-      if (!Arrays.asList(environment.getActiveProfiles())
-        .contains(PROD)) {
-        openAPI.info(new Info()
-            .title("MonthSub API")
-            .version(buildProperties.getVersion())
-            .termsOfService("https://monthsub.netlify.app/")
-            .license(new License().name("Apache 2.0")
-              .url("http://springdoc.org"))
-          )
-          .components(
-            openAPI.getComponents()
-              .addSecuritySchemes(
-                "bearer",
-                new SecurityScheme()
-                  .type(Type.HTTP)
-                  .scheme("bearer")
-                  .bearerFormat("JWT")
-                  .in(SecurityScheme.In.HEADER)
-                  .name("Authorization")
+      if (!Arrays.asList(environment.getActiveProfiles()).contains(PROD)) {
+        openAPI.info(
+            new Info()
+              .title("MonthSub API")
+              .version(buildProperties.getVersion())
+              .termsOfService("https://monthsub.netlify.app/")
+              .license(
+                new License().name("Apache 2.0").url("http://springdoc.org")
               )
           )
+          .components(
+            openAPI.getComponents().addSecuritySchemes(
+              "bearer",
+              new SecurityScheme()
+                .type(Type.HTTP)
+                .scheme("bearer")
+                .bearerFormat("JWT")
+                .in(SecurityScheme.In.HEADER)
+                .name("Authorization")
+            )
+          )
           .addSecurityItem(
-            new SecurityRequirement()
-              .addList("bearer", Arrays.asList("read", "write"))
+            new SecurityRequirement().addList(
+              "bearer", Arrays.asList("read", "write")
+            )
           );
       } else {
         openAPI.setComponents(new Components());

@@ -3,7 +3,7 @@ package com.prgrms.monthsub.module.series.article.app;
 import com.prgrms.monthsub.common.s3.S3Client;
 import com.prgrms.monthsub.common.s3.config.S3.Bucket;
 import com.prgrms.monthsub.module.part.user.app.provider.UserProvider;
-import com.prgrms.monthsub.module.payment.app.provider.PaymentProvider;
+import com.prgrms.monthsub.module.payment.bill.app.provider.PaymentProvider;
 import com.prgrms.monthsub.module.series.article.converter.ArticleConverter;
 import com.prgrms.monthsub.module.series.article.domain.Article;
 import com.prgrms.monthsub.module.series.article.domain.exception.ArticleException.ViewUnAuthorize;
