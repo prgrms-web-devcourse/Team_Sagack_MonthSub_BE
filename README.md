@@ -1,12 +1,18 @@
 # Monthsub
+![image](https://user-images.githubusercontent.com/70589857/147059348-66c7769a-d6ce-4e0c-8de6-2fed65a274c4.png)
+
 [Monthsub 바로가기](https://monthsub.netlify.app)
 
-## ♨️ 프로젝트 소개
-    프로젝트 기간 : 2021/11/26 ~ 
-
+## 🤗 프로젝트 소개
+- 프로젝트 기간 : 2021/11/26 ~ 
+- 작가와 독자의 연결고리, 모두의 출판 플랫폼 MonthSub!
 ---
 ## 🧚‍♀️ 팀 소개
-김다희, 김은서, 유지훈
+
+|김다희|김은서|유지훈|
+|:---:|:---:|:---:|
+|<img src="https://user-images.githubusercontent.com/70589857/147060575-ec7c45e4-435e-42d6-896c-07cef5a76f32.png" width="60%"    />|<img src="https://user-images.githubusercontent.com/68772751/139533586-1edc542b-ab38-4b0e-ad30-8947aff3d70b.png" width="60%"  />|<img src="https://user-images.githubusercontent.com/70589857/147061670-e47bfdc2-ba54-4083-a403-cd3068ad6ae0.png" width="60%"   />
+
 
 ---
 ## 🚀 기술스택
@@ -55,7 +61,7 @@
 - 프로젝트 설치
 
 ```bash
-$ git clone https://github.com/prgrms-be-devcourse/BEDV1_Interparkyu
+$ git clone https://github.com/prgrms-web-devcourse/Team_Sagack_MonthSub_BE
 
 # 프로젝트 루트 디렉토리에서 실행 
 # husky 설치로 git hook 관리 
