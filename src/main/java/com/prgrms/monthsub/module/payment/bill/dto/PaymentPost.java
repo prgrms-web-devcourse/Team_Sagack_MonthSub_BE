@@ -1,7 +1,7 @@
-package com.prgrms.monthsub.module.payment.dto;
+package com.prgrms.monthsub.module.payment.bill.dto;
 
-import com.prgrms.monthsub.module.payment.dto.PaymentPost.Response;
-import com.prgrms.monthsub.module.payment.dto.PaymentPost.UserPoint;
+import com.prgrms.monthsub.module.payment.bill.dto.PaymentPost.Response;
+import com.prgrms.monthsub.module.payment.bill.dto.PaymentPost.UserPoint;
 import com.prgrms.monthsub.module.series.series.domain.Series.Category;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;

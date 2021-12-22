@@ -122,7 +122,8 @@ public class S3Client {
           key,
           file.getInputStream(),
           objectMetadata
-        ).withCannedAcl(CannedAccessControlList.PublicRead)
+        )
+          .withCannedAcl(CannedAccessControlList.PublicRead)
       );
     } catch (IOException e) {
       String message = "File=" + file.getOriginalFilename();

@@ -1,6 +1,6 @@
-package com.prgrms.monthsub.module.payment.dto;
+package com.prgrms.monthsub.module.payment.bill.dto;
 
-import com.prgrms.monthsub.module.payment.dto.PaymentSeries.Response;
+import com.prgrms.monthsub.module.payment.bill.dto.PaymentSeries.Response;
 import com.prgrms.monthsub.module.series.series.domain.Series.Category;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;

@@ -1,4 +1,4 @@
-package com.prgrms.monthsub.module.payment.domain;
+package com.prgrms.monthsub.module.payment.bill.domain;
 
 import com.prgrms.monthsub.common.domain.BaseEntity;
 import com.prgrms.monthsub.module.series.series.domain.Series;

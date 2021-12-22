@@ -1,14 +1,14 @@
-package com.prgrms.monthsub.module.payment.app;
+package com.prgrms.monthsub.module.payment.bill.app;
 
 import com.prgrms.monthsub.module.part.user.app.provider.UserProvider;
 import com.prgrms.monthsub.module.part.user.domain.User;
-import com.prgrms.monthsub.module.payment.app.provider.PaymentProvider;
-import com.prgrms.monthsub.module.payment.converter.PaymentConverter;
-import com.prgrms.monthsub.module.payment.domain.Payment;
-import com.prgrms.monthsub.module.payment.domain.exception.PaymentException.PaymentDuplicated;
-import com.prgrms.monthsub.module.payment.dto.PaymentPost;
-import com.prgrms.monthsub.module.payment.dto.PaymentPost.Response;
-import com.prgrms.monthsub.module.payment.dto.PaymentSeries;
+import com.prgrms.monthsub.module.payment.bill.app.provider.PaymentProvider;
+import com.prgrms.monthsub.module.payment.bill.converter.PaymentConverter;
+import com.prgrms.monthsub.module.payment.bill.domain.Payment;
+import com.prgrms.monthsub.module.payment.bill.domain.exception.PaymentException.PaymentDuplicated;
+import com.prgrms.monthsub.module.payment.bill.dto.PaymentPost;
+import com.prgrms.monthsub.module.payment.bill.dto.PaymentPost.Response;
+import com.prgrms.monthsub.module.payment.bill.dto.PaymentSeries;
 import com.prgrms.monthsub.module.series.series.app.Provider.SeriesProvider;
 import com.prgrms.monthsub.module.series.series.domain.ArticleUploadDate;
 import com.prgrms.monthsub.module.series.series.domain.Series;

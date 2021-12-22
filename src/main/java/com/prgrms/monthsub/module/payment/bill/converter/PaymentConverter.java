@@ -1,11 +1,11 @@
-package com.prgrms.monthsub.module.payment.converter;
+package com.prgrms.monthsub.module.payment.bill.converter;
 
 import com.prgrms.monthsub.common.s3.config.S3;
 import com.prgrms.monthsub.module.part.user.domain.User;
-import com.prgrms.monthsub.module.payment.domain.Payment;
-import com.prgrms.monthsub.module.payment.dto.PaymentPost;
-import com.prgrms.monthsub.module.payment.dto.PaymentPost.UserPoint;
-import com.prgrms.monthsub.module.payment.dto.PaymentSeries.Response;
+import com.prgrms.monthsub.module.payment.bill.domain.Payment;
+import com.prgrms.monthsub.module.payment.bill.dto.PaymentPost;
+import com.prgrms.monthsub.module.payment.bill.dto.PaymentPost.UserPoint;
+import com.prgrms.monthsub.module.payment.bill.dto.PaymentSeries.Response;
 import com.prgrms.monthsub.module.series.series.domain.ArticleUploadDate;
 import com.prgrms.monthsub.module.series.series.domain.Series;
 import java.util.List;
