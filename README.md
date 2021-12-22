@@ -11,9 +11,7 @@
 
 |김다희|김은서|유지훈|
 |:---:|:---:|:---:|
-|<img src="https://user-images.githubusercontent.com/81504103/147106038-631f0898-2afd-4f12-ab27-9560fb99be1e.png" width="60%"/>
-|<img src="https://user-images.githubusercontent.com/68772751/139533586-1edc542b-ab38-4b0e-ad30-8947aff3d70b.png" width="60%"/>
-|<img src="https://user-images.githubusercontent.com/70589857/147061670-e47bfdc2-ba54-4083-a403-cd3068ad6ae0.png" width="60%"/>
+|<img src="https://user-images.githubusercontent.com/81504103/147106038-631f0898-2afd-4f12-ab27-9560fb99be1e.png" width="60%" />|<img src="https://user-images.githubusercontent.com/81504103/147106990-9630996b-17e4-4557-b491-342f3021af43.png" width="60%" />|<img src="https://user-images.githubusercontent.com/70589857/147061670-e47bfdc2-ba54-4083-a403-cd3068ad6ae0.png" width="60%" />
 
 
 ---
