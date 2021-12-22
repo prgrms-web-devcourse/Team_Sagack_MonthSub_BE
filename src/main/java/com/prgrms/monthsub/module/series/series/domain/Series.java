@@ -129,11 +129,11 @@ public class Series extends BaseEntity {
   public void changeSeriesStatus(
     LocalDate today
   ) {
-    if (this.subscribeStartDate.compareTo(today) <= 0
-      && this.subscribeEndDate.compareTo(today) >= 0) {
+    if (this.subscribeStartDate.isBefore(today)
+      && this.subscribeEndDate.isAfter(today)) {
       this.subscribeStatus = SeriesStatus.SUBSCRIPTION_AVAILABLE;
-    } else if (this.seriesStartDate.compareTo(today) <= 0
-      && this.seriesEndDate.compareTo(today) >= 0) {
+    } else if (this.seriesStartDate.isBefore(today)
+      && this.seriesEndDate.isAfter(today)) {
       this.subscribeStatus = SeriesStatus.SERIALIZATION_AVAILABLE;
     } else {
       this.subscribeStatus = SeriesStatus.SUBSCRIPTION_AVAILABLE;

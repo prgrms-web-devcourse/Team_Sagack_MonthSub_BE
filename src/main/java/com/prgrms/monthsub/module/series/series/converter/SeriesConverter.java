@@ -16,7 +16,6 @@ import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeList.Subscrib
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeList.UploadObject;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeList.WriterObject;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeOne;
-import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeOne.Response;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeOne.UsageEditResponse;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribePost;
 import java.time.LocalDate;
@@ -74,10 +73,10 @@ public class SeriesConverter {
   ) {
     SeriesWriterResponse writerResponse = writerConverter.toSeriesOneWithWriter(
       series.getWriter());
-    return new Response(
-      series.isLikedStatus(),
-      isMine,
-      SeriesSubscribeList.SeriesObject.builder()
+    return SeriesSubscribeOne.Response.builder()
+      .isLiked(series.isLikedStatus())
+      .isMine(isMine)
+      .series(SeriesSubscribeList.SeriesObject.builder()
         .id(series.getId())
         .thumbnail(this.toThumbnailEndpoint(series.getThumbnailKey()))
         .title(series.getTitle())
@@ -90,22 +89,22 @@ public class SeriesConverter {
         .likes(series.getLikes())
         .createdDate(series.getCreatedAt().toLocalDate())
         .updatedDate(series.getCreatedAt().toLocalDate())
-        .build(),
-      UploadObject.builder()
+        .build())
+      .upload(UploadObject.builder()
         .date(uploadDateList.stream().map(uploadDate ->
           uploadDate.getUploadDate()
             .toString()
             .toLowerCase()
         ).toArray(String[]::new))
         .time(series.getUploadTime().toString())
-        .build(),
-      SubscribeObject.builder()
+        .build())
+      .subscribe(SubscribeObject.builder()
         .startDate(series.getSubscribeStartDate())
         .endDate(series.getSubscribeEndDate())
         .status(String.valueOf(series.getSubscribeStatus()))
-        .build(),
-      series.getCategory(),
-      WriterObject.builder()
+        .build())
+      .category(series.getCategory())
+      .writer(WriterObject.builder()
         .id(writerResponse.writerId())
         .userId(writerResponse.user().userId())
         .followCount(writerResponse.followCount())
@@ -113,11 +112,11 @@ public class SeriesConverter {
         .profileImage(writerResponse.user().profileImage())
         .profileIntroduce(writerResponse.user().profileIntroduce())
         .nickname(writerResponse.user().nickname())
-        .build(),
-      articleList.stream()
+        .build())
+      .articleList(articleList.stream()
         .map(articleConverter::toArticle)
-        .collect(Collectors.toList())
-    );
+        .collect(Collectors.toList()))
+      .build();
   }
 
   public SeriesSubscribeList.SeriesListObject toResponse(Series series) {
@@ -144,8 +143,8 @@ public class SeriesConverter {
     Series series,
     List<ArticleUploadDate> uploadDateList
   ) {
-    return new UsageEditResponse(
-      SeriesSubscribeList.SeriesObject.builder()
+    return UsageEditResponse.builder()
+      .series(SeriesSubscribeList.SeriesObject.builder()
         .id(series.getId())
         .title(series.getTitle())
         .introduceSentence(series.getIntroduceSentence())
@@ -153,20 +152,20 @@ public class SeriesConverter {
         .price(series.getPrice())
         .createdDate(series.getCreatedAt().toLocalDate())
         .updatedDate(series.getCreatedAt().toLocalDate())
-        .build(),
-      series.getCategory(),
-      UploadObject.builder()
+        .build())
+      .category(series.getCategory())
+      .upload(UploadObject.builder()
         .date(uploadDateList.stream().map(uploadDate -> uploadDate.getUploadDate()
           .toString()
           .toLowerCase()
         ).toArray(String[]::new)).time(series.getUploadTime().toString())
-        .build(),
-      SubscribeObject.builder()
+        .build())
+      .subscribe(SubscribeObject.builder()
         .startDate(series.getSubscribeStartDate())
         .endDate(series.getSubscribeEndDate())
         .status(String.valueOf(series.getSubscribeStatus()))
-        .build()
-    );
+        .build())
+      .build();
   }
 
   public MyChannel.SubscribeObject toMyChannelSubscribeObject(Series series) {
