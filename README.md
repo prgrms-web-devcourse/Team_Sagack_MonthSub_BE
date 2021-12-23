@@ -9,10 +9,14 @@
 ---
 ## 🧚‍♀️ 팀 소개
 
-|김다희|김은서|유지훈|
-|:---:|:---:|:---:|
-|<img src="https://user-images.githubusercontent.com/81504103/147106038-631f0898-2afd-4f12-ab27-9560fb99be1e.png" width="60%" />|<img src="https://user-images.githubusercontent.com/81504103/147106990-9630996b-17e4-4557-b491-342f3021af43.png" width="60%" />|<img src="https://user-images.githubusercontent.com/70589857/147061670-e47bfdc2-ba54-4083-a403-cd3068ad6ae0.png" width="60%" />
 
+|                          **김다희 - 팀장, PO**                          |                          **김은서 - 팀원**                          |                          **유지훈 - 팀원**                          |
+| :----------------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: |
+|                 **![다희](https://user-images.githubusercontent.com/81504103/147106038-631f0898-2afd-4f12-ab27-9560fb99be1e.png)**                 |                   **![은서](https://user-images.githubusercontent.com/81504103/147106990-9630996b-17e4-4557-b491-342f3021af43.png)**                   |                   **![ha](https://user-images.githubusercontent.com/81504103/147187537-57f65db8-203d-47ed-9644-01be307a6c0a.png)**                   |
+|                          담당 기능                           |                          담당 기능                           |                          담당 기능                           |
+| ･*프로젝트 아키텍처 구성* <br/>･*API 개발*<br/> ･*CI/CD 구축*<br/>･*Cloud Watch 구축*<br/>･*HTTPS 연결*<br/> ･*S3 이미지 업로드 및 삭제 구현* <br/>･  *S3 File 리소스 관리 시스템 설계  및 구현* <br> ･*Criteria를 이용한 커서기반 페이지네이션*<br/>･*Git hooks 지라 티켓 번호 자동화* <br/>･*프로젝트 기획*| ･*JWT(Json Web Token) 발급 구현* <br/>･*API 개발*<br/> ･*토큰 유무에 따른 권한 체크 구현*<br/>･*CORS 처리 구현*<br/>･*유저 로그 관리 구현*<br/> ･*Flyway DDL 형상관리* <br/>･  *DB Seed 관리* <br> ･*AWS RDS 이용하여 로컬, 운영 DB 관리*<br/>･*결제 시스템 설계 및 개발* <br/>･*결제 동시 요청 낙관적 락으로 관리* |･*JDK17 sealed와 record를 활용한 DTO 구현* <br/>･*Scheduler를 활용한 DB 상태값 관리 *<br/> ･*전체적인 DB 설계*<br/>･*핵심 비지니스 설계 및 구현*<br/>･*모집공고(시리즈) 좋아요 시스템 설계 및 기능 구현*<br/> ･*회원 팔로우 시스템 설계 및 기능 구현* <br/>･  *프로젝트 예외처리 기능구현* <br>
+
+<br/>
 
 ---
 ## 🚀 기술스택
@@ -52,9 +56,11 @@
 ### Infra Architecture​
 <img width="1200" alt="architecture" src="https://user-images.githubusercontent.com/81504103/146681427-21e24399-ac82-4434-a3f4-a90e04ab2896.png">
 
+### Monthsub Architecture
+<img width="1200" alt="architecture" src="https://user-images.githubusercontent.com/81504103/147188674-9ba012a4-88e5-4a0f-afaf-41f32b220872.png">
+
 ### ERD
 <img width="1200" alt="erd" src="https://user-images.githubusercontent.com/81504103/146680870-366a3912-9380-4489-8293-5d537e52526b.png">
-
 
 ### API 문서
 [Swagger API 문서](https://monthsub.com/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#)
