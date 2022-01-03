@@ -16,12 +16,12 @@ public class Scheduler {
     this.seriesScheduledHandler = seriesScheduledHandler;
   }
 
-  @Scheduled(cron = "0 0/10 * * * *")
+  @Scheduled(cron = "0 0 0/1 * * *")
   @Async
   public void changeSeriesStatus() {
-    logger.info("=======10분 마다 실행=======");
+    logger.info("=======1시간 마다 실행=======");
     seriesScheduledHandler.changeSeriesStatus();
-    logger.info("=========================");
+    logger.info("==========================");
   }
 
 }
