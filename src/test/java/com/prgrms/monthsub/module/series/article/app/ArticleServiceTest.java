@@ -2,6 +2,7 @@ package com.prgrms.monthsub.module.series.article.app;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
 
@@ -62,10 +63,11 @@ public class ArticleServiceTest {
     given(this.article.getSeries()).willReturn(this.series);
 
     //when
-    this.articleRepository.save(this.article);
+    when(this.articleRepository.save(any())).thenReturn(this.article);
+    Long id = this.articleService.save(article);
 
     //then
-    assertThat(this.article.getId(), equalTo(1L));
+    assertThat(this.article.getId(), equalTo(id));
     assertThat(this.article.getTitle(), equalTo("제목"));
     assertThat(this.article.getContents(), equalTo("내용"));
     assertThat(this.article.getRound(), equalTo(5));
