@@ -7,14 +7,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class PartService {
 
-  private final PartRepository writerRepository;
+  private final PartRepository partRepository;
 
-  public PartService(PartRepository writerRepository) {
-    this.writerRepository = writerRepository;
+  public PartService(PartRepository partRepository) {
+    this.partRepository = partRepository;
   }
 
   public Part findByName(String name) {
-    return this.writerRepository
+    return this.partRepository
       .findByName(name)
       .orElseThrow(() -> new PartNotFound("name=" + name));
   }
