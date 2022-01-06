@@ -133,7 +133,6 @@ class UserServiceTest {
     assertThat(1L, is(userResponse.getId()));
   }
 
-
   @Test
   @DisplayName("회원가입을 할 수 있다.")
   public void signUpTest() {
