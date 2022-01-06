@@ -27,158 +27,164 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @MockitoSettings(strictness = Strictness.LENIENT)
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
 
-    @InjectMocks
-    private UserService userService;
+  @InjectMocks
+  private UserService userService;
 
-    @Mock
-    private UserConverter userConverter;
+  @Mock
+  private UserConverter userConverter;
 
-    @Mock
-    private UserRepository userRepository;
+  @Mock
+  private PasswordEncoder passwordEncoder;
 
-    public static User getUser() {
-        User user = Mockito.mock(User.class);
-        given(user.getId()).willReturn(1L);
-        given(user.getNickname()).willReturn("email");
-        given(user.getUsername()).willReturn("userName");
-        given(user.getNickname()).willReturn("nickName");
-        return user;
-    }
+  @Mock
+  private UserRepository userRepository;
 
-    @Test
-    @DisplayName("닉네임으로 유저를 조회할 수 있다.")
-    public void getUserNickName() {
-        //given
-        User user = getUser();
-        given(this.userRepository.findByNickname(anyString())).willReturn(Optional.of(user));
+  public static User getUser() {
+    User user = Mockito.mock(User.class);
+    given(user.getId()).willReturn(1L);
+    given(user.getNickname()).willReturn("email");
+    given(user.getUsername()).willReturn("userName");
+    given(user.getNickname()).willReturn("nickName");
+    return user;
+  }
 
-        //when
-        Optional<User> userResponse = this.userService.findByNickname("nickName");
+  @Test
+  @DisplayName("닉네임으로 유저를 조회할 수 있다.")
+  public void getUserNickNameTest() {
+    //given
+    User user = getUser();
+    given(this.userRepository.findByNickname(anyString())).willReturn(Optional.of(user));
 
-        //then
-        assertThat(user.getNickname(), is(userResponse.get().getNickname()));
-    }
+    //when
+    Optional<User> userResponse = this.userService.findByNickname("nickName");
 
-    @Test
-    @DisplayName("아이디로 유저를 조회할 수 있다.")
-    public void getUserId() {
-        //given
-        User user = getUser();
-        given(this.userRepository.findById(anyLong())).willReturn(Optional.of(user));
+    //then
+    assertThat(user.getNickname(), is(userResponse.get().getNickname()));
+  }
 
-        //when
-        User userResponse = this.userService.findById(1L);
+  @Test
+  @DisplayName("아이디로 유저를 조회할 수 있다.")
+  public void getUserIdTest() {
+    //given
+    User user = getUser();
+    given(this.userRepository.findById(anyLong())).willReturn(Optional.of(user));
 
-        //then
-        assertThat(user.getId(), is(userResponse.getId()));
-    }
+    //when
+    User userResponse = this.userService.findById(1L);
 
-    @Test
-    @DisplayName("아이디로 유저를 조회할 수 없을 시 예외가 발생한다.")
-    public void userNotFoundId() {
-        //given
-        given(this.userRepository.findById(anyLong())).willReturn(Optional.empty());
+    //then
+    assertThat(user.getId(), is(userResponse.getId()));
+  }
 
-        //when//then
-        Assertions.assertThrows(
-            UserNotFound.class, () -> this.userService.findById(1L));
-    }
+  @Test
+  @DisplayName("아이디로 유저를 조회할 수 없을 시 예외가 발생한다.")
+  public void userNotFoundIdTest() {
+    //given
+    given(this.userRepository.findById(anyLong())).willReturn(Optional.empty());
 
-    @Test
-    @DisplayName("이메일로 유저를 조회할 수 있다.")
-    public void getUserEmail() {
-        //given
-        User user = getUser();
-        given(this.userRepository.findByEmail(anyString())).willReturn(Optional.of(user));
+    //when//then
+    Assertions.assertThrows(
+      UserNotFound.class, () -> this.userService.findById(1L));
+  }
 
-        //when
-        User userResponse = this.userService.findByEmail("email");
+  @Test
+  @DisplayName("이메일로 유저를 조회할 수 있다.")
+  public void getUserEmailTest() {
+    //given
+    User user = getUser();
+    given(this.userRepository.findByEmail(anyString())).willReturn(Optional.of(user));
 
-        //then
-        assertThat(user.getEmail(), is(userResponse.getEmail()));
-    }
+    //when
+    User userResponse = this.userService.findByEmail("email");
 
-    @Test
-    @DisplayName("이메일로 유저를 조회할 수 없을 시 예외가 발생한다.")
-    public void userNotFoundEmail() {
-        //given
-        given(this.userRepository.findByEmail(anyString())).willReturn(Optional.empty());
+    //then
+    assertThat(user.getEmail(), is(userResponse.getEmail()));
+  }
 
-        //when//then
-        Assertions.assertThrows(
-            UserNotFound.class, () -> this.userService.findByEmail("email"));
-    }
+  @Test
+  @DisplayName("이메일로 유저를 조회할 수 없을 시 예외가 발생한다.")
+  public void userNotFoundEmailTest() {
+    //given
+    given(this.userRepository.findByEmail(anyString())).willReturn(Optional.empty());
 
-    @Test
-    @DisplayName("로그인을 할 수 있다.")
-    public void Login() {
-        //given
-        User user = getUser();
-        given(this.userRepository.findByEmail(anyString())).willReturn(Optional.of(user));
+    //when//then
+    Assertions.assertThrows(
+      UserNotFound.class, () -> this.userService.findByEmail("email"));
+  }
 
-        //when
-        User userResponse = this.userService.login("email", "user123");
+  @Test
+  @DisplayName("로그인을 할 수 있다.")
+  public void LoginTest() {
+    //given
+    User user = getUser();
+    given(this.userRepository.findByEmail(anyString())).willReturn(Optional.of(user));
+    given(!passwordEncoder.matches(anyString(), anyString())).willReturn(false);
 
-        //then
-        assertThat(1L, is(userResponse.getId()));
-    }
+    //when
+    User userResponse = this.userService.login("email", "user123");
 
-    @Test
-    @DisplayName("회원가입을 할 수 있다.")
-    public void signUp() {
-        //given
-        User user = getUser();
-        UserSignUp.Request request = Request.builder()
-            .email(user.getEmail())
-            .userName(user.getUsername())
-            .password(user.getPassword())
-            .nickName(user.getNickname())
-            .build();
+    //then
+    assertThat(1L, is(userResponse.getId()));
+  }
 
-        when(this.userRepository.save(any())).thenReturn(user);
 
-        //when
-        UserSignUp.Response response = this.userService.signUp(request);
+  @Test
+  @DisplayName("회원가입을 할 수 있다.")
+  public void signUpTest() {
+    //given
+    User user = getUser();
+    UserSignUp.Request request = Request.builder()
+      .email(user.getEmail())
+      .userName(user.getUsername())
+      .password(user.getPassword())
+      .nickName(user.getNickname())
+      .build();
 
-        //then
-        assertThat(user.getId(), is(response.userId()));
-    }
+    when(this.userRepository.save(any())).thenReturn(user);
 
-    @Test
-    @DisplayName("회원가입 시 이메일 중복은 예외가 발생한다.")
-    public void duplicatedEmail() {
-        //given
-        User user = getUser();
-        UserSignUp.Request request = Request.builder()
-            .email(user.getEmail())
-            .build();
+    //when
+    UserSignUp.Response response = this.userService.signUp(request);
 
-        doReturn(Optional.of(user)).when(userRepository).findByEmail(request.email());
+    //then
+    assertThat(user.getId(), is(response.userId()));
+  }
 
-        //when//then
-        Assertions.assertThrows(
-            EmailDuplicated.class, () -> this.userService.checkEmail(request.email()));
-    }
+  @Test
+  @DisplayName("회원가입 시 이메일 중복은 예외가 발생한다.")
+  public void duplicatedEmailTest() {
+    //given
+    User user = getUser();
+    UserSignUp.Request request = Request.builder()
+      .email(user.getEmail())
+      .build();
 
-    @Test
-    @DisplayName("회원가입 시 닉네임 중복은 예외가 발생한다.")
-    public void duplicatedNickName() {
-        //given
-        User user = getUser();
-        UserSignUp.Request request = Request.builder()
-            .nickName(user.getNickname())
-            .build();
+    doReturn(Optional.of(user)).when(userRepository).findByEmail(request.email());
 
-        doReturn(Optional.of(user)).when(userRepository).findByNickname(request.nickName());
+    //when//then
+    Assertions.assertThrows(
+      EmailDuplicated.class, () -> this.userService.checkEmail(request.email()));
+  }
 
-        //when//then
-        Assertions.assertThrows(
-            NickNameDuplicated.class, () -> this.userService.checkNickName(request.nickName()));
-    }
+  @Test
+  @DisplayName("회원가입 시 닉네임 중복은 예외가 발생한다.")
+  public void duplicatedNickNameTest() {
+    //given
+    User user = getUser();
+    UserSignUp.Request request = Request.builder()
+      .nickName(user.getNickname())
+      .build();
+
+    doReturn(Optional.of(user)).when(userRepository).findByNickname(request.nickName());
+
+    //when//then
+    Assertions.assertThrows(
+      NickNameDuplicated.class, () -> this.userService.checkNickName(request.nickName()));
+  }
 
 }
