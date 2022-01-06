@@ -66,7 +66,7 @@ public class ArticleController {
     @PathVariable Long id,
     @RequestParam(value = "seriesId", required = true) Long seriesId
   ) {
-    return this.articleAssemble.getArticleOne(id, seriesId, authentication.userId);
+    return this.articleAssemble.getArticle(id, seriesId, authentication.userId);
   }
 
 }
