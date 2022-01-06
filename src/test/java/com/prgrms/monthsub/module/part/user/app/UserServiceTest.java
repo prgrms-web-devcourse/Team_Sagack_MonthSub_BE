@@ -88,7 +88,7 @@ class UserServiceTest {
     //given
     given(this.userRepository.findById(anyLong())).willReturn(Optional.empty());
 
-    //when//then
+    //when, then
     Assertions.assertThrows(
       UserNotFound.class, () -> this.userService.findById(1L));
   }
@@ -113,7 +113,7 @@ class UserServiceTest {
     //given
     given(this.userRepository.findByEmail(anyString())).willReturn(Optional.empty());
 
-    //when//then
+    //when, then
     Assertions.assertThrows(
       UserNotFound.class, () -> this.userService.findByEmail("email"));
   }
@@ -165,7 +165,7 @@ class UserServiceTest {
 
     doReturn(Optional.of(user)).when(userRepository).findByEmail(request.email());
 
-    //when//then
+    //when, then
     Assertions.assertThrows(
       EmailDuplicated.class, () -> this.userService.checkEmail(request.email()));
   }
@@ -181,7 +181,7 @@ class UserServiceTest {
 
     doReturn(Optional.of(user)).when(userRepository).findByNickname(request.nickName());
 
-    //when//then
+    //when, then
     Assertions.assertThrows(
       NickNameDuplicated.class, () -> this.userService.checkNickName(request.nickName()));
   }
