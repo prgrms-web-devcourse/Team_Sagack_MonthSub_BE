@@ -22,7 +22,6 @@ public class WriterLikesService {
 
   private final int INCREASE_NUM = 1;
   private final int DECREASE_NUM = -1;
-  private final int DEFAULT_WRITER_LIKES = 10;
 
   private final WriterLikesRepository writerLikesRepository;
   private final WriterService writerService;
@@ -36,17 +35,6 @@ public class WriterLikesService {
     this.writerLikesRepository = writerLikesRepository;
     this.writerService = writerService;
     this.writerConverter = writerConverter;
-  }
-
-  public List<WriterLikes> findAllByUserIdAndAndLikesStatus(
-    Long userId,
-    LikesStatus likesStatus
-  ) {
-    PageRequest cursorPageable = getPageRequest(DEFAULT_WRITER_LIKES);
-
-    return this.writerLikesRepository.findAllByUserIdAndLikesStatus(
-      userId, likesStatus, cursorPageable
-    );
   }
 
   @Transactional
