@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class MyChannelConverter {
 
+  private final int DEFAULT_LIST_SIZE = 10;
   private final int FOLLOW_COUNT_DEFAULT = 0;
   private final UserConverter userConverter;
   private final WriterConverter writerConverter;
@@ -46,6 +47,7 @@ public class MyChannelConverter {
       .followIngCount(followingWriterList.size())
       .followWriterList(followingWriterList.stream()
         .map(writerConverter::toMyChannelFollowWriterObject)
+        .limit(DEFAULT_LIST_SIZE)
         .collect(Collectors.toList()))
       .subscribeList(seriesSubscribeList.stream()
         .map(seriesConverter::toMyChannelSubscribeObject)
@@ -71,6 +73,7 @@ public class MyChannelConverter {
       .followIngCount(followingWriterList.size())
       .followWriterList(followingWriterList.stream()
         .map(writerConverter::toMyChannelFollowWriterObject)
+        .limit(DEFAULT_LIST_SIZE)
         .collect(Collectors.toList()))
       .subscribeList(seriesSubscribeList.stream()
         .map(seriesConverter::toMyChannelSubscribeObject)
@@ -95,6 +98,7 @@ public class MyChannelConverter {
       .followIngCount(followingWriterList.size())
       .followWriterList(followingWriterList.stream()
         .map(writerConverter::toMyChannelFollowWriterObject)
+        .limit(DEFAULT_LIST_SIZE)
         .collect(Collectors.toList()))
       .followCount(writer.getFollowCount())
       .seriesPostList(seriesPostList.stream()
@@ -116,6 +120,7 @@ public class MyChannelConverter {
       .followIngCount(followingWriterList.size())
       .followWriterList(followingWriterList.stream()
         .map(writerConverter::toMyChannelFollowWriterObject)
+        .limit(DEFAULT_LIST_SIZE)
         .collect(Collectors.toList()))
       .followCount(FOLLOW_COUNT_DEFAULT)
       .seriesPostList(Collections.emptyList())
