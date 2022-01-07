@@ -60,7 +60,7 @@ public class MyChannelAssemble {
 
     //2. 내가 팔로잉한 작가 리스트 가져오기
     List<Writer> writerLikesList = this.writerLikesService
-      .findAllByUserIdAndAndLikesStatus(userId, LikesStatus.Like)
+      .getFollowWriterList(userId, LikesStatus.Like)
       .stream()
       .map(this.getWriterLikesWriterFunction())
       .collect(Collectors.toList());
@@ -131,7 +131,7 @@ public class MyChannelAssemble {
 
     //2. 내가 팔로잉한 작가 리스트 가져오기
     List<Writer> writerLikesList = this.writerLikesService
-      .findAllByUserIdAndAndLikesStatus(otherUserId, LikesStatus.Like)
+      .getFollowWriterList(otherUserId, LikesStatus.Like)
       .stream()
       .map(this.getWriterLikesWriterFunction())
       .collect(Collectors.toList());
