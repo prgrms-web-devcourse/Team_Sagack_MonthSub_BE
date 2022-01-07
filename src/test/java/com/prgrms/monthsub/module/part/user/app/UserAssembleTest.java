@@ -29,10 +29,13 @@ class UserAssembleTest {
 
   @InjectMocks
   private UserAssemble userAssemble;
+
   @Mock
   private UserService userService;
+
   @Mock
   private S3Client s3Client;
+
   private User user;
   private MockMultipartFile file;
 
@@ -69,7 +72,8 @@ class UserAssembleTest {
 
     //when
     UserEdit.Response response = userAssemble.edit(
-      this.user.getId(), request, ofNullable(this.file));
+      this.user.getId(), request, ofNullable(this.file)
+    );
 
     //then
     assertThat(response.userId(), is(1L));
