@@ -65,7 +65,7 @@ class UserServiceTest {
     Optional<User> userResponse = this.userService.findByNickname("nickName");
 
     //then
-    assertThat(user.getNickname(), is(userResponse.get().getNickname()));
+    assertThat(userResponse.get().getNickname(), is(user.getNickname()));
   }
 
   @Test
@@ -79,7 +79,7 @@ class UserServiceTest {
     User userResponse = this.userService.findById(1L);
 
     //then
-    assertThat(user.getId(), is(userResponse.getId()));
+    assertThat(userResponse.getId(), is(user.getId()));
   }
 
   @Test
@@ -104,7 +104,7 @@ class UserServiceTest {
     User userResponse = this.userService.findByEmail("email");
 
     //then
-    assertThat(user.getEmail(), is(userResponse.getEmail()));
+    assertThat(userResponse.getEmail(), is(user.getEmail()));
   }
 
   @Test
@@ -130,7 +130,7 @@ class UserServiceTest {
     User userResponse = this.userService.login("email", "user123");
 
     //then
-    assertThat(1L, is(userResponse.getId()));
+    assertThat(userResponse.getId(), is(1L));
   }
 
   @Test
@@ -151,7 +151,7 @@ class UserServiceTest {
     UserSignUp.Response response = this.userService.signUp(request);
 
     //then
-    assertThat(user.getId(), is(response.userId()));
+    assertThat(response.userId(), is(user.getId()));
   }
 
   @Test
