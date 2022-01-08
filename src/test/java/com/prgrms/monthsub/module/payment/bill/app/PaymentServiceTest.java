@@ -128,7 +128,7 @@ class PaymentServiceTest {
     );
 
     //then
-    assertThat(series.getWriter().getUser().getEmail(), is(response.email()));
+    assertThat(response.email(), is(series.getWriter().getUser().getEmail()));
     verify(paymentRepository, times(1)).save(any());
     verify(paymentRepository, times(1)).findByUserIdAndSeriesId(any(), any());
   }
