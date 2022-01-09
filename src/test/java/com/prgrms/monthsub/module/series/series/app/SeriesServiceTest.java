@@ -4,11 +4,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import com.prgrms.monthsub.module.part.writer.domain.Writer;
 import com.prgrms.monthsub.module.series.series.domain.ArticleUploadDate;
@@ -16,6 +15,7 @@ import com.prgrms.monthsub.module.series.series.domain.ArticleUploadDate.UploadD
 import com.prgrms.monthsub.module.series.series.domain.Series;
 import com.prgrms.monthsub.module.series.series.domain.Series.Category;
 import com.prgrms.monthsub.module.series.series.domain.Series.SeriesStatus;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -27,16 +27,24 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.test.util.ReflectionTestUtils;
 
 @MockitoSettings(strictness = Strictness.LENIENT)
 @ExtendWith(MockitoExtension.class)
 class SeriesServiceTest {
+  private final int PAGE_NUM = 0;
+  private final int SERIES_SIZE = 10;
+  private final long WRITER_ID = 1L;
+
+  @InjectMocks
+  private SeriesService seriesService;
 
   @Mock
   private SeriesRepositoryCustom seriesRepository;
@@ -44,31 +52,30 @@ class SeriesServiceTest {
   @Mock
   private ArticleUploadDateRepository articleUploadDateRepository;
 
-  @InjectMocks
-  private SeriesService seriesService;
-
   public Series getSeriesFixture(
     Long id,
     Long writerId
   ) {
-    Series series = Mockito.mock(Series.class);
     Writer writer = getWriterFixture(writerId);
-    given(series.getId()).willReturn(id);
-    given(series.getTitle()).willReturn("타이틀" + id);
-    given(series.getWriter()).willReturn(writer);
-    given(series.getSubscribeStatus()).willReturn(SeriesStatus.SUBSCRIPTION_AVAILABLE);
-    given(series.getCategory()).willReturn(Category.ESSAY);
-    given(series.getPrice()).willReturn(1000);
-    given(series.getArticleCount()).willReturn(10);
-    given(series.getIntroduceSentence()).willReturn("소개 문장");
-    given(series.getCreatedAt()).willReturn(LocalDateTime.now());
+    Series series = Series.builder()
+      .title("타이틀" + id)
+      .writer(writer)
+      .subscribeStatus(SeriesStatus.SUBSCRIPTION_AVAILABLE)
+      .category(Category.ESSAY)
+      .price(1000)
+      .articleCount(10)
+      .introduceSentence("소개문장")
+      .build();
+    ReflectionTestUtils.setField(series, "id", id);
+    ReflectionTestUtils.setField(series, "createdAt", LocalDateTime.now());
     return series;
   }
 
   public Writer getWriterFixture(Long id) {
-    Writer writer = Mockito.mock(Writer.class);
-    given(writer.getId()).willReturn(id);
-    given(writer.getFollowCount()).willReturn((int) Math.pow(id, 2));
+    Writer writer = Writer.builder()
+      .followCount((int) Math.pow(id, 2))
+      .build();
+    ReflectionTestUtils.setField(writer, "id", id);
     return writer;
   }
 
@@ -76,23 +83,23 @@ class SeriesServiceTest {
     Long id,
     Long seriesId
   ) {
-    ArticleUploadDate articleUploadDate = Mockito.mock(ArticleUploadDate.class);
-    given(articleUploadDate.getId()).willReturn(id);
-    given(articleUploadDate.getSeriesId()).willReturn(seriesId);
-    given(articleUploadDate.getUploadDate()).willReturn(UploadDate.FRIDAY);
+    ArticleUploadDate articleUploadDate = ArticleUploadDate.builder()
+      .seriesId(seriesId)
+      .uploadDate(UploadDate.FRIDAY)
+      .build();
+    ReflectionTestUtils.setField(articleUploadDate, "id", id);
     return articleUploadDate;
   }
 
   @Test
   @DisplayName("시리즈를 저장할 수 있다.")
   void saveTest() {
-
     //given
-    Series series = getSeriesFixture(3L, 1L);
-    doReturn(series).when(seriesRepository).save(any());
+    Series series = getSeriesFixture(3L, WRITER_ID);
+    doReturn(series).when(this.seriesRepository).save(any());
 
     //when
-    Long id = seriesService.save(series);
+    Long id = this.seriesService.save(series);
 
     //then
     verify(seriesRepository, times(1)).save(any(Series.class));
@@ -100,15 +107,14 @@ class SeriesServiceTest {
   }
 
   @Test
-  @DisplayName("시리즈 단건 조회를 할 수 있다.")
+  @DisplayName("시리즈 단건 조회할 수 있다.")
   void getByIdTest() {
-
     //given
-    Series series = getSeriesFixture(3L, 1L);
-    doReturn(Optional.ofNullable(series)).when(seriesRepository).findById(any(Long.class));
+    Series series = getSeriesFixture(3L, WRITER_ID);
+    doReturn(Optional.ofNullable(series)).when(this.seriesRepository).findById(any(Long.class));
 
     //when
-    Series findSeries = seriesService.getById(3L);
+    Series findSeries = this.seriesService.getById(3L);
 
     //then
     verify(seriesRepository, times(1)).findById(anyLong());
@@ -120,16 +126,14 @@ class SeriesServiceTest {
   @Test
   @DisplayName("아티클 업로드 날짜를 저장할 수 있다.")
   void articleUploadDateSaveTest() {
-
     //given
-    Series series = getSeriesFixture(3L, 1L);
+    Series series = getSeriesFixture(3L, WRITER_ID);
     ArticleUploadDate articleUploadDate = getArticleUploadDateFixture(1L, series.getId());
-    doNothing()
-      .when(articleUploadDateRepository)
-      .save(any(ArticleUploadDate.class));
+    when(articleUploadDateRepository.save(any(ArticleUploadDate.class))).thenReturn(
+      articleUploadDate);
 
     //when
-    seriesService.articleUploadDateSave(articleUploadDate);
+    this.seriesService.articleUploadDateSave(articleUploadDate);
 
     //then
     verify(articleUploadDateRepository, times(1)).save(any(ArticleUploadDate.class));
@@ -138,19 +142,18 @@ class SeriesServiceTest {
   @Test
   @DisplayName("아티클 업로드 날짜를 가져올 수 있다.")
   void getArticleUploadDateTest() {
-
     //given
-    Series series = getSeriesFixture(3L, 1L);
+    Series series = getSeriesFixture(3L, WRITER_ID);
     List<ArticleUploadDate> articleUploadDateList = new ArrayList<>();
     for (long i = 0; i < 10; i++) {
       articleUploadDateList.add(getArticleUploadDateFixture(i, series.getId()));
     }
     doReturn(articleUploadDateList)
-      .when(articleUploadDateRepository)
+      .when(this.articleUploadDateRepository)
       .findAllBySeriesId(any(Long.class));
 
     //when
-    List<ArticleUploadDate> findList = seriesService.getArticleUploadDate(series.getId());
+    List<ArticleUploadDate> findList = this.seriesService.getArticleUploadDate(series.getId());
 
     //then
     verify(articleUploadDateRepository, times(1))
@@ -159,19 +162,18 @@ class SeriesServiceTest {
   }
 
   @Test
-  @DisplayName("특정 작가의 `입력된 모집 상태`와 같은 공고가 있는지 확인 할 수 있다.")
+  @DisplayName("특정 작가의 `입력된 모집 상태`와 같은 공고가 있는지 확인할 수 있다.")
   public void checkSeriesStatusByWriterIdTest() {
-
     //given
-    Long writerId = 1L;
+    Long writerId = WRITER_ID;
     SeriesStatus status = SeriesStatus.SUBSCRIPTION_AVAILABLE;
     Series series = getSeriesFixture(3L, writerId);
     doReturn(true)
-      .when(seriesRepository)
+      .when(this.seriesRepository)
       .existsAllByWriterIdAndSubscribeStatus(any(Long.class), any(SeriesStatus.class));
 
     //when
-    boolean check = seriesService.checkSeriesStatusByWriterId(writerId, status);
+    boolean check = this.seriesService.checkSeriesStatusByWriterId(writerId, status);
 
     //then
     verify(seriesRepository, times(1))
@@ -182,21 +184,20 @@ class SeriesServiceTest {
   }
 
   @Test
-  @DisplayName("특정 작가가 발행한 시리즈들을 조회 할 수 있다.")
+  @DisplayName("특정 작가가 발행한 시리즈들을 조회할 수 있다.")
   void findAllByWriterIdTest() {
-
     //given
-    Long writerId = 1L;
+    Long writerId = WRITER_ID;
     List<Series> seriesList = new ArrayList<>();
     for (long i = 0; i < 10; i++) {
       seriesList.add(getSeriesFixture(i, writerId));
     }
     doReturn(seriesList)
-      .when(seriesRepository)
+      .when(this.seriesRepository)
       .findAllByWriterId(any(Long.class));
 
     //when
-    List<Series> findSeriesList = seriesService.findAllByWriterId(writerId);
+    List<Series> findSeriesList = this.seriesService.findAllByWriterId(writerId);
 
     //then
     verify(seriesRepository, times(1)).findAllByWriterId(anyLong());
@@ -208,22 +209,21 @@ class SeriesServiceTest {
   }
 
   @Test
-  @DisplayName("입력된 제목을 가진 시리즈를 조회 할 수 있다.")
+  @DisplayName("입력된 제목을 가진 시리즈를 조회할 수 있다.")
   void getSeriesSearchTitle() {
-
     //given
-    Long writerId = 1L;
+    Long writerId = WRITER_ID;
     String title = "타이틀";
     List<Series> seriesList = new ArrayList<>();
     for (long i = 0; i < 10; i++) {
       seriesList.add(getSeriesFixture(i, writerId));
     }
     doReturn(seriesList)
-      .when(seriesRepository)
+      .when(this.seriesRepository)
       .findByTitleContainingIgnoreCase(anyString());
 
     //when
-    List<Series> findSeriesList = seriesService.getSeriesSearchTitle(title);
+    List<Series> findSeriesList = this.seriesService.getSeriesSearchTitle(title);
 
     //then
     verify(seriesRepository, times(1)).findByTitleContainingIgnoreCase(anyString());
@@ -235,11 +235,10 @@ class SeriesServiceTest {
   }
 
   @Test
-  @DisplayName("시리즈를 최신순으로 조회 할 수 있다.")
+  @DisplayName("시리즈를 최신순으로 조회할 수 있다.")
   void recentSort_findAllTest() {
-
     //given
-    Long writerId = 1L;
+    Long writerId = WRITER_ID;
     Sort recentSort = Sort.by(Direction.DESC, "createdAt", "id");
     List<Series> seriesList = new ArrayList<>();
     for (long i = 0; i < 10; i++) {
@@ -254,25 +253,22 @@ class SeriesServiceTest {
       )
       .collect(Collectors.toList());
     doReturn(recentSeriesList)
-      .when(seriesRepository)
+      .when(this.seriesRepository)
       .findAll(any(Sort.class));
 
     //when
-    List<Series> findRecentSortList = seriesService.findAll(recentSort);
+    List<Series> findRecentSortList = this.seriesService.findAll(recentSort);
 
     //then
     verify(seriesRepository, times(1)).findAll(any(Sort.class));
-    for (int i = 0; i < 10; i++) {
-      assertThat(findRecentSortList.get(i).getId()).isEqualTo(recentSeriesList.get(i).getId());
-    }
+    assertThat(findRecentSortList).isEqualTo(recentSeriesList);
   }
 
   @Test
-  @DisplayName("시리즈를 인기순으로 조회 할 수 있다.")
+  @DisplayName("시리즈를 인기순으로 조회할 수 있다.")
   void popularSort_findAllTest() {
-
     //given
-    Long writerId = 1L;
+    Long writerId = WRITER_ID;
     Sort popularSort = Sort.by(Direction.DESC, "likes");
     Comparator<Series> comparator = Comparator.comparingInt(s -> s.getWriter().getFollowCount());
     List<Series> seriesList = new ArrayList<>();
@@ -284,17 +280,75 @@ class SeriesServiceTest {
       .sorted(comparator.reversed())
       .collect(Collectors.toList());
     doReturn(popularSeriesList)
-      .when(seriesRepository)
+      .when(this.seriesRepository)
       .findAll(any(Sort.class));
 
     //when
-    List<Series> findPopularSortList = seriesService.findAll(popularSort);
+    List<Series> findPopularSortList = this.seriesService.findAll(popularSort);
 
     //then
     verify(seriesRepository, times(1)).findAll(any(Sort.class));
-    for (int i = 0; i < 10; i++) {
-      assertThat(findPopularSortList.get(i).getId()).isEqualTo(popularSeriesList.get(i).getId());
-    }
+    assertThat(findPopularSortList).isEqualTo(popularSeriesList);
   }
 
+  @Test
+  @DisplayName("구독 상태로 시리즈 리스트를 조회할 수 있다.")
+  void findBySubscribeStatusTest() {
+    //given
+    Long writerId = WRITER_ID;
+    Pageable pageable = PageRequest.of(
+      PAGE_NUM, SERIES_SIZE, Sort.by(Direction.DESC, "createdAt", "id"));
+    List<Series> seriesList = new ArrayList<>();
+    for (long i = 0; i < 20; i++) {
+      seriesList.add(getSeriesFixture(i, writerId));
+    }
+    seriesList = seriesList.stream()
+      .filter(s -> s.getSubscribeStatus().equals(SeriesStatus.SUBSCRIPTION_AVAILABLE))
+      .sorted(Comparator
+        .comparing(Series::getCreatedAt)
+        .thenComparing(Series::getId)
+        .reversed()
+      )
+      .limit(SERIES_SIZE)
+      .collect(Collectors.toList());
+
+    doReturn(seriesList)
+      .when(seriesRepository)
+      .findBySubscribeStatus(any(SeriesStatus.class), any(Pageable.class));
+
+    //when
+    List<Series> findSeries = this.seriesService.findBySubscribeStatus(
+      SeriesStatus.SUBSCRIPTION_AVAILABLE, pageable);
+
+    //then
+    verify(this.seriesRepository, times(1))
+      .findBySubscribeStatus(any(SeriesStatus.class), any(Pageable.class));
+    assertThat(findSeries).isEqualTo(seriesList);
+  }
+
+  @Test
+  @DisplayName("스케쥴러에 의해 상태값을 바꿔줄 수 있다.")
+  void changeSeriesStatusTest() {
+    //given
+    Long writerId = WRITER_ID;
+    List<Series> seriesList = new ArrayList<>();
+    for (long i = 0; i < 10; i++) {
+      seriesList.add(getSeriesFixture(i, writerId));
+    }
+    LocalDate today = LocalDate.now();
+    seriesList = this.seriesRepository.findAll()
+      .stream()
+      .peek(series -> {
+        series.changeSeriesStatus(today);
+      })
+      .collect(Collectors.toList());
+
+    when(seriesRepository.saveAll(seriesList)).thenReturn(seriesList);
+
+    //when
+    this.seriesService.changeSeriesStatus();
+
+    //then
+    verify(seriesRepository, times(1)).saveAll(new ArrayList<>());
+  }
 }
