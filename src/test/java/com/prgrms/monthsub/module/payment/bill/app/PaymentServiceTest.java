@@ -41,6 +41,9 @@ class PaymentServiceTest {
   private static final String FILE_KEY = "originalFilename.jpg";
   private static final int ARTICLE_COUNT = 10;
 
+  @InjectMocks
+  private PaymentService paymentService;
+
   @Mock
   SeriesProvider seriesProvider;
 
@@ -52,9 +55,6 @@ class PaymentServiceTest {
 
   @Mock
   PaymentRepository paymentRepository;
-
-  @InjectMocks
-  private PaymentService paymentService;
 
   private Series series;
   private Writer writer;
