@@ -102,7 +102,7 @@ public class ArticleAssemble {
     return new ArticleEdit.ChangeResponse(article.getId(), true);
   }
 
-  public ArticleOne.Response getArticleOne(
+  public ArticleOne.Response getArticle(
     Long id,
     Long seriesId,
     Long userId

@@ -29,15 +29,18 @@ import org.springframework.web.multipart.MultipartFile;
 public class UserController {
 
   private final UserService userService;
+  private final UserAssemble userAssemble;
   private final AuthenticationManager authenticationManager;
   private final UserConverter userConverter;
 
   public UserController(
     UserService userService,
+    UserAssemble userAssemble,
     AuthenticationManager authenticationManager,
     UserConverter userConverter
   ) {
     this.userService = userService;
+    this.userAssemble = userAssemble;
     this.authenticationManager = authenticationManager;
     this.userConverter = userConverter;
   }
@@ -80,7 +83,7 @@ public class UserController {
     @Valid @RequestPart UserEdit.Request request,
     @RequestPart(required = false) MultipartFile file
   ) {
-    return this.userService.edit(authentication.userId, request, Optional.ofNullable(file));
+    return this.userAssemble.edit(authentication.userId, request, Optional.ofNullable(file));
   }
 
   @PostMapping(path = "/signup")
