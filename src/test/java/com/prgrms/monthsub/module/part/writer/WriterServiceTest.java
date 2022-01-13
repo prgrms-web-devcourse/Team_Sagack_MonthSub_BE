@@ -96,7 +96,7 @@ public class WriterServiceTest {
   }
 
   @Test
-  @DisplayName("시리즈 발행한 유저는 이미 작가이다.")
+  @DisplayName("시리즈 발행했던 유저는 이미 작가이다.")
   public void alreadyWriterTest() {
     //when
     when(this.userService.findById(1L)).thenReturn(this.user);
