@@ -25,7 +25,7 @@ public interface WriterLikesRepository extends JpaRepository<WriterLikes, Long> 
     LikesStatus likesStatus
   );
 
-  List<WriterLikes> findByIdGreaterThanAndUserIdAndLikesStatus(
+  List<WriterLikes> findByIdLessThanAndUserIdAndLikesStatus(
     Long id,
     Long userId,
     LikesStatus likesStatus,

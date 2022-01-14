@@ -1,5 +1,7 @@
 package com.prgrms.monthsub.module.part.writer.app;
 
+import static java.util.Optional.ofNullable;
+
 import com.prgrms.monthsub.common.security.jwt.JwtAuthentication;
 import com.prgrms.monthsub.module.part.writer.dto.WriterFollowEvent;
 import com.prgrms.monthsub.module.part.writer.dto.WriterLikesList;
@@ -64,12 +66,12 @@ public class WriterController {
   public WriterLikesList.Response getWritersLikesList(
     @AuthenticationPrincipal JwtAuthentication authentication,
     @RequestParam(required = false) Long userId,
-    @RequestParam(required = false) Long lastId,
+    @RequestParam(required = false) Long writerLikesLastId,
     @RequestParam @Positive Integer size
   ) {
     return this.writerLikesService.getWriterLikesList(
       (userId == null ? authentication.userId : userId),
-      lastId,
+      writerLikesLastId,
       size
     );
   }

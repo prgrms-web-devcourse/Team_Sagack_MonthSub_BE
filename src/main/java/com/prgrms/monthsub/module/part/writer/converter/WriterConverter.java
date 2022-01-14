@@ -4,6 +4,7 @@ import com.prgrms.monthsub.common.s3.config.S3;
 import com.prgrms.monthsub.module.part.user.converter.UserConverter;
 import com.prgrms.monthsub.module.part.user.domain.User;
 import com.prgrms.monthsub.module.part.writer.domain.Writer;
+import com.prgrms.monthsub.module.part.writer.domain.WriterLikes;
 import com.prgrms.monthsub.module.part.writer.dto.WriterLikesList.LikesResponse;
 import com.prgrms.monthsub.module.part.writer.dto.WriterList.WriterResponse;
 import com.prgrms.monthsub.module.series.series.dto.MyChannel;
@@ -60,10 +61,12 @@ public class WriterConverter {
       .build();
   }
 
-  public LikesResponse toWriterLikesList(Writer writer) {
+  public LikesResponse toWriterLikesList(WriterLikes writerLikes) {
+    Writer writer = writerLikes.getWriter();
     User user = writer.getUser();
 
     return LikesResponse.builder()
+      .writerLikesId(writerLikes.getId())
       .writerId(writer.getId())
       .nickname(user.getNickname())
       .profileIntroduce(user.getProfileIntroduce())
