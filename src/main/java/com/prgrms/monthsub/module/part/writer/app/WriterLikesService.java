@@ -1,5 +1,7 @@
 package com.prgrms.monthsub.module.part.writer.app;
 
+import static java.util.Optional.ofNullable;
+
 import com.prgrms.monthsub.module.part.writer.converter.WriterConverter;
 import com.prgrms.monthsub.module.part.writer.domain.Writer;
 import com.prgrms.monthsub.module.part.writer.domain.WriterLikes;
@@ -46,9 +48,8 @@ public class WriterLikesService {
     PageRequest cursorPageable = getPageRequest(size);
 
     return new WriterLikesList.Response(
-      this.getWriterLikes(channelOwnerUserId, lastId, cursorPageable)
+      this.getWriterLikes(channelOwnerUserId, ofNullable(lastId), cursorPageable)
         .stream()
-        .map(WriterLikes::getWriter)
         .map(this.writerConverter::toWriterLikesList)
         .collect(Collectors.toList())
     );
@@ -63,12 +64,11 @@ public class WriterLikesService {
 
   private List<WriterLikes> getWriterLikes(
     Long userId,
-    Long lastId,
+    Optional<Long> lastId,
     PageRequest cursorPageable
   ) {
-    return Optional.ofNullable(lastId)
-      .map(lastWriterLikesId ->
-        this.writerLikesRepository.findByIdGreaterThanAndUserIdAndLikesStatus(
+    return lastId.map(lastWriterLikesId ->
+        this.writerLikesRepository.findByIdLessThanAndUserIdAndLikesStatus(
           lastWriterLikesId, userId, LikesStatus.Like, cursorPageable
         )
       )

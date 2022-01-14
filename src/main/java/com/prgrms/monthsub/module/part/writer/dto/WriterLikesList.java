@@ -19,6 +19,7 @@ public sealed interface WriterLikesList permits Response, LikesResponse {
 
   @Schema(name = "WriterLikesList.LikesResponse")
   record LikesResponse(
+    Long writerLikesId,
     Long writerId,
     int followCount,
     String nickname,
