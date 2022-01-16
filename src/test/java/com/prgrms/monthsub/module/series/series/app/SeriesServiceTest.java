@@ -68,6 +68,7 @@ class SeriesServiceTest {
       .build();
     ReflectionTestUtils.setField(series, "id", id);
     ReflectionTestUtils.setField(series, "createdAt", LocalDateTime.now());
+
     return series;
   }
 
@@ -76,6 +77,7 @@ class SeriesServiceTest {
       .followCount((int) Math.pow(id, 2))
       .build();
     ReflectionTestUtils.setField(writer, "id", id);
+
     return writer;
   }
 
@@ -88,6 +90,7 @@ class SeriesServiceTest {
       .uploadDate(UploadDate.FRIDAY)
       .build();
     ReflectionTestUtils.setField(articleUploadDate, "id", id);
+
     return articleUploadDate;
   }
 
@@ -129,8 +132,8 @@ class SeriesServiceTest {
     //given
     Series series = getSeriesFixture(3L, WRITER_ID);
     ArticleUploadDate articleUploadDate = getArticleUploadDateFixture(1L, series.getId());
-    when(articleUploadDateRepository.save(any(ArticleUploadDate.class))).thenReturn(
-      articleUploadDate);
+    when(articleUploadDateRepository.save(any(ArticleUploadDate.class)))
+      .thenReturn(articleUploadDate);
 
     //when
     this.seriesService.articleUploadDateSave(articleUploadDate);
@@ -297,7 +300,8 @@ class SeriesServiceTest {
     //given
     Long writerId = WRITER_ID;
     Pageable pageable = PageRequest.of(
-      PAGE_NUM, SERIES_SIZE, Sort.by(Direction.DESC, "createdAt", "id"));
+      PAGE_NUM, SERIES_SIZE, Sort.by(Direction.DESC, "createdAt", "id")
+    );
     List<Series> seriesList = new ArrayList<>();
     for (long i = 0; i < 20; i++) {
       seriesList.add(getSeriesFixture(i, writerId));
@@ -318,7 +322,8 @@ class SeriesServiceTest {
 
     //when
     List<Series> findSeries = this.seriesService.findBySubscribeStatus(
-      SeriesStatus.SUBSCRIPTION_AVAILABLE, pageable);
+      SeriesStatus.SUBSCRIPTION_AVAILABLE, pageable
+    );
 
     //then
     verify(this.seriesRepository, times(1))
