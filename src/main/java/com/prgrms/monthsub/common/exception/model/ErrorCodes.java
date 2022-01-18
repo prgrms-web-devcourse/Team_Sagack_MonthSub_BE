@@ -65,6 +65,10 @@ public record ErrorCodes(ErrorCode errorCode, String message) {
     return new ErrorCodes(ErrorCode.NO_POINT, message);
   }
 
+  public static ErrorCodes EMAIL_SEND_FAIL(String message){
+    return new ErrorCodes(ErrorCode.EMAIL_SEND_FAIL, message);
+  }
+
   @Getter
   public enum ErrorCode {
 
@@ -72,6 +76,7 @@ public record ErrorCodes(ErrorCode errorCode, String message) {
     INTERNAL_SERVER_ERROR("S001", HttpStatus.INTERNAL_SERVER_ERROR),
     FILE_ERROR("S002", HttpStatus.INTERNAL_SERVER_ERROR),
     NO_POINT("S003", HttpStatus.INTERNAL_SERVER_ERROR),
+    EMAIL_SEND_FAIL("S004", HttpStatus.INTERNAL_SERVER_ERROR),
 
     //400
     INVALID_INPUT_VALUE("U001", HttpStatus.BAD_REQUEST),
