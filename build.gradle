@@ -77,6 +77,10 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.1.RELEASE'
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+
+    implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.2.9'
+    implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.9'
 
     implementation 'org.flywaydb:flyway-core'
 

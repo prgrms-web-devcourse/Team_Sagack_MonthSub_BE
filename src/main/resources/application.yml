@@ -18,6 +18,18 @@ spring:
     multipart:
       maxFileSize: 5MB
       maxRequestSize: 5MB
+  mail:
+    host: smtp.gmail.com
+    port: 587
+#    username: ${MAIL_USERNAME}
+#    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          timeout: 5000
+          starttls:
+            enable: true
 
 springdoc:
   swagger-ui:
@@ -84,6 +96,7 @@ security:
     post:
       - /signin
       - /signup
+      - /send-email
 #    put:
 #    patch:
 
