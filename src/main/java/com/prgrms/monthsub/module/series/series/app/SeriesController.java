@@ -62,7 +62,7 @@ public class SeriesController {
   @GetMapping("/popular")
   @Operation(summary = "인기 시리즈 리스트 조회")
   @Tag(name = "[화면]-메인 페이지")
-  public SeriesSubscribeList.Response getPopulatSeriesList() {
+  public SeriesSubscribeList.Response getPopularSeriesList() {
     return this.seriesAssemble.getPopularSeriesList();
   }
 

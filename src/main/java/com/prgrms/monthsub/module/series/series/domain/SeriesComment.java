@@ -42,9 +42,6 @@ public class SeriesComment extends BaseEntity {
   @Column(name = "parent_id", columnDefinition = "BIGINT")
   private Long parentId;
 
-  @Column(name = "sequence", columnDefinition = "INT", nullable = false)
-  private int sequence;
-
   @Enumerated(EnumType.STRING)
   @Column(name = "comment_status", columnDefinition = "VARCHAR(50)", nullable = false)
   private CommentStatus commentStatus;
@@ -55,14 +52,12 @@ public class SeriesComment extends BaseEntity {
     Long userId,
     Long seriesId,
     Long parentId,
-    int sequence,
     CommentStatus commentStatus
   ) {
     this.contents = contents;
     this.userId = userId;
     this.seriesId = seriesId;
     this.parentId = parentId;
-    this.sequence = sequence;
     this.commentStatus = commentStatus;
   }
 
