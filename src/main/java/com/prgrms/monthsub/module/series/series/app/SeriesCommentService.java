@@ -31,7 +31,7 @@ public class SeriesCommentService {
     return SeriesCommentPost.Response.builder()
       .id(
         this.seriesCommentRepository.save(
-          seriesCommentConverter.toEntity(userId, request)
+          this.seriesCommentConverter.toEntity(userId, request)
         ).getId()
       ).build();
   }
