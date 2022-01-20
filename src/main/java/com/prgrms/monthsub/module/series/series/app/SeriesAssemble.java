@@ -119,13 +119,13 @@ public class SeriesAssemble {
     Long userId
   ) {
     Series series = this.seriesService.getById(seriesId);
-    thumbnail.map(multipartFile -> this.changeThumbnail(multipartFile, series, userId));
-
-    series.editSeries(request);
-
     if (!series.isMine(userId)) {
       throw new AccessDeniedException("수정 권한이 없습니다.");
     }
+
+    thumbnail.map(multipartFile -> this.changeThumbnail(multipartFile, series, userId));
+
+    series.editSeries(request);
 
     return new SeriesSubscribeEdit.Response(this.seriesService.save(series), true);
   }

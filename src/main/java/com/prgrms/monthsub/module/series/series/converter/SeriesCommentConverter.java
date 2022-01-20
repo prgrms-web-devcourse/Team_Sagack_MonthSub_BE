@@ -16,7 +16,7 @@ public class SeriesCommentConverter {
     SeriesCommentPost.Request request
   ){
     return SeriesComment.builder()
-      .contents(request.comment())
+      .comment(request.comment())
       .userId(userId)
       .seriesId(request.seriesId())
       .parentId(request.parentId())
