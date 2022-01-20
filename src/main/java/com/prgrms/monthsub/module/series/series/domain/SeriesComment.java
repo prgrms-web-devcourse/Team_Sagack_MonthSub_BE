@@ -1,18 +1,15 @@
 package com.prgrms.monthsub.module.series.series.domain;
 
 import com.prgrms.monthsub.common.domain.BaseEntity;
-import com.prgrms.monthsub.module.part.user.domain.User;
+import com.prgrms.monthsub.module.series.series.dto.SeriesCommentEdit;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -30,8 +27,8 @@ public class SeriesComment extends BaseEntity {
   @Column(name = "id", columnDefinition = "BIGINT")
   private Long id;
 
-  @Column(name = "contents", columnDefinition = "VARCHAR(300)", nullable = false)
-  private String contents;
+  @Column(name = "comment", columnDefinition = "VARCHAR(300)", nullable = false)
+  private String comment;
 
   @Column(name = "user_id", columnDefinition = "BIGINT", nullable = false)
   private Long userId;
@@ -48,17 +45,26 @@ public class SeriesComment extends BaseEntity {
 
   @Builder
   private SeriesComment(
-    String contents,
+    String comment,
     Long userId,
     Long seriesId,
     Long parentId,
     CommentStatus commentStatus
   ) {
-    this.contents = contents;
+    this.comment = comment;
     this.userId = userId;
     this.seriesId = seriesId;
     this.parentId = parentId;
     this.commentStatus = commentStatus;
+  }
+
+  public void editComment(String comment) {
+    this.comment = comment;
+    this.commentStatus = CommentStatus.MODIFIED;
+  }
+
+  public Boolean isMine(Long userId){
+    return Objects.equals(this.userId, userId);
   }
 
   public enum CommentStatus {
