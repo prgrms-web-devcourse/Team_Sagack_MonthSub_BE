@@ -17,4 +17,11 @@ public class SeriesException {
       super(ErrorCodes.ENTITY_NOT_FOUND(Arrays.stream(message).toList().toString()));
     }
   }
+
+  public static class SeriesCommentNotFound extends BusinessException {
+    public SeriesCommentNotFound(String... message) {
+      super(ErrorCodes.ENTITY_NOT_FOUND(Arrays.stream(message).toList().toString()));
+    }
+  }
+
 }
