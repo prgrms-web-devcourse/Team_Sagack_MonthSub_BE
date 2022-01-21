@@ -27,6 +27,7 @@ public abstract class FSM<T extends Event> extends BaseEntity {
         System.out.println(state.stateEvents());
         throw new InvalidEvent();
       }
+      
       return event.getNextState();
     }
 
