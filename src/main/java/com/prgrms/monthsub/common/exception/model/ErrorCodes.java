@@ -37,6 +37,10 @@ public record ErrorCodes(ErrorCode errorCode, String message) {
     return new ErrorCodes(ErrorCode.HANDLE_ACCESS_DENIED, "인증 권한을 보유하지 않습니다");
   }
 
+  public static ErrorCodes INVALID_EVENT() {
+    return new ErrorCodes(ErrorCode.DUPLICATED_PAYMENT, "유효하지 않은 이벤트입니다.");
+  }
+
   public static ErrorCodes FILE_ERROR(String message) {
     return new ErrorCodes(ErrorCode.FILE_ERROR, message);
   }
@@ -65,7 +69,7 @@ public record ErrorCodes(ErrorCode errorCode, String message) {
     return new ErrorCodes(ErrorCode.NO_POINT, message);
   }
 
-  public static ErrorCodes EMAIL_SEND_FAIL(String message){
+  public static ErrorCodes EMAIL_SEND_FAIL(String message) {
     return new ErrorCodes(ErrorCode.EMAIL_SEND_FAIL, message);
   }
 
@@ -77,6 +81,7 @@ public record ErrorCodes(ErrorCode errorCode, String message) {
     FILE_ERROR("S002", HttpStatus.INTERNAL_SERVER_ERROR),
     NO_POINT("S003", HttpStatus.INTERNAL_SERVER_ERROR),
     EMAIL_SEND_FAIL("S004", HttpStatus.INTERNAL_SERVER_ERROR),
+    INVALID_EVENT("S005", HttpStatus.INTERNAL_SERVER_ERROR),
 
     //400
     INVALID_INPUT_VALUE("U001", HttpStatus.BAD_REQUEST),
