@@ -61,13 +61,13 @@ public class Payment extends FSM<Event> {
     this.series = series;
     this.state = state;
   }
-
-  //  실제로 상태 변경하는 메서드
+  
   @Override
   public Payment transit(Event event) {
     State nextState = (State) this.state.next(event, getState());
     this.state = nextState;
     this.histories.add(new PaymentStateHistory(nextState, event, userId, series, this));
+
     return this;
   }
 
