@@ -7,6 +7,7 @@ import com.prgrms.monthsub.module.part.user.domain.exception.UserException.Email
 import com.prgrms.monthsub.module.part.user.domain.exception.UserException.NickNameDuplicated;
 import com.prgrms.monthsub.module.part.user.domain.exception.UserException.UserNotFound;
 import com.prgrms.monthsub.module.part.user.dto.UserSignUp;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -40,6 +41,11 @@ public class UserService implements UserProvider {
     return this.userRepository
       .findById(userId)
       .orElseThrow(() -> new UserNotFound("id=" + userId));
+  }
+
+  @Override
+  public List<User> findByIdIn(List<Long> ids){
+    return this.userRepository.findByIdIn(ids);
   }
 
   public User findByEmail(String email) {
