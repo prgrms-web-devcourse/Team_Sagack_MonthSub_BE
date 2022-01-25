@@ -25,21 +25,11 @@ public sealed interface SeriesCommentList permits Response, CommentObject, Reply
   @Schema(name = "SeriesCommentList.CommentObject")
   record CommentObject(
     UserInfoObject userInfoObject,
-    List<ReplyCommentObject> replyCommentObjects,
-    CommentMetaInfoObject commentMetaInfoObject
+    CommentMetaInfoObject commentMetaInfoObject,
+    List<ReplyCommentObject> replyCommentObjects
   ) implements SeriesCommentList {
     @Builder
     public CommentObject {
-    }
-  }
-
-  @Schema(name = "SeriesCommentList.ReplyCommentObject")
-  record ReplyCommentObject(
-    UserInfoObject userInfoObject,
-    CommentMetaInfoObject commentMetaInfoObject
-  ) implements SeriesCommentList {
-    @Builder
-    public ReplyCommentObject {
     }
   }
 
@@ -61,6 +51,16 @@ public sealed interface SeriesCommentList permits Response, CommentObject, Reply
     ) implements SeriesCommentList {
     @Builder
     public CommentMetaInfoObject {
+    }
+  }
+
+  @Schema(name = "SeriesCommentList.ReplyCommentObject")
+  record ReplyCommentObject(
+    UserInfoObject userInfoObject,
+    CommentMetaInfoObject commentMetaInfoObject
+  ) implements SeriesCommentList {
+    @Builder
+    public ReplyCommentObject {
     }
   }
 
