@@ -24,7 +24,7 @@ public class SeriesCommentService {
     this.seriesCommentConverter = seriesCommentConverter;
   }
 
-  public SeriesCommentPost.Response save(
+  public SeriesCommentPost.Response saveComment(
     Long userId,
     SeriesCommentPost.Request request
   ) {
@@ -36,7 +36,7 @@ public class SeriesCommentService {
       ).build();
   }
 
-  public SeriesCommentEdit.Response edit(
+  public SeriesCommentEdit.Response editComment(
     Long userId,
     SeriesCommentEdit.Request request
   ) {
@@ -54,4 +54,14 @@ public class SeriesCommentService {
       .build();
   }
 
+  public void deleteComment(Long userId, Long id){
+    SeriesComment seriesComment = this.seriesCommentRepository.findById(id)
+      .orElseThrow(() -> new SeriesCommentNotFound("id= " + id));
+    if(!seriesComment.isMine(userId)){
+      throw new AccessDeniedException("삭제 권한이 없습니다.");
+    }
+
+    seriesComment.deleteComment();
+  }
+  
 }

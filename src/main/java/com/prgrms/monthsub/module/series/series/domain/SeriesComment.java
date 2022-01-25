@@ -63,6 +63,10 @@ public class SeriesComment extends BaseEntity {
     this.commentStatus = CommentStatus.MODIFIED;
   }
 
+  public void deleteComment(){
+    this.commentStatus = CommentStatus.DELETED;
+  }
+
   public Boolean isMine(Long userId){
     return Objects.equals(this.userId, userId);
   }
