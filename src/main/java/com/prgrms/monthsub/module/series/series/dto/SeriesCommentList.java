@@ -6,7 +6,6 @@ import com.prgrms.monthsub.module.series.series.dto.SeriesCommentList.ReplyComme
 import com.prgrms.monthsub.module.series.series.dto.SeriesCommentList.Response;
 import com.prgrms.monthsub.module.series.series.dto.SeriesCommentList.UserInfoObject;
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.time.LocalDate;
 import java.util.List;
 import lombok.Builder;
 
@@ -45,9 +44,10 @@ public sealed interface SeriesCommentList permits Response, CommentObject, Reply
 
   @Schema(name = "SeriesCommentList.CommentMetaInfoObject")
   record CommentMetaInfoObject(
+    String comment,
     boolean isMine,
     boolean isDeleted,
-    LocalDate updatedDate
+    String updatedDateTime
     ) implements SeriesCommentList {
     @Builder
     public CommentMetaInfoObject {
