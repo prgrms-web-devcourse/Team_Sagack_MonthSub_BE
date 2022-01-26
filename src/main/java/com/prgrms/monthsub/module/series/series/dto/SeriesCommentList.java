@@ -34,6 +34,7 @@ public sealed interface SeriesCommentList permits Response, CommentObject, Reply
 
   @Schema(name = "SeriesCommentList.ReplyCommentObject")
   record UserInfoObject(
+    Long userId,
     String nickname,
     String profileImage
   ) implements SeriesCommentList {
@@ -44,6 +45,7 @@ public sealed interface SeriesCommentList permits Response, CommentObject, Reply
 
   @Schema(name = "SeriesCommentList.CommentMetaInfoObject")
   record CommentMetaInfoObject(
+    Long commentId,
     String comment,
     boolean isMine,
     boolean isDeleted,
