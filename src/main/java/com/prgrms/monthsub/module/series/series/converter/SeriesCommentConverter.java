@@ -48,7 +48,7 @@ public class SeriesCommentConverter {
       .build();
   }
 
-  public Response toResponse(
+  public SeriesCommentList.Response toResponse(
     Optional<Long> userIdOrEmpty,
     List<SeriesComment> comments,
     List<SeriesComment> replyComments,
@@ -70,12 +70,14 @@ public class SeriesCommentConverter {
         User user = usersInfo.get(comment.getUserId());
 
         UserInfoObject commentUserInfoObject = UserInfoObject.builder()
+          .userId(user.getId())
           .nickname(user.getNickname())
           .profileImage(
             user.getProfileKey() == null ? null : this.s3.getDomain() + "/" + user.getProfileKey())
           .build();
 
         CommentMetaInfoObject commentMetaInfoObject = CommentMetaInfoObject.builder()
+          .commentId(comment.getId())
           .comment(comment.getComment())
           .isMine(userIdOrEmpty.map(userId -> {
               return userId.equals(comment.getUserId());
@@ -93,12 +95,14 @@ public class SeriesCommentConverter {
             replyComment -> {
               User replyCommentUser = usersInfo.get(replyComment.getUserId());
               UserInfoObject replyCommentUserInfoObject = UserInfoObject.builder()
+                .userId(replyCommentUser.getId())
                 .nickname(replyCommentUser.getNickname())
                 .profileImage(user.getProfileKey() == null ? null
                   : this.s3.getDomain() + "/" + user.getProfileKey())
                 .build();
 
               CommentMetaInfoObject replyCommentMetaInfoObject = CommentMetaInfoObject.builder()
+                .commentId(replyComment.getId())
                 .comment(replyComment.getComment())
                 .isMine(userIdOrEmpty.map(userId -> {
                     return userId.equals(replyComment.getUserId());
