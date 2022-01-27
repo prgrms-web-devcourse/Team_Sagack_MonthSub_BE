@@ -1,5 +1,6 @@
 package com.prgrms.monthsub.module.series.series.dto;
 
+import com.prgrms.monthsub.module.series.series.domain.SeriesComment.CommentStatus;
 import com.prgrms.monthsub.module.series.series.dto.SeriesCommentList.CommentMetaInfoObject;
 import com.prgrms.monthsub.module.series.series.dto.SeriesCommentList.CommentObject;
 import com.prgrms.monthsub.module.series.series.dto.SeriesCommentList.ReplyCommentObject;
@@ -48,8 +49,8 @@ public sealed interface SeriesCommentList permits Response, CommentObject, Reply
     Long commentId,
     String comment,
     boolean isMine,
-    boolean isDeleted,
-    String updatedDateTime
+    CommentStatus commentStatus,
+    String createdDateTime
     ) implements SeriesCommentList {
     @Builder
     public CommentMetaInfoObject {
