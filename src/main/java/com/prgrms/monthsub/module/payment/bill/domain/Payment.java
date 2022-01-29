@@ -61,7 +61,7 @@ public class Payment extends FSM<Event> {
     this.series = series;
     this.state = state;
   }
-  
+
   @Override
   public Payment transit(Event event) {
     State nextState = (State) this.state.next(event, getState());
@@ -107,7 +107,7 @@ public class Payment extends FSM<Event> {
     PAY_REJECTED {
       @Override
       public State getNextState() {
-        return State.PAY_CONFIRMED;
+        return State.PAY_CANCELED;
       }
     },
     REFUND_REQUIRED {
@@ -129,4 +129,5 @@ public class Payment extends FSM<Event> {
       }
     };
   }
+
 }

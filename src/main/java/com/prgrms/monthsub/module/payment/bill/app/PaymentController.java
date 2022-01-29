@@ -41,7 +41,7 @@ public class PaymentController {
   public PaymentPost.Response create(
     @AuthenticationPrincipal JwtAuthentication authentication,
     @PathVariable Long id
-  ) {
+  ) throws Exception {
     return this.paymentService.pay(id, authentication.userId);
   }
 
