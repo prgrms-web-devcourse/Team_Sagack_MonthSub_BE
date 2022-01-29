@@ -10,7 +10,6 @@ import com.prgrms.monthsub.module.payment.bill.domain.Payment.Event;
 import com.prgrms.monthsub.module.payment.bill.domain.Payment.State;
 import com.prgrms.monthsub.module.payment.bill.domain.PaymentStateHistory;
 import com.prgrms.monthsub.module.payment.bill.domain.exception.PaymentException.PaymentDuplicated;
-import com.prgrms.monthsub.module.payment.bill.dto.PaymentPost;
 import com.prgrms.monthsub.module.payment.bill.dto.PaymentSeries;
 import com.prgrms.monthsub.module.series.series.app.Provider.SeriesProvider;
 import com.prgrms.monthsub.module.series.series.domain.ArticleUploadDate;
@@ -23,7 +22,6 @@ import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.retry.annotation.EnableRetry;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
 
@@ -70,19 +68,12 @@ public class PaymentService implements PaymentProvider {
   }
 
   @Retryable(maxAttempts = 3, value = ObjectOptimisticLockingFailureException.class)
-  public PaymentPost.Response pay(
+  public Object pay(
     Long id,
     Long userId
-  ) throws Exception {
+  ) {
     try {
-      return this.transactionTemplate.execute(status -> {
-        try {
-          return this.createPayment(id, userId);
-        } catch (NoPoint e) {
-          e.printStackTrace();
-        }
-        return null;
-      });
+      return this.transactionTemplate.execute(status -> this.createPayment(id, userId));
     } catch (ObjectOptimisticLockingFailureException e) {
       log.info("충돌 감지 재시도: {}", e.getMessage());
 
@@ -91,7 +82,7 @@ public class PaymentService implements PaymentProvider {
   }
 
   @Transactional
-  public PaymentPost.Response createPayment(
+  public Object createPayment(
     Long seriesId,
     Long userId
   ) throws ObjectOptimisticLockingFailureException, NoPoint {
@@ -121,18 +112,18 @@ public class PaymentService implements PaymentProvider {
     } catch (NoPoint e) {
       payment.transit(Event.PAY_REJECTED);
       this.saveHistory(payment.getHistories().get(1));
-      throw new NoPoint(e.getMessage()); //Checked Exception
+      return e.getMessage();
     }
-
     return this.paymentConverter.toPaymentPost(series, uploadDateList, user.getPoint());
   }
 
-  @Transactional(propagation = Propagation.REQUIRES_NEW)
+
+  @Transactional
   public Payment savePayment(Payment payment) {
     return paymentRepository.save(payment);
   }
 
-  @Transactional(propagation = Propagation.REQUIRES_NEW)
+  @Transactional
   public PaymentStateHistory saveHistory(PaymentStateHistory paymentStateHistory) {
     return paymentStateHistoryRepository.save(paymentStateHistory);
   }

@@ -10,6 +10,12 @@ public class PaymentException {
     public PaymentDuplicated(String... message) {
       super(ErrorCodes.DUPLICATED_PAYMENT(Arrays.stream(message).toList().toString()));
     }
+
+    public static class PaymentNotAccepted extends Exception {
+      public PaymentNotAccepted(String... message) {
+        super(String.valueOf(ErrorCodes.NO_POINT(Arrays.stream(message).toList().toString())));
+      }
+    }
   }
 
 }

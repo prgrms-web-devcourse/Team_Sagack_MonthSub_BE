@@ -1,7 +1,6 @@
 package com.prgrms.monthsub.module.payment.bill.app;
 
 import com.prgrms.monthsub.common.security.jwt.JwtAuthentication;
-import com.prgrms.monthsub.module.payment.bill.dto.PaymentPost;
 import com.prgrms.monthsub.module.payment.bill.dto.PaymentSeries;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -38,7 +37,7 @@ public class PaymentController {
   @PostMapping("/series/{id}")
   @Operation(summary = "결제 완료 요청")
   @Tag(name = "[화면]-결제")
-  public PaymentPost.Response create(
+  public Object create(
     @AuthenticationPrincipal JwtAuthentication authentication,
     @PathVariable Long id
   ) throws Exception {

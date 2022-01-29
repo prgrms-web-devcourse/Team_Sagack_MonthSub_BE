@@ -117,7 +117,7 @@ public class User extends BaseEntity {
     this.profileIntroduce = profileIntroduce;
   }
 
-  public int decreasePoint(int point) throws NoPoint {
+  public int decreasePoint(int point) {
     if (this.point - point < 0) {
       throw new NoPoint("포인트가 부족합니다.");
     }
