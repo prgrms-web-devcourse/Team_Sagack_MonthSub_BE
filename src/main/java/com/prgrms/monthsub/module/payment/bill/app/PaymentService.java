@@ -7,9 +7,9 @@ import com.prgrms.monthsub.module.payment.bill.converter.PaymentConverter;
 import com.prgrms.monthsub.module.payment.bill.domain.Payment;
 import com.prgrms.monthsub.module.payment.bill.domain.Payment.Event;
 import com.prgrms.monthsub.module.payment.bill.domain.Payment.State;
-import com.prgrms.monthsub.module.payment.bill.domain.exception.PaymentException;
 import com.prgrms.monthsub.module.payment.bill.domain.exception.PaymentException.FailedPayment;
 import com.prgrms.monthsub.module.payment.bill.domain.exception.PaymentException.PaymentDuplicated;
+import com.prgrms.monthsub.module.payment.bill.dto.PaymentPost.Response;
 import com.prgrms.monthsub.module.payment.bill.dto.PaymentSeries;
 import com.prgrms.monthsub.module.series.series.app.Provider.SeriesProvider;
 import com.prgrms.monthsub.module.series.series.domain.ArticleUploadDate;
@@ -65,10 +65,19 @@ public class PaymentService implements PaymentProvider {
     Long id,
     Long userId
   ) throws FailedPayment {
-    Series series = this.seriesProvider.getById(id);
+//    @@@ Transactional operator 사용
+    return this.createPayment(id, userId);
+  }
+
+  @Transactional
+  Response createPayment(
+    Long seriesId,
+    Long userId
+  ) throws FailedPayment{
+    Series series = this.seriesProvider.getById(seriesId);
     User user = this.userProvider.findById(userId);
 
-    final String message = "seriesId=" + id + ", userId=" + userId;
+    final String message = "seriesId=" + seriesId + ", userId=" + userId;
 
     //이미 구매한 적이 있는 경우
     this.paymentRepository
@@ -84,7 +93,7 @@ public class PaymentService implements PaymentProvider {
     if (!user.isPayable(series.getPrice())) {
       payment.transit(Event.PAY_REJECTED);
 
-      throw new PaymentException.FailedPayment(message);
+      throw new FailedPayment(message);
     }
 
     user.decreasePoint(series.getPrice());

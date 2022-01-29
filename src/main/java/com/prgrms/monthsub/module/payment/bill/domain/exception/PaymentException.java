@@ -1,6 +1,7 @@
 package com.prgrms.monthsub.module.payment.bill.domain.exception;
 
 import com.prgrms.monthsub.common.exception.base.BusinessException;
+import com.prgrms.monthsub.common.exception.base.CheckedException;
 import com.prgrms.monthsub.common.exception.base.InvalidInputException;
 import com.prgrms.monthsub.common.exception.model.ErrorCodes;
 import java.util.Arrays;
@@ -19,7 +20,7 @@ public class PaymentException {
     }
   }
 
-  public static class FailedPayment extends BusinessException {
+  public static class FailedPayment extends CheckedException {
     public FailedPayment(String... message) {
       super(ErrorCodes.FAILED_PAYMENT(Arrays.stream(message).toList().toString()));
     }

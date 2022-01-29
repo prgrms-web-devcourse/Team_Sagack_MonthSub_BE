@@ -1,6 +1,7 @@
 package com.prgrms.monthsub.module.payment.bill.app;
 
 import com.prgrms.monthsub.common.security.jwt.JwtAuthentication;
+import com.prgrms.monthsub.module.payment.bill.domain.exception.PaymentException.FailedPayment;
 import com.prgrms.monthsub.module.payment.bill.dto.PaymentSeries;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -40,7 +41,7 @@ public class PaymentController {
   public Object create(
     @AuthenticationPrincipal JwtAuthentication authentication,
     @PathVariable Long id
-  ) {
+  ) throws FailedPayment {
     return this.paymentService.pay(id, authentication.userId);
   }
 
