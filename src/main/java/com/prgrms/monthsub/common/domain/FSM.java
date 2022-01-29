@@ -5,13 +5,11 @@ import com.prgrms.monthsub.common.domain.FSM.State;
 import com.prgrms.monthsub.common.exception.global.FSMException.InvalidEvent;
 import java.util.Set;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 public abstract class FSM<S extends State, E extends Event> extends BaseEntity {
 
   public abstract FSM<S, E> transit(E event);
@@ -19,8 +17,11 @@ public abstract class FSM<S extends State, E extends Event> extends BaseEntity {
   protected interface State<E extends Event> {
     Set<E> getEvents();
 
-    static <E extends Event> State<E> next(State<E> state, E event) {
-      if(!state.getEvents().contains(event)){
+    static <E extends Event> State<E> next(
+      State<E> state,
+      E event
+    ) {
+      if (!state.getEvents().contains(event)) {
         throw new InvalidEvent();
       }
 

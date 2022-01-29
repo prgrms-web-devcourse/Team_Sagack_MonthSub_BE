@@ -61,9 +61,11 @@ public class SeriesCommentService {
     return SeriesCommentPost.Response.builder()
       .id(
         this.seriesCommentRepository.save(
-          this.seriesCommentConverter.toEntity(userId, request)
-        ).getId()
-      ).build();
+            this.seriesCommentConverter.toEntity(userId, request)
+          )
+          .getId()
+      )
+      .build();
   }
 
   public SeriesCommentEdit.Response editComment(
@@ -72,8 +74,10 @@ public class SeriesCommentService {
   ) {
     SeriesComment seriesComment = this.seriesCommentRepository.findById(request.id())
       .orElseThrow(() -> new SeriesCommentNotFound("id= " + request.id()));
+
     if (!seriesComment.isMine(userId)) {
-      throw new AccessDeniedException("수정 권한이 없습니다.");
+      final String message = "seriesCommentId=" + seriesComment.getId() + ", userId=" + userId;
+      throw new AccessDeniedException(message + ":수정 권한이 없습니다.");
     }
 
     seriesComment.editComment(request.comment());
@@ -90,8 +94,10 @@ public class SeriesCommentService {
   ) {
     SeriesComment seriesComment = this.seriesCommentRepository.findById(id)
       .orElseThrow(() -> new SeriesCommentNotFound("id= " + id));
+
     if (!seriesComment.isMine(userId)) {
-      throw new AccessDeniedException("삭제 권한이 없습니다.");
+      final String message = "seriesCommentId=" + seriesComment.getId() + ", userId=" + userId;
+      throw new AccessDeniedException(message + ":삭제 권한이 없습니다.");
     }
 
     seriesComment.deleteComment();

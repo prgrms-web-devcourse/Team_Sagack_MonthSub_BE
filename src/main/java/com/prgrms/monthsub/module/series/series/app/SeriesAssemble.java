@@ -119,8 +119,10 @@ public class SeriesAssemble {
     Long userId
   ) {
     Series series = this.seriesService.getById(seriesId);
+
     if (!series.isMine(userId)) {
-      throw new AccessDeniedException("수정 권한이 없습니다.");
+      final String message = "seriesId=" + series.getId() + ", userId=" + userId;
+      throw new AccessDeniedException(message + ":수정 권한이 없습니다.");
     }
 
     thumbnail.map(multipartFile -> this.changeThumbnail(multipartFile, series, userId));
@@ -191,11 +193,12 @@ public class SeriesAssemble {
           series.changeSeriesIsLiked(true);
         }
       })
-      .collect(Collectors.toList());
+      .toList();
 
-    return new Response(recentSeriesList.stream()
-      .map(seriesConverter::toResponse).collect(
-        Collectors.toList())
+    return new Response(
+      recentSeriesList.stream()
+      .map(seriesConverter::toResponse)
+      .collect(Collectors.toList())
     );
   }
 
@@ -287,11 +290,14 @@ public class SeriesAssemble {
 
   public SeriesSubscribeList.Response getSeriesPostList(Long userId) {
     //TODO user table part id로 part 확인해야함.
-    return writerProvider.findByUserIdOrEmpty(userId).map(writer -> {
+    return writerProvider
+      .findByUserIdOrEmpty(userId)
+      .map(writer -> {
           List<Long> likeSeriesList = this.seriesLikesService.findAllByUserId(userId);
           return new SeriesSubscribeList.Response(
             this.seriesService
-              .findAllByWriterId(this.writerProvider.findByUserId(userId).getId())
+              .findAllByWriterId(this.writerProvider.findByUserId(userId)
+                .getId())
               .stream()
               .peek(series -> {
                 if (likeSeriesList.contains(series.getId())) {
@@ -324,14 +330,16 @@ public class SeriesAssemble {
 
     return new SeriesSubscribeList.Response(
       lastSeriesId.map(id -> {
-          LocalDateTime createdAt = this.seriesService.getById(id).getCreatedAt();
+          LocalDateTime createdAt = this.seriesService.getById(id)
+            .getCreatedAt();
           return this.seriesService.findAllByCategory(
             id,
             size,
             categoryList,
             createdAt
           );
-        }).orElse(
+        })
+        .orElse(
           this.seriesService.findAllByCategoryIn(
             categoryList, PageRequest.of(
               PAGE_NUM,

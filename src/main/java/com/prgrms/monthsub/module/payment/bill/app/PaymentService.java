@@ -2,13 +2,13 @@ package com.prgrms.monthsub.module.payment.bill.app;
 
 import com.prgrms.monthsub.module.part.user.app.provider.UserProvider;
 import com.prgrms.monthsub.module.part.user.domain.User;
-import com.prgrms.monthsub.module.part.user.domain.exception.UserException.NoPoint;
 import com.prgrms.monthsub.module.payment.bill.app.provider.PaymentProvider;
 import com.prgrms.monthsub.module.payment.bill.converter.PaymentConverter;
 import com.prgrms.monthsub.module.payment.bill.domain.Payment;
 import com.prgrms.monthsub.module.payment.bill.domain.Payment.Event;
 import com.prgrms.monthsub.module.payment.bill.domain.Payment.State;
-import com.prgrms.monthsub.module.payment.bill.domain.PaymentStateHistory;
+import com.prgrms.monthsub.module.payment.bill.domain.exception.PaymentException;
+import com.prgrms.monthsub.module.payment.bill.domain.exception.PaymentException.FailedPayment;
 import com.prgrms.monthsub.module.payment.bill.domain.exception.PaymentException.PaymentDuplicated;
 import com.prgrms.monthsub.module.payment.bill.dto.PaymentSeries;
 import com.prgrms.monthsub.module.series.series.app.Provider.SeriesProvider;
@@ -23,7 +23,6 @@ import org.springframework.retry.annotation.EnableRetry;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.TransactionTemplate;
 
 @Service
 @EnableRetry
@@ -33,24 +32,18 @@ public class PaymentService implements PaymentProvider {
   private final SeriesProvider seriesProvider;
   private final UserProvider userProvider;
   private final PaymentConverter paymentConverter;
-  private final TransactionTemplate transactionTemplate;
   private final PaymentRepository paymentRepository;
-  private final PaymentStateHistoryRepository paymentStateHistoryRepository;
 
   public PaymentService(
     SeriesProvider seriesProvider,
     UserProvider userProvider,
     PaymentConverter paymentConverter,
-    TransactionTemplate transactionTemplate,
-    PaymentRepository paymentRepository,
-    PaymentStateHistoryRepository paymentStateHistoryRepository
+    PaymentRepository paymentRepository
   ) {
     this.seriesProvider = seriesProvider;
     this.userProvider = userProvider;
     this.paymentConverter = paymentConverter;
-    this.transactionTemplate = transactionTemplate;
     this.paymentRepository = paymentRepository;
-    this.paymentStateHistoryRepository = paymentStateHistoryRepository;
   }
 
   @Transactional
@@ -71,61 +64,40 @@ public class PaymentService implements PaymentProvider {
   public Object pay(
     Long id,
     Long userId
-  ) {
-    try {
-      return this.transactionTemplate.execute(status -> this.createPayment(id, userId));
-    } catch (ObjectOptimisticLockingFailureException e) {
-      log.info("충돌 감지 재시도: {}", e.getMessage());
-
-      throw new ObjectOptimisticLockingFailureException("충돌", Throwable.class);
-    }
-  }
-
-  @Transactional
-  public Object createPayment(
-    Long seriesId,
-    Long userId
-  ) throws ObjectOptimisticLockingFailureException, NoPoint {
-    Series series = this.seriesProvider.getById(seriesId);
-    List<ArticleUploadDate> uploadDateList = this.seriesProvider.getArticleUploadDate(seriesId);
-
+  ) throws FailedPayment {
+    Series series = this.seriesProvider.getById(id);
     User user = this.userProvider.findById(userId);
 
-    Payment payment = this.paymentConverter.toEntity(series, user);
-    payment.transit(Event.PAY_REQUIRED);
-    this.savePayment(payment);
-    this.saveHistory(payment.getHistories().get(0));
+    final String message = "seriesId=" + id + ", userId=" + userId;
 
     //이미 구매한 적이 있는 경우
     this.paymentRepository
-      .findByUserIdAndSeriesIdAndState(userId, seriesId, State.PAY_COMPLETE)
-      .map(pay -> {
-          throw new PaymentDuplicated("이미 결제되었습니다.");
-        }
-      );
+      .findByUserIdAndSeriesIdAndState(user.getId(), series.getId(), State.PAY_COMPLETE)
+      .map(pay -> {throw new PaymentDuplicated(message + ":이미 결제되었습니다.");});
 
-    //포인트 확인
-    try {
-      user.decreasePoint(series.getPrice());
-      payment.transit(Event.PAY_ACCEPTED);
-      this.saveHistory(payment.getHistories().get(1));
-    } catch (NoPoint e) {
+    Payment payment = this.save(
+      this.paymentConverter
+        .toEntity(series, user)
+        .transit(Event.PAY_REQUIRED)
+    );
+
+    if (!user.isPayable(series.getPrice())) {
       payment.transit(Event.PAY_REJECTED);
-      this.saveHistory(payment.getHistories().get(1));
-      return e.getMessage();
+
+      throw new PaymentException.FailedPayment(message);
     }
+
+    user.decreasePoint(series.getPrice());
+    payment.transit(Event.PAY_ACCEPTED);
+
+    List<ArticleUploadDate> uploadDateList = this.seriesProvider.getArticleUploadDate(
+      series.getId());
+
     return this.paymentConverter.toPaymentPost(series, uploadDateList, user.getPoint());
   }
 
-
-  @Transactional
-  public Payment savePayment(Payment payment) {
+  private Payment save(Payment payment) {
     return paymentRepository.save(payment);
-  }
-
-  @Transactional
-  public PaymentStateHistory saveHistory(PaymentStateHistory paymentStateHistory) {
-    return paymentStateHistoryRepository.save(paymentStateHistory);
   }
 
   @Override

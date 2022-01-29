@@ -40,7 +40,7 @@ public class PaymentController {
   public Object create(
     @AuthenticationPrincipal JwtAuthentication authentication,
     @PathVariable Long id
-  ) throws Exception {
+  ) {
     return this.paymentService.pay(id, authentication.userId);
   }
 

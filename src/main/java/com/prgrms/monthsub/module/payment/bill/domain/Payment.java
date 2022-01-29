@@ -9,6 +9,7 @@ import com.prgrms.monthsub.module.series.series.domain.Series;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -44,8 +45,8 @@ public class Payment extends FSM<State, Event> {
   @Column(name = "state", columnDefinition = "VARCHAR(50)", nullable = false)
   private State state;
 
-  @OneToMany(mappedBy = "payment")
-  private List<PaymentStateHistory> histories = new ArrayList<>();
+  @OneToMany(mappedBy = "payment", cascade = CascadeType.PERSIST)
+  private final List<PaymentStateHistory> histories = new ArrayList<>();
 
   @OneToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "series_id", referencedColumnName = "id")
@@ -129,6 +130,16 @@ public class Payment extends FSM<State, Event> {
         return State.PAY_CONFIRMED;
       }
     };
+  }
+
+  public PaymentStateHistory getLastHistory() {
+    if (this.histories.isEmpty()) {
+      return null;
+    }
+
+    int lastIndex = this.histories.size() - 1;
+
+    return this.histories.get(this.histories.size() - 1);
   }
 
 }

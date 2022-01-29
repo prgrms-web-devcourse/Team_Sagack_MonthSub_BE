@@ -61,6 +61,10 @@ public record ErrorCodes(ErrorCode errorCode, String message) {
     return new ErrorCodes(ErrorCode.DUPLICATED_PAYMENT, message);
   }
 
+  public static ErrorCodes FAILED_PAYMENT(String message) {
+    return new ErrorCodes(ErrorCode.FAILED_PAYMENT, message);
+  }
+
   public static ErrorCodes VIEW_UN_AUTHORIZE(String message) {
     return new ErrorCodes(ErrorCode.VIEW_UN_AUTHORIZED, message);
   }
@@ -82,6 +86,7 @@ public record ErrorCodes(ErrorCode errorCode, String message) {
     NO_POINT("S003", HttpStatus.INTERNAL_SERVER_ERROR),
     EMAIL_SEND_FAIL("S004", HttpStatus.INTERNAL_SERVER_ERROR),
     INVALID_EVENT("S005", HttpStatus.INTERNAL_SERVER_ERROR),
+    FAILED_PAYMENT("S006", HttpStatus.INTERNAL_SERVER_ERROR),
 
     //400
     INVALID_INPUT_VALUE("U001", HttpStatus.BAD_REQUEST),
