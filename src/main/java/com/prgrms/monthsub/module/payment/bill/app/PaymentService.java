@@ -23,6 +23,7 @@ import org.springframework.retry.annotation.EnableRetry;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionTemplate;
 
 @Service
 @EnableRetry
@@ -33,17 +34,20 @@ public class PaymentService implements PaymentProvider {
   private final UserProvider userProvider;
   private final PaymentConverter paymentConverter;
   private final PaymentRepository paymentRepository;
+  private final TransactionTemplate transactionTemplate;
 
   public PaymentService(
     SeriesProvider seriesProvider,
     UserProvider userProvider,
     PaymentConverter paymentConverter,
-    PaymentRepository paymentRepository
+    PaymentRepository paymentRepository,
+    TransactionTemplate transactionTemplate
   ) {
     this.seriesProvider = seriesProvider;
     this.userProvider = userProvider;
     this.paymentConverter = paymentConverter;
     this.paymentRepository = paymentRepository;
+    this.transactionTemplate = transactionTemplate;
   }
 
   @Transactional
@@ -61,11 +65,11 @@ public class PaymentService implements PaymentProvider {
   }
 
   @Retryable(maxAttempts = 3, value = ObjectOptimisticLockingFailureException.class)
+  @Transactional
   public Object pay(
     Long id,
     Long userId
-  ) throws FailedPayment {
-//    @@@ Transactional operator 사용
+  ) throws FailedPayment, ObjectOptimisticLockingFailureException {
     return this.createPayment(id, userId);
   }
 
@@ -73,7 +77,7 @@ public class PaymentService implements PaymentProvider {
   Response createPayment(
     Long seriesId,
     Long userId
-  ) throws FailedPayment{
+  ) throws FailedPayment {
     Series series = this.seriesProvider.getById(seriesId);
     User user = this.userProvider.findById(userId);
 

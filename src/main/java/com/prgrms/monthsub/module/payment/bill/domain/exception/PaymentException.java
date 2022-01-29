@@ -1,6 +1,5 @@
 package com.prgrms.monthsub.module.payment.bill.domain.exception;
 
-import com.prgrms.monthsub.common.exception.base.BusinessException;
 import com.prgrms.monthsub.common.exception.base.CheckedException;
 import com.prgrms.monthsub.common.exception.base.InvalidInputException;
 import com.prgrms.monthsub.common.exception.model.ErrorCodes;
