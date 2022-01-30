@@ -12,4 +12,10 @@ public class WriterException {
     }
   }
 
+  public static class WriterLikesNotFound extends BusinessException {
+    public WriterLikesNotFound(String... message) {
+      super(ErrorCodes.ENTITY_NOT_FOUND(Arrays.stream(message).toList().toString()));
+    }
+  }
+
 }
