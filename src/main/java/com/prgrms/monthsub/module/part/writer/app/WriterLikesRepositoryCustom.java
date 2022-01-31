@@ -7,7 +7,8 @@ import java.util.Optional;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface WriterLikesRepository extends JpaRepository<WriterLikes, Long> {
+public interface WriterLikesRepositoryCustom extends JpaRepository<WriterLikes, Long>,
+  DynamicWriterLikesRepository {
 
   Optional<WriterLikes> findByUserIdAndWriterId(
     Long userId,

@@ -11,7 +11,6 @@ import com.prgrms.monthsub.module.series.series.dto.SeriesCommentList;
 import com.prgrms.monthsub.module.series.series.dto.SeriesCommentList.CommentMetaInfoObject;
 import com.prgrms.monthsub.module.series.series.dto.SeriesCommentList.CommentObject;
 import com.prgrms.monthsub.module.series.series.dto.SeriesCommentList.ReplyCommentObject;
-import com.prgrms.monthsub.module.series.series.dto.SeriesCommentList.Response;
 import com.prgrms.monthsub.module.series.series.dto.SeriesCommentList.UserInfoObject;
 import com.prgrms.monthsub.module.series.series.dto.SeriesCommentPost;
 import java.time.format.DateTimeFormatter;
@@ -27,7 +26,7 @@ public class SeriesCommentConverter {
 
   private final S3 s3;
 
-  private final DateTimeFormatter commentUpdatedTimeFormatter = DateTimeFormatter.ofPattern(
+  private final DateTimeFormatter commentCreatedTimeFormatter = DateTimeFormatter.ofPattern(
     "yyyy-MM-dd HH:mm"
   );
 
@@ -54,7 +53,7 @@ public class SeriesCommentConverter {
     List<SeriesComment> replyComments,
     List<User> users
   ) {
-    if(comments.isEmpty()){
+    if (comments.isEmpty()) {
       return SeriesCommentList.Response.builder()
         .commentObjects(Collections.emptyList())
         .build();
@@ -73,7 +72,8 @@ public class SeriesCommentConverter {
           .userId(user.getId())
           .nickname(user.getNickname())
           .profileImage(
-            user.getProfileKey() == null ? null : this.s3.getDomain() + "/" + user.getProfileKey())
+            user.getProfileKey() == null ? null : this.s3.getDomain() + "/" + user.getProfileKey()
+          )
           .build();
 
         CommentMetaInfoObject commentMetaInfoObject = CommentMetaInfoObject.builder()
@@ -83,8 +83,8 @@ public class SeriesCommentConverter {
               return userId.equals(comment.getUserId());
             }
           ).orElse(false))
-          .isDeleted(comment.getCommentStatus() == CommentStatus.DELETED)
-          .updatedDateTime(commentUpdatedTimeFormatter.format(comment.getUpdateAt()))
+          .commentStatus(comment.getCommentStatus())
+          .createdDateTime(commentCreatedTimeFormatter.format(comment.getCreatedAt()))
           .build();
 
         List<SeriesComment> replySeriesComment = replyCommentsInfo.getOrDefault(
@@ -97,8 +97,9 @@ public class SeriesCommentConverter {
               UserInfoObject replyCommentUserInfoObject = UserInfoObject.builder()
                 .userId(replyCommentUser.getId())
                 .nickname(replyCommentUser.getNickname())
-                .profileImage(user.getProfileKey() == null ? null
-                  : this.s3.getDomain() + "/" + user.getProfileKey())
+                .profileImage(replyCommentUser.getProfileKey() == null ? null
+                  : this.s3.getDomain() + "/" + replyCommentUser.getProfileKey()
+                )
                 .build();
 
               CommentMetaInfoObject replyCommentMetaInfoObject = CommentMetaInfoObject.builder()
@@ -108,8 +109,8 @@ public class SeriesCommentConverter {
                     return userId.equals(replyComment.getUserId());
                   }
                 ).orElse(false))
-                .isDeleted(replyComment.getCommentStatus() == CommentStatus.DELETED)
-                .updatedDateTime(commentUpdatedTimeFormatter.format(replyComment.getUpdateAt()))
+                .commentStatus(replyComment.getCommentStatus())
+                .createdDateTime(commentCreatedTimeFormatter.format(replyComment.getCreatedAt()))
                 .build();
 
               return ReplyCommentObject.builder()
