@@ -1,4 +1,4 @@
-package com.prgrms.monthsub.module.worker.explusion.domain;
+package com.prgrms.monthsub.module.worker.expulsion.app;
 
 import com.prgrms.monthsub.common.s3.config.S3.Bucket;
 import com.prgrms.monthsub.common.security.jwt.JwtAuthentication;

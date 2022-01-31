@@ -24,12 +24,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class SeriesService implements SeriesProvider, ScheduledHandler {
 
-  private final SeriesRepositoryCustom seriesRepository;
+  private final CustomSeriesRepository seriesRepository;
   private final ArticleUploadDateRepository articleUploadDateRepository;
   private final Logger logger = LoggerFactory.getLogger(getClass());
 
   public SeriesService(
-    SeriesRepositoryCustom seriesRepository,
+    CustomSeriesRepository seriesRepository,
     SeriesConverter seriesConverter,
     ArticleUploadDateRepository articleUploadDateRepository
   ) {
@@ -74,10 +74,6 @@ public class SeriesService implements SeriesProvider, ScheduledHandler {
 
   public List<Series> getSeriesSearchTitle(String title) {
     return this.seriesRepository.findByTitleContainingIgnoreCase(title);
-  }
-
-  public List<Series> findAll(Sort sort) {
-    return this.seriesRepository.findAll(sort);
   }
 
   public List<Series> findAll(Pageable pageable) {

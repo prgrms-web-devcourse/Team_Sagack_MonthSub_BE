@@ -47,7 +47,7 @@ class SeriesServiceTest {
   private SeriesService seriesService;
 
   @Mock
-  private SeriesRepositoryCustom seriesRepository;
+  private CustomSeriesRepository seriesRepository;
 
   @Mock
   private ArticleUploadDateRepository articleUploadDateRepository;

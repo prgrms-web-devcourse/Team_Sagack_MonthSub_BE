@@ -11,11 +11,11 @@ import com.prgrms.monthsub.module.series.article.dto.ArticleOne;
 import com.prgrms.monthsub.module.series.article.dto.ArticlePost;
 import com.prgrms.monthsub.module.series.series.app.SeriesService;
 import com.prgrms.monthsub.module.series.series.domain.Series;
-import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.DomainType;
-import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.FileCategory;
-import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.FileType;
-import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.Status;
-import com.prgrms.monthsub.module.worker.explusion.domain.ExpulsionService;
+import com.prgrms.monthsub.module.worker.expulsion.app.provider.ExpulsionProvider;
+import com.prgrms.monthsub.module.worker.expulsion.domain.Expulsion.DomainType;
+import com.prgrms.monthsub.module.worker.expulsion.domain.Expulsion.FileCategory;
+import com.prgrms.monthsub.module.worker.expulsion.domain.Expulsion.FileType;
+import com.prgrms.monthsub.module.worker.expulsion.domain.Expulsion.Status;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.security.access.AccessDeniedException;
@@ -29,7 +29,7 @@ public class ArticleAssemble {
 
   private final ArticleService articleService;
   private final SeriesService seriesService;
-  private final ExpulsionService expulsionService;
+  private final ExpulsionProvider expulsionProvider;
   private final ArticleConverter articleConverter;
   private final S3Client s3Client;
   private final PaymentProvider paymentProvider;
@@ -37,14 +37,14 @@ public class ArticleAssemble {
   public ArticleAssemble(
     ArticleService articleService,
     SeriesService seriesService,
-    ExpulsionService expulsionService,
+    ExpulsionProvider expulsionProvider,
     ArticleConverter articleConverter,
     S3Client s3Client,
     PaymentProvider paymentProvider
   ) {
     this.articleService = articleService;
     this.seriesService = seriesService;
-    this.expulsionService = expulsionService;
+    this.expulsionProvider = expulsionProvider;
     this.articleConverter = articleConverter;
     this.s3Client = s3Client;
     this.paymentProvider = paymentProvider;
@@ -141,7 +141,7 @@ public class ArticleAssemble {
       article.getId()
     );
 
-    expulsionService.save(
+    expulsionProvider.save(
       article.getId(),
       userId,
       originalThumbnailKey,
