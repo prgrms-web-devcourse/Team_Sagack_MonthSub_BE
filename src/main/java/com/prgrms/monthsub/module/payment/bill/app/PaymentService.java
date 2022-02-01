@@ -34,20 +34,17 @@ public class PaymentService implements PaymentProvider {
   private final UserProvider userProvider;
   private final PaymentConverter paymentConverter;
   private final PaymentRepository paymentRepository;
-  private final TransactionTemplate transactionTemplate;
 
   public PaymentService(
     SeriesProvider seriesProvider,
     UserProvider userProvider,
     PaymentConverter paymentConverter,
-    PaymentRepository paymentRepository,
-    TransactionTemplate transactionTemplate
+    PaymentRepository paymentRepository
   ) {
     this.seriesProvider = seriesProvider;
     this.userProvider = userProvider;
     this.paymentConverter = paymentConverter;
     this.paymentRepository = paymentRepository;
-    this.transactionTemplate = transactionTemplate;
   }
 
   @Transactional
@@ -65,19 +62,11 @@ public class PaymentService implements PaymentProvider {
   }
 
   @Retryable(maxAttempts = 3, value = ObjectOptimisticLockingFailureException.class)
-  @Transactional
-  public Object pay(
-    Long id,
-    Long userId
-  ) throws FailedPayment, ObjectOptimisticLockingFailureException {
-    return this.createPayment(id, userId);
-  }
-
-  @Transactional
-  Response createPayment(
+  @Transactional(noRollbackFor = FailedPayment.class)
+  public Response pay(
     Long seriesId,
     Long userId
-  ) throws FailedPayment {
+  ) throws FailedPayment, ObjectOptimisticLockingFailureException {
     Series series = this.seriesProvider.getById(seriesId);
     User user = this.userProvider.findById(userId);
 
