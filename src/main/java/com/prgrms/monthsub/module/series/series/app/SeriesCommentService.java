@@ -8,10 +8,14 @@ import com.prgrms.monthsub.module.series.series.domain.exception.SeriesException
 import com.prgrms.monthsub.module.series.series.dto.SeriesCommentEdit;
 import com.prgrms.monthsub.module.series.series.dto.SeriesCommentList;
 import com.prgrms.monthsub.module.series.series.dto.SeriesCommentPost;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,28 +24,46 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class SeriesCommentService {
 
-  private final SeriesCommentRepository seriesCommentRepository;
+  private final int PAGE_NUM = 0;
+  private final SeriesCommentRepositoryCustom seriesCommentRepositoryCustom;
   private final SeriesCommentConverter seriesCommentConverter;
   private final UserProvider userProvider;
 
   public SeriesCommentService(
-    SeriesCommentRepository seriesCommentRepository,
+    SeriesCommentRepositoryCustom seriesCommentRepositoryCustom,
     SeriesCommentConverter seriesCommentConverter,
     UserProvider userProvider
   ) {
-    this.seriesCommentRepository = seriesCommentRepository;
+    this.seriesCommentRepositoryCustom = seriesCommentRepositoryCustom;
     this.seriesCommentConverter = seriesCommentConverter;
     this.userProvider = userProvider;
   }
 
+  public SeriesComment getById(Long id) {
+    return this.seriesCommentRepositoryCustom
+      .findById(id)
+      .orElseThrow(() -> new SeriesCommentNotFound("id=" + id));
+  }
+
   public SeriesCommentList.Response getComments(
     Optional<Long> userIdOrEmpty,
-    Long seriesId
+    Long seriesId,
+    Optional<Long> lastId,
+    Integer size
   ) {
-    List<SeriesComment> comments = this.seriesCommentRepository.findAllBySeriesIdAndParentIdIsNull(
-      seriesId
-    );
-    List<SeriesComment> replyComments = this.seriesCommentRepository.findAllBySeriesIdAndParentIdIsNotNull(
+    List<SeriesComment> comments = lastId.map(id -> {
+      LocalDateTime createdAt = this.getById(seriesId).getCreatedAt();
+      return this.seriesCommentRepositoryCustom.findAll(
+        seriesId, id, size, createdAt
+      );
+    }).orElse(
+      this.seriesCommentRepositoryCustom.findAllBySeriesIdAndParentIdIsNull(
+        seriesId, PageRequest.of(
+          PAGE_NUM, size, Sort.by(Direction.DESC, "createdAt", "id")
+        )
+      )).stream().toList();
+
+    List<SeriesComment> replyComments = this.seriesCommentRepositoryCustom.findAllBySeriesIdAndParentIdIsNotNull(
       seriesId
     );
 
@@ -60,19 +82,17 @@ public class SeriesCommentService {
   ) {
     return SeriesCommentPost.Response.builder()
       .id(
-        this.seriesCommentRepository.save(
-            this.seriesCommentConverter.toEntity(userId, request)
-          )
-          .getId()
-      )
-      .build();
+        this.seriesCommentRepositoryCustom.save(
+          this.seriesCommentConverter.toEntity(userId, request)
+        ).getId()
+      ).build();
   }
 
   public SeriesCommentEdit.Response editComment(
     Long userId,
     SeriesCommentEdit.Request request
   ) {
-    SeriesComment seriesComment = this.seriesCommentRepository.findById(request.id())
+    SeriesComment seriesComment = this.seriesCommentRepositoryCustom.findById(request.id())
       .orElseThrow(() -> new SeriesCommentNotFound("id= " + request.id()));
 
     if (!seriesComment.isMine(userId)) {
@@ -92,7 +112,7 @@ public class SeriesCommentService {
     Long userId,
     Long id
   ) {
-    SeriesComment seriesComment = this.seriesCommentRepository.findById(id)
+    SeriesComment seriesComment = this.seriesCommentRepositoryCustom.findById(id)
       .orElseThrow(() -> new SeriesCommentNotFound("id= " + id));
 
     if (!seriesComment.isMine(userId)) {

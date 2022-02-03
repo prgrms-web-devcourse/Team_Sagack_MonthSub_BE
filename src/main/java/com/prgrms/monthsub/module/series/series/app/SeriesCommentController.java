@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.Optional;
 import javax.validation.Valid;
+import javax.validation.constraints.Positive;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,16 +35,21 @@ public class SeriesCommentController {
   }
 
   @GetMapping
-  @Operation(summary = "시리즈 댓글, 대댓글 조회")
+  @Operation(summary = "시리즈 댓글, 대댓글 조회(무한 스크롤)")
   @Tag(name = "[화면]-시리즈")
   public SeriesCommentList.Response getComments(
     @AuthenticationPrincipal JwtAuthentication authentication,
     @RequestParam Long seriesId,
+    @RequestParam @Positive Integer size,
     @RequestParam(required = false) Long lastId
   ) {
     return ofNullable(authentication)
-      .map(authenticate -> this.seriesCommentService.getComments(of(authenticate.userId), seriesId))
-      .orElse(this.seriesCommentService.getComments(Optional.empty(), seriesId));
+      .map(authenticate -> this.seriesCommentService.getComments(
+        of(authenticate.userId), seriesId, ofNullable(lastId), size
+      ))
+      .orElse(this.seriesCommentService.getComments(
+        Optional.empty(), seriesId, ofNullable(lastId), size
+      ));
   }
 
   @PostMapping

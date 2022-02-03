@@ -66,12 +66,12 @@ public class WriterController {
   public WriterLikesList.Response getWritersLikesList(
     @AuthenticationPrincipal JwtAuthentication authentication,
     @RequestParam(required = false) Long userId,
-    @RequestParam(required = false) Long writerLikesLastId,
+    @RequestParam(required = false) Long lastId,
     @RequestParam @Positive Integer size
   ) {
     return this.writerLikesService.getWriterLikesList(
       (userId == null ? authentication.userId : userId),
-      writerLikesLastId,
+      ofNullable(lastId),
       size
     );
   }
