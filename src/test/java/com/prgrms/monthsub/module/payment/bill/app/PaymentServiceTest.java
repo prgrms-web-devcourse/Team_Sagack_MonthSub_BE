@@ -14,6 +14,7 @@ import com.prgrms.monthsub.module.part.user.domain.User;
 import com.prgrms.monthsub.module.part.writer.domain.Writer;
 import com.prgrms.monthsub.module.payment.bill.converter.PaymentConverter;
 import com.prgrms.monthsub.module.payment.bill.domain.Payment;
+import com.prgrms.monthsub.module.payment.bill.domain.Payment.State;
 import com.prgrms.monthsub.module.payment.bill.domain.exception.PaymentException.PaymentDuplicated;
 import com.prgrms.monthsub.module.payment.bill.dto.PaymentPost;
 import com.prgrms.monthsub.module.series.series.app.Provider.SeriesProvider;
@@ -40,22 +41,16 @@ import org.springframework.test.util.ReflectionTestUtils;
 class PaymentServiceTest {
   private static final String FILE_KEY = "originalFilename.jpg";
   private static final int ARTICLE_COUNT = 10;
-
-  @InjectMocks
-  private PaymentService paymentService;
-
   @Mock
   SeriesProvider seriesProvider;
-
   @Mock
   UserProvider userProvider;
-
   @Mock
   PaymentConverter paymentConverter;
-
   @Mock
   PaymentRepository paymentRepository;
-
+  @InjectMocks
+  private PaymentService paymentService;
   private Series series;
   private Writer writer;
   private Payment payment;
@@ -101,6 +96,7 @@ class PaymentServiceTest {
     this.payment = Payment.builder()
       .series(this.series)
       .userId(1L)
+      .state(State.NULL)
       .build();
 
     this.response = PaymentPost.Response.builder()
@@ -115,22 +111,22 @@ class PaymentServiceTest {
     when(this.seriesProvider.getById(anyLong())).thenReturn(this.series);
     when(this.userProvider.findById(anyLong())).thenReturn(user);
     when(this.paymentRepository
-      .findByUserIdAndSeriesId(anyLong(), anyLong()))
+      .findByUserIdAndSeriesIdAndState(anyLong(), anyLong(), any()))
       .thenReturn(
         Optional.empty()
       );
     when(this.paymentConverter.toPaymentPost(any(), any(), anyInt())).thenReturn(response);
+    when(this.paymentConverter.toEntity(any(), any())).thenReturn(payment);
     when(this.paymentRepository.save(any())).thenReturn(payment);
 
     //when
-    PaymentPost.Response response = this.paymentService.createPayment(
-      this.series.getId(), this.user.getId()
-    );
+    this.paymentService.pay(this.series.getId(), this.user.getId());
 
     //then
-    assertThat(response.email(), is(series.getWriter().getUser().getEmail()));
+    assertThat(payment.getState(), is(State.PAY_COMPLETE));
     verify(paymentRepository, times(1)).save(any());
-    verify(paymentRepository, times(1)).findByUserIdAndSeriesId(any(), any());
+    verify(paymentRepository, times(1))
+      .findByUserIdAndSeriesIdAndState(any(), any(), any());
   }
 
   @Test
@@ -140,7 +136,7 @@ class PaymentServiceTest {
     when(this.seriesProvider.getById(anyLong())).thenReturn(this.series);
     when(this.userProvider.findById(anyLong())).thenReturn(user);
     when(this.paymentRepository
-      .findByUserIdAndSeriesId(anyLong(), anyLong()))
+      .findByUserIdAndSeriesIdAndState(anyLong(), anyLong(), any()))
       .thenReturn(
         Optional.of(payment)
       );
@@ -150,7 +146,7 @@ class PaymentServiceTest {
     //when,then
     Assertions.assertThrows(
       PaymentDuplicated.class,
-      () -> this.paymentService.createPayment(this.series.getId(), this.user.getId())
+      () -> this.paymentService.pay(this.series.getId(), this.user.getId())
     );
   }
 }
