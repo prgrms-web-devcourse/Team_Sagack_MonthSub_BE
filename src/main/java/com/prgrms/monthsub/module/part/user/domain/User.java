@@ -119,10 +119,13 @@ public class User extends BaseEntity {
 
   public int decreasePoint(int point) {
     if (this.point - point < 0) {
-      throw new NoPoint("포인트가 부족합니다.");
+      throw new NoPoint("userId=", this.id + ":포인트가 부족합니다.");
     }
-
     return this.point -= point;
+  }
+
+  public boolean isPayable(int point) {
+    return this.point - point >= 0;
   }
 
 }

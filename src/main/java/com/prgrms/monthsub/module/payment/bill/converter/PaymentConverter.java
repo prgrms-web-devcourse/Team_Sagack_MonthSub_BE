@@ -3,6 +3,7 @@ package com.prgrms.monthsub.module.payment.bill.converter;
 import com.prgrms.monthsub.common.s3.config.S3;
 import com.prgrms.monthsub.module.part.user.domain.User;
 import com.prgrms.monthsub.module.payment.bill.domain.Payment;
+import com.prgrms.monthsub.module.payment.bill.domain.Payment.State;
 import com.prgrms.monthsub.module.payment.bill.dto.PaymentPost;
 import com.prgrms.monthsub.module.payment.bill.dto.PaymentPost.UserPoint;
 import com.prgrms.monthsub.module.payment.bill.dto.PaymentSeries.Response;
@@ -46,6 +47,7 @@ public class PaymentConverter {
     return Payment.builder()
       .series(series)
       .userId(user.getId())
+      .state(State.NULL)
       .build();
   }
 
