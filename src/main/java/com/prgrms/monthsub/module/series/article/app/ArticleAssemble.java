@@ -2,7 +2,6 @@ package com.prgrms.monthsub.module.series.article.app;
 
 import com.prgrms.monthsub.common.s3.S3Client;
 import com.prgrms.monthsub.common.s3.config.S3.Bucket;
-import com.prgrms.monthsub.module.part.user.app.provider.UserProvider;
 import com.prgrms.monthsub.module.payment.bill.app.provider.PaymentProvider;
 import com.prgrms.monthsub.module.series.article.converter.ArticleConverter;
 import com.prgrms.monthsub.module.series.article.domain.Article;
@@ -12,11 +11,11 @@ import com.prgrms.monthsub.module.series.article.dto.ArticleOne;
 import com.prgrms.monthsub.module.series.article.dto.ArticlePost;
 import com.prgrms.monthsub.module.series.series.app.SeriesService;
 import com.prgrms.monthsub.module.series.series.domain.Series;
-import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.DomainType;
-import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.FileCategory;
-import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.FileType;
-import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.Status;
-import com.prgrms.monthsub.module.worker.explusion.domain.ExpulsionService;
+import com.prgrms.monthsub.module.worker.expulsion.app.provider.ExpulsionProvider;
+import com.prgrms.monthsub.module.worker.expulsion.domain.Expulsion.DomainType;
+import com.prgrms.monthsub.module.worker.expulsion.domain.Expulsion.FileCategory;
+import com.prgrms.monthsub.module.worker.expulsion.domain.Expulsion.FileType;
+import com.prgrms.monthsub.module.worker.expulsion.domain.Expulsion.Status;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.security.access.AccessDeniedException;
@@ -30,8 +29,7 @@ public class ArticleAssemble {
 
   private final ArticleService articleService;
   private final SeriesService seriesService;
-  private final ExpulsionService expulsionService;
-  private final UserProvider userProvider;
+  private final ExpulsionProvider expulsionProvider;
   private final ArticleConverter articleConverter;
   private final S3Client s3Client;
   private final PaymentProvider paymentProvider;
@@ -39,16 +37,14 @@ public class ArticleAssemble {
   public ArticleAssemble(
     ArticleService articleService,
     SeriesService seriesService,
-    ExpulsionService expulsionService,
-    UserProvider userProvider,
+    ExpulsionProvider expulsionProvider,
     ArticleConverter articleConverter,
     S3Client s3Client,
     PaymentProvider paymentProvider
   ) {
     this.articleService = articleService;
     this.seriesService = seriesService;
-    this.expulsionService = expulsionService;
-    this.userProvider = userProvider;
+    this.expulsionProvider = expulsionProvider;
     this.articleConverter = articleConverter;
     this.s3Client = s3Client;
     this.paymentProvider = paymentProvider;
@@ -65,7 +61,8 @@ public class ArticleAssemble {
     Article article = this.articleConverter.toEntity(series, request, articleCount.intValue() + 1);
 
     if (!article.isMine(userId)) {
-      throw new AccessDeniedException("생성 권한이 없습니다.");
+      final String message = "articleId=" + article.getId() + ", userId=" + userId;
+      throw new AccessDeniedException(message + ":생성 권한이 없습니다.");
     }
 
     this.articleService.save(article);
@@ -91,7 +88,8 @@ public class ArticleAssemble {
     Article article = articleService.find(id);
 
     if (!article.isMine(userId)) {
-      throw new AccessDeniedException("수정 권한이 없습니다.");
+      final String message = "articleId=" + article.getId() + ", userId=" + userId;
+      throw new AccessDeniedException(message + ":수정 권한이 없습니다.");
     }
 
     thumbnail.map(
@@ -110,14 +108,18 @@ public class ArticleAssemble {
     Article article = articleService.find(id);
 
     if (!article.isMine(userId)) {
+      final String message = "articleId=" + article.getId() + ", userId=" + userId;
+
       this.paymentProvider.find(userId, seriesId)
-        .orElseThrow(() -> new ViewUnAuthorize("결제 후 이용해주세요."));
+        .orElseThrow(() -> new ViewUnAuthorize(message + ":결제 후 이용해주세요."));
     }
 
     Long articleCount = this.articleService.countBySeriesId(seriesId);
 
     return articleConverter.toArticleOneResponse(
-      article.isMine(userId), article, articleCount, article.getSeries().getWriter().getUser()
+      article.isMine(userId), article, articleCount, article.getSeries()
+        .getWriter()
+        .getUser()
     );
   }
 
@@ -139,7 +141,7 @@ public class ArticleAssemble {
       article.getId()
     );
 
-    expulsionService.save(
+    expulsionProvider.save(
       article.getId(),
       userId,
       originalThumbnailKey,

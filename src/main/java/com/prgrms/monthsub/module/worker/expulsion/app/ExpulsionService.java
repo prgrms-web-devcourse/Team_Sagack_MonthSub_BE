@@ -1,11 +1,13 @@
-package com.prgrms.monthsub.module.worker.explusion.domain;
+package com.prgrms.monthsub.module.worker.expulsion.app;
 
 import com.prgrms.monthsub.common.s3.S3Client;
 import com.prgrms.monthsub.common.s3.config.S3.Bucket;
-import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.DomainType;
-import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.FileCategory;
-import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.FileType;
-import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.Status;
+import com.prgrms.monthsub.module.worker.expulsion.app.provider.ExpulsionProvider;
+import com.prgrms.monthsub.module.worker.expulsion.domain.Expulsion;
+import com.prgrms.monthsub.module.worker.expulsion.domain.Expulsion.DomainType;
+import com.prgrms.monthsub.module.worker.expulsion.domain.Expulsion.FileCategory;
+import com.prgrms.monthsub.module.worker.expulsion.domain.Expulsion.FileType;
+import com.prgrms.monthsub.module.worker.expulsion.domain.Expulsion.Status;
 import java.util.List;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -14,14 +16,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class ExpulsionService {
+public class ExpulsionService implements ExpulsionProvider {
 
   private final int CHUNK_SIZE = 100;
   private final ExpulsionRepository expulsionRepository;
   private final S3Client s3Client;
 
   public ExpulsionService(
-
     ExpulsionRepository expulsionRepository,
     S3Client s3Client
   ) {
@@ -29,6 +30,7 @@ public class ExpulsionService {
     this.s3Client = s3Client;
   }
 
+  @Override
   public void save(
     Long domainId,
     Long userId,

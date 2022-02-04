@@ -17,17 +17,21 @@ import com.prgrms.monthsub.module.series.series.domain.ArticleUploadDate;
 import com.prgrms.monthsub.module.series.series.domain.Series;
 import com.prgrms.monthsub.module.series.series.domain.Series.Category;
 import com.prgrms.monthsub.module.series.series.domain.Series.SeriesStatus;
-import com.prgrms.monthsub.module.series.series.domain.type.SortType;
+import com.prgrms.monthsub.module.series.series.domain.SeriesLikes;
+import com.prgrms.monthsub.module.series.series.domain.SeriesLikes.LikesStatus;
+import com.prgrms.monthsub.module.series.series.domain.exception.SeriesException.SeriesLikesNotFound;
+import com.prgrms.monthsub.module.series.series.dto.SeriesLikesEvent;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeEdit;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeList;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeList.Response;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeOne;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribePost;
-import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.DomainType;
-import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.FileCategory;
-import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.FileType;
-import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.Status;
-import com.prgrms.monthsub.module.worker.explusion.domain.ExpulsionService;
+import com.prgrms.monthsub.module.worker.expulsion.app.provider.ExpulsionProvider;
+import com.prgrms.monthsub.module.worker.expulsion.domain.Expulsion.DomainType;
+import com.prgrms.monthsub.module.worker.expulsion.domain.Expulsion.FileCategory;
+import com.prgrms.monthsub.module.worker.expulsion.domain.Expulsion.FileType;
+import com.prgrms.monthsub.module.worker.expulsion.domain.Expulsion.Status;
+import com.prgrms.monthsub.module.worker.expulsion.app.ExpulsionService;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
@@ -51,7 +55,7 @@ public class SeriesAssemble {
   private final int POPULAR_SERIES_SIZE = 10;
   private final SeriesService seriesService;
   private final ArticleService articleService;
-  private final ExpulsionService expulsionService;
+  private final ExpulsionProvider expulsionProvider;
   private final WriterProvider writerProvider;
   private final UserProvider userProvider;
   private final S3Client s3Client;
@@ -64,7 +68,7 @@ public class SeriesAssemble {
   public SeriesAssemble(
     SeriesService seriesService,
     ArticleService articleService,
-    ExpulsionService expulsionService,
+    ExpulsionProvider expulsionProvider,
     WriterProvider writerProvider,
     UserProvider userProvider,
     S3Client s3Client,
@@ -75,7 +79,7 @@ public class SeriesAssemble {
   ) {
     this.seriesService = seriesService;
     this.articleService = articleService;
-    this.expulsionService = expulsionService;
+    this.expulsionProvider = expulsionProvider;
     this.writerProvider = writerProvider;
     this.userProvider = userProvider;
     this.s3Client = s3Client;
@@ -119,8 +123,10 @@ public class SeriesAssemble {
     Long userId
   ) {
     Series series = this.seriesService.getById(seriesId);
+
     if (!series.isMine(userId)) {
-      throw new AccessDeniedException("수정 권한이 없습니다.");
+      final String message = "seriesId=" + series.getId() + ", userId=" + userId;
+      throw new AccessDeniedException(message + ":수정 권한이 없습니다.");
     }
 
     thumbnail.map(multipartFile -> this.changeThumbnail(multipartFile, series, userId));
@@ -147,7 +153,7 @@ public class SeriesAssemble {
       series.getId()
     );
 
-    expulsionService.save(
+    expulsionProvider.save(
       series.getId(),
       userId,
       originalThumbnailKey,
@@ -191,11 +197,12 @@ public class SeriesAssemble {
           series.changeSeriesIsLiked(true);
         }
       })
-      .collect(Collectors.toList());
+      .toList();
 
-    return new Response(recentSeriesList.stream()
-      .map(seriesConverter::toResponse).collect(
-        Collectors.toList())
+    return new Response(
+      recentSeriesList.stream()
+      .map(seriesConverter::toResponse)
+      .collect(Collectors.toList())
     );
   }
 
@@ -220,17 +227,6 @@ public class SeriesAssemble {
         this.seriesConverter.toSeriesOne(
           series, articleList, uploadDateList, series.isMine(userId)))
       .orElse(this.seriesConverter.toSeriesOne(series, articleList, uploadDateList, false));
-  }
-
-  public SeriesSubscribeList.Response getSeriesListSort(SortType sort) {
-    return new SeriesSubscribeList.Response((
-      switch (sort) {
-        case RECENT -> this.seriesService.findAll(Sort.by(Direction.DESC, "createdAt", "id"));
-        case POPULAR -> this.seriesService.findAll(Sort.by(Direction.DESC, "likes"));
-      })
-      .stream()
-      .map(this.seriesConverter::toResponse)
-      .collect(Collectors.toList()));
   }
 
   public SeriesSubscribeOne.UsageEditResponse getSeriesUsageEdit(Long seriesId) {
@@ -287,11 +283,14 @@ public class SeriesAssemble {
 
   public SeriesSubscribeList.Response getSeriesPostList(Long userId) {
     //TODO user table part id로 part 확인해야함.
-    return writerProvider.findByUserIdOrEmpty(userId).map(writer -> {
+    return writerProvider
+      .findByUserIdOrEmpty(userId)
+      .map(writer -> {
           List<Long> likeSeriesList = this.seriesLikesService.findAllByUserId(userId);
           return new SeriesSubscribeList.Response(
             this.seriesService
-              .findAllByWriterId(this.writerProvider.findByUserId(userId).getId())
+              .findAllByWriterId(this.writerProvider.findByUserId(userId)
+                .getId())
               .stream()
               .peek(series -> {
                 if (likeSeriesList.contains(series.getId())) {
@@ -324,14 +323,16 @@ public class SeriesAssemble {
 
     return new SeriesSubscribeList.Response(
       lastSeriesId.map(id -> {
-          LocalDateTime createdAt = this.seriesService.getById(id).getCreatedAt();
+          LocalDateTime createdAt = this.seriesService.getById(id)
+            .getCreatedAt();
           return this.seriesService.findAllByCategory(
             id,
             size,
             categoryList,
             createdAt
           );
-        }).orElse(
+        })
+        .orElse(
           this.seriesService.findAllByCategoryIn(
             categoryList, PageRequest.of(
               PAGE_NUM,
@@ -348,6 +349,58 @@ public class SeriesAssemble {
         .filter(series -> finalStatus.contains(series.getSubscribeStatus()))
         .map(this.seriesConverter::toResponse)
         .collect(Collectors.toList()));
+  }
+
+  @Transactional
+  public SeriesLikesEvent.Response likesEvent(
+    Long userId,
+    Long seriesId
+  ) {
+    return this.seriesLikesService
+      .findSeriesLikes(userId, seriesId)
+      .map(seriesLikes -> {
+          LikesStatus changeStatus = seriesLikes.changeLikeStatus(LikesStatus.Like);
+          seriesLikes.getSeries().changeLikesCount(changeStatus);
+
+          return new SeriesLikesEvent.Response(
+            this.seriesLikesService.save(seriesLikes), String.valueOf(changeStatus)
+          );
+        }
+      )
+      .orElseGet(() -> {
+          Series series = this.seriesService.getById(seriesId);
+          series.changeLikesCount(LikesStatus.Like);
+
+          SeriesLikes seriesLikes = SeriesLikes.builder()
+            .userId(userId)
+            .series(series)
+            .likesStatus(LikesStatus.Like)
+            .build();
+
+          return new SeriesLikesEvent.Response(
+            this.seriesLikesService.save(seriesLikes), String.valueOf(LikesStatus.Like)
+          );
+        }
+      );
+  }
+
+  @Transactional
+  public SeriesLikesEvent.Response cancelSeriesLike(
+    Long userId,
+    Long seriesId
+  ) {
+    return this.seriesLikesService
+      .findSeriesLikes(userId, seriesId)
+      .map(seriesLikes -> {
+          SeriesLikes.LikesStatus changeStatus = seriesLikes.changeLikeStatus(LikesStatus.Nothing);
+          seriesLikes.getSeries().changeLikesCount(changeStatus);
+
+          return new SeriesLikesEvent.Response(
+            this.seriesLikesService.save(seriesLikes), String.valueOf(changeStatus)
+          );
+        }
+      )
+      .orElseThrow(() -> new SeriesLikesNotFound("userId=" + userId, "seriesId=" + seriesId));
   }
 
   public String uploadThumbnailImage(

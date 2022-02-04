@@ -13,12 +13,12 @@ import javax.persistence.criteria.Root;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class SeriesCommentRepositoryCustomImpl implements DynamicSeriesCommentRepository {
+public class CustomSeriesCommentRepositoryImpl implements DynamicSeriesCommentRepository {
 
   @PersistenceContext
   private final EntityManager em;
 
-  public SeriesCommentRepositoryCustomImpl(EntityManager em) {
+  public CustomSeriesCommentRepositoryImpl(EntityManager em) {
     this.em = em;
   }
 

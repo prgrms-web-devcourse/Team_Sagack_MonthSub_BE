@@ -65,7 +65,8 @@ public class WriterService implements WriterProvider {
 
   public WriterList.Response findAll() {
     return new Response(this.writerRepository.findAll(
-        PageRequest.of(PAGE_NUM, PAGE_WRITER_NUM, Sort.by(Direction.DESC, "followCount")))
+        PageRequest.of(PAGE_NUM, PAGE_WRITER_NUM, Sort.by(Direction.DESC, "followCount"))
+      )
       .getContent()
       .stream()
       .map(writerConverter::writerToWriterRes).collect(

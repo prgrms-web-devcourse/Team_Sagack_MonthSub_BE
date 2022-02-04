@@ -4,11 +4,11 @@ import com.prgrms.monthsub.common.s3.S3Client;
 import com.prgrms.monthsub.common.s3.config.S3.Bucket;
 import com.prgrms.monthsub.module.part.user.domain.User;
 import com.prgrms.monthsub.module.part.user.dto.UserEdit;
-import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.DomainType;
-import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.FileCategory;
-import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.FileType;
-import com.prgrms.monthsub.module.worker.explusion.domain.Expulsion.Status;
-import com.prgrms.monthsub.module.worker.explusion.domain.ExpulsionService;
+import com.prgrms.monthsub.module.worker.expulsion.app.provider.ExpulsionProvider;
+import com.prgrms.monthsub.module.worker.expulsion.domain.Expulsion.DomainType;
+import com.prgrms.monthsub.module.worker.expulsion.domain.Expulsion.FileCategory;
+import com.prgrms.monthsub.module.worker.expulsion.domain.Expulsion.FileType;
+import com.prgrms.monthsub.module.worker.expulsion.domain.Expulsion.Status;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.stereotype.Service;
@@ -19,16 +19,16 @@ import org.springframework.web.multipart.MultipartFile;
 @Transactional(readOnly = true)
 public class UserAssemble {
   private final UserService userService;
-  private final ExpulsionService expulsionService;
+  private final ExpulsionProvider expulsionProvider;
   private final S3Client s3Client;
 
   public UserAssemble(
     UserService userService,
-    ExpulsionService expulsionService,
+    ExpulsionProvider expulsionProvider,
     S3Client s3Client
   ) {
     this.userService = userService;
-    this.expulsionService = expulsionService;
+    this.expulsionProvider = expulsionProvider;
     this.s3Client = s3Client;
   }
 
@@ -71,7 +71,7 @@ public class UserAssemble {
     String originalProfileKey = user.getProfileKey();
 
     if (originalProfileKey != null) {
-      expulsionService.save(
+      expulsionProvider.save(
         user.getId(),
         user.getId(),
         originalProfileKey,

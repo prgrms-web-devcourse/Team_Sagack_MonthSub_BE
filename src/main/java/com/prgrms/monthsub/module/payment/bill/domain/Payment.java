@@ -4,11 +4,12 @@ import static java.util.Collections.emptySet;
 
 import com.prgrms.monthsub.common.domain.FSM;
 import com.prgrms.monthsub.module.payment.bill.domain.Payment.Event;
+import com.prgrms.monthsub.module.payment.bill.domain.Payment.State;
 import com.prgrms.monthsub.module.series.series.domain.Series;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -30,7 +31,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "payment")
-public class Payment extends FSM<Event> {
+public class Payment extends FSM<State, Event> {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,8 +45,8 @@ public class Payment extends FSM<Event> {
   @Column(name = "state", columnDefinition = "VARCHAR(50)", nullable = false)
   private State state;
 
-  @OneToMany(mappedBy = "payment")
-  private List<PaymentStateHistory> histories = new ArrayList<>();
+  @OneToMany(mappedBy = "payment", cascade = CascadeType.PERSIST)
+  private final List<PaymentStateHistory> histories = new ArrayList<>();
 
   @OneToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "series_id", referencedColumnName = "id")
@@ -61,17 +62,18 @@ public class Payment extends FSM<Event> {
     this.series = series;
     this.state = state;
   }
-  
+
   @Override
   public Payment transit(Event event) {
-    State nextState = (State) this.state.next(event, getState());
+    State nextState = (State) FSM.State.next(this.state, event);
     this.state = nextState;
     this.histories.add(new PaymentStateHistory(nextState, event, userId, series, this));
 
     return this;
   }
 
-  public enum State implements FSM.State {
+
+  public enum State implements FSM.State<Event> {
     NULL(Set.of(Event.PAY_REQUIRED)),
     PAY_CONFIRMED(Set.of(Event.PAY_ACCEPTED, Event.PAY_REJECTED)),
     PAY_CANCELED(emptySet()),
@@ -81,17 +83,17 @@ public class Payment extends FSM<Event> {
 
     final Set<Event> events;
 
-    State(Set<Event> events) {
+    private State(Set<Event> events) {
       this.events = events;
     }
 
     @Override
-    public List stateEvents() {
-      return Arrays.asList(this.events.toArray());
+    public Set<Event> getEvents() {
+      return events;
     }
   }
 
-  public enum Event implements FSM.Event {
+  public enum Event implements FSM.Event<State> {
     PAY_REQUIRED {
       @Override
       public State getNextState() {
@@ -107,7 +109,7 @@ public class Payment extends FSM<Event> {
     PAY_REJECTED {
       @Override
       public State getNextState() {
-        return State.PAY_CONFIRMED;
+        return State.PAY_CANCELED;
       }
     },
     REFUND_REQUIRED {
@@ -129,4 +131,15 @@ public class Payment extends FSM<Event> {
       }
     };
   }
+
+  public PaymentStateHistory getLastHistory() {
+    if (this.histories.isEmpty()) {
+      return null;
+    }
+
+    int lastIndex = this.histories.size() - 1;
+
+    return this.histories.get(this.histories.size() - 1);
+  }
+
 }

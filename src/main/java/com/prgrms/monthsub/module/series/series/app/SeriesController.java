@@ -6,7 +6,6 @@ import static java.util.Optional.ofNullable;
 import com.prgrms.monthsub.common.security.jwt.JwtAuthentication;
 import com.prgrms.monthsub.module.series.series.domain.Series.Category;
 import com.prgrms.monthsub.module.series.series.domain.Series.SeriesStatus;
-import com.prgrms.monthsub.module.series.series.domain.type.SortType;
 import com.prgrms.monthsub.module.series.series.dto.SeriesLikesEvent;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeEdit;
 import com.prgrms.monthsub.module.series.series.dto.SeriesSubscribeList;
@@ -100,7 +99,7 @@ public class SeriesController {
     @AuthenticationPrincipal JwtAuthentication authentication,
     @PathVariable Long id
   ) {
-    return this.seriesLikesService.likesEvent(authentication.userId, id);
+    return this.seriesAssemble.likesEvent(authentication.userId, id);
   }
 
   @DeleteMapping("/{id}/likes")
@@ -110,7 +109,7 @@ public class SeriesController {
     @AuthenticationPrincipal JwtAuthentication authentication,
     @PathVariable Long id
   ) {
-    return this.seriesLikesService.cancelSeriesLike(authentication.userId, id);
+    return this.seriesAssemble.cancelSeriesLike(authentication.userId, id);
   }
 
   @GetMapping("/{id}/edit")
@@ -183,16 +182,6 @@ public class SeriesController {
         ofNullable(lastSeriesId), size, List.of(categories),
         Optional.empty(), List.of(status)
       ));
-  }
-
-  @GetMapping("/sort")
-  //@Operation(summary = "인기순/최신순 시리즈 리스트 조회") //추후에 쓸 기능
-  @Operation(hidden = true)
-  @Tag(name = "[화면]-시리즈")
-  public SeriesSubscribeList.Response getSeriesList(
-    @RequestParam(value = "sort", required = true) SortType sort
-  ) {
-    return this.seriesAssemble.getSeriesListSort(sort);
   }
 
   @GetMapping("/subscribe")
