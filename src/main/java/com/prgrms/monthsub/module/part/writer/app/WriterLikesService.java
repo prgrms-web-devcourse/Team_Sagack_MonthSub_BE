@@ -8,8 +8,6 @@ import com.prgrms.monthsub.module.part.writer.domain.exception.WriterException.W
 import com.prgrms.monthsub.module.part.writer.domain.exception.WriterException.WriterNotFound;
 import com.prgrms.monthsub.module.part.writer.dto.WriterFollowEvent;
 import com.prgrms.monthsub.module.part.writer.dto.WriterLikesList;
-import com.prgrms.monthsub.module.series.series.domain.SeriesComment;
-import com.prgrms.monthsub.module.series.series.domain.exception.SeriesException.SeriesCommentNotFound;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -27,22 +25,22 @@ public class WriterLikesService {
   private final int INCREASE_NUM = 1;
   private final int DECREASE_NUM = -1;
 
-  private final WriterLikesRepositoryCustom writerLikesRepositoryCustom;
+  private final CustomWriterLikesRepository customWriterLikesRepository;
   private final WriterService writerService;
   private final WriterConverter writerConverter;
 
   public WriterLikesService(
-    WriterLikesRepositoryCustom writerLikesRepositoryCustom,
+    CustomWriterLikesRepository customWriterLikesRepository,
     WriterService writerService,
     WriterConverter writerConverter
   ) {
-    this.writerLikesRepositoryCustom = writerLikesRepositoryCustom;
+    this.customWriterLikesRepository = customWriterLikesRepository;
     this.writerService = writerService;
     this.writerConverter = writerConverter;
   }
 
   public WriterLikes getById(Long id) {
-    return this.writerLikesRepositoryCustom
+    return this.customWriterLikesRepository
       .findById(id)
       .orElseThrow(() -> new WriterLikesNotFound("id=" + id));
   }
@@ -54,13 +52,13 @@ public class WriterLikesService {
   ) {
     return new WriterLikesList.Response(lastId.map(id -> {
           LocalDateTime createdAt = this.getById(id).getCreatedAt();
-          return this.writerLikesRepositoryCustom.findAll(
+          return this.customWriterLikesRepository.findAll(
             userId, id, size, createdAt
           );
         }
       )
       .orElse(
-        this.writerLikesRepositoryCustom.findAllByUserIdAndLikesStatus(
+        this.customWriterLikesRepository.findAllByUserIdAndLikesStatus(
           userId,
           LikesStatus.Like,
           PageRequest.of(0, size, Sort.by(Direction.DESC, "createdAt", "id"))
@@ -76,7 +74,7 @@ public class WriterLikesService {
     Long userId,
     LikesStatus likesStatus
   ) {
-    return this.writerLikesRepositoryCustom.findAllByUserIdAndLikesStatus(userId, likesStatus);
+    return this.customWriterLikesRepository.findAllByUserIdAndLikesStatus(userId, likesStatus);
   }
 
   @Transactional
@@ -84,7 +82,7 @@ public class WriterLikesService {
     Long userId,
     Long writerId
   ) {
-    return this.writerLikesRepositoryCustom
+    return this.customWriterLikesRepository
       .findByUserIdAndWriterId(userId, writerId)
       .map(writerLikes -> {
         String likeStatus = String.valueOf(writerLikes.changeLikeStatus(LikesStatus.Like));
@@ -92,7 +90,7 @@ public class WriterLikesService {
         writerLikes.getWriter().updateFollowCount(INCREASE_NUM);
 
         return new WriterFollowEvent.Response(
-          this.writerLikesRepositoryCustom.save(writerLikes).getUserId(),
+          this.customWriterLikesRepository.save(writerLikes).getUserId(),
           likeStatus
         );
       })
@@ -101,7 +99,7 @@ public class WriterLikesService {
           writer.updateFollowCount(INCREASE_NUM);
 
           return new WriterFollowEvent.Response(
-            this.writerLikesRepositoryCustom.save(
+            this.customWriterLikesRepository.save(
               WriterLikes.builder()
                 .likesStatus(LikesStatus.Like)
                 .writer(writer)
@@ -124,7 +122,7 @@ public class WriterLikesService {
     writerLikes.getWriter().updateFollowCount(DECREASE_NUM);
 
     return new WriterFollowEvent.Response(
-      this.writerLikesRepositoryCustom.save(writerLikes).getId(),
+      this.customWriterLikesRepository.save(writerLikes).getId(),
       likeStatus
     );
   }
@@ -133,7 +131,7 @@ public class WriterLikesService {
     Long userId,
     Long writerId
   ) {
-    return this.writerLikesRepositoryCustom
+    return this.customWriterLikesRepository
       .findByUserIdAndWriterId(userId, writerId)
       .orElseThrow(() ->
         new WriterNotFound("userId=" + userId + ", " + "writerId=", writerId.toString())

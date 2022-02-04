@@ -1,4 +1,4 @@
-package com.prgrms.monthsub.module.worker.explusion.domain;
+package com.prgrms.monthsub.module.worker.expulsion.domain;
 
 import java.time.LocalDateTime;
 import javax.persistence.Column;

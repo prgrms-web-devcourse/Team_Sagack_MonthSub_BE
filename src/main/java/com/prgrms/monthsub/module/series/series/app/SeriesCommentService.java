@@ -25,22 +25,22 @@ import org.springframework.transaction.annotation.Transactional;
 public class SeriesCommentService {
 
   private final int PAGE_NUM = 0;
-  private final SeriesCommentRepositoryCustom seriesCommentRepositoryCustom;
+  private final CustomSeriesCommentRepository customSeriesCommentRepository;
   private final SeriesCommentConverter seriesCommentConverter;
   private final UserProvider userProvider;
 
   public SeriesCommentService(
-    SeriesCommentRepositoryCustom seriesCommentRepositoryCustom,
+    CustomSeriesCommentRepository customSeriesCommentRepository,
     SeriesCommentConverter seriesCommentConverter,
     UserProvider userProvider
   ) {
-    this.seriesCommentRepositoryCustom = seriesCommentRepositoryCustom;
+    this.customSeriesCommentRepository = customSeriesCommentRepository;
     this.seriesCommentConverter = seriesCommentConverter;
     this.userProvider = userProvider;
   }
 
   public SeriesComment getById(Long id) {
-    return this.seriesCommentRepositoryCustom
+    return this.customSeriesCommentRepository
       .findById(id)
       .orElseThrow(() -> new SeriesCommentNotFound("id=" + id));
   }
@@ -53,17 +53,17 @@ public class SeriesCommentService {
   ) {
     List<SeriesComment> comments = lastId.map(id -> {
       LocalDateTime createdAt = this.getById(seriesId).getCreatedAt();
-      return this.seriesCommentRepositoryCustom.findAll(
+      return this.customSeriesCommentRepository.findAll(
         seriesId, id, size, createdAt
       );
     }).orElse(
-      this.seriesCommentRepositoryCustom.findAllBySeriesIdAndParentIdIsNull(
+      this.customSeriesCommentRepository.findAllBySeriesIdAndParentIdIsNull(
         seriesId, PageRequest.of(
           PAGE_NUM, size, Sort.by(Direction.DESC, "createdAt", "id")
         )
       )).stream().toList();
 
-    List<SeriesComment> replyComments = this.seriesCommentRepositoryCustom.findAllBySeriesIdAndParentIdIsNotNull(
+    List<SeriesComment> replyComments = this.customSeriesCommentRepository.findAllBySeriesIdAndParentIdIsNotNull(
       seriesId
     );
 
@@ -82,7 +82,7 @@ public class SeriesCommentService {
   ) {
     return SeriesCommentPost.Response.builder()
       .id(
-        this.seriesCommentRepositoryCustom.save(
+        this.customSeriesCommentRepository.save(
           this.seriesCommentConverter.toEntity(userId, request)
         ).getId()
       ).build();
@@ -92,7 +92,7 @@ public class SeriesCommentService {
     Long userId,
     SeriesCommentEdit.Request request
   ) {
-    SeriesComment seriesComment = this.seriesCommentRepositoryCustom.findById(request.id())
+    SeriesComment seriesComment = this.customSeriesCommentRepository.findById(request.id())
       .orElseThrow(() -> new SeriesCommentNotFound("id= " + request.id()));
 
     if (!seriesComment.isMine(userId)) {
@@ -112,7 +112,7 @@ public class SeriesCommentService {
     Long userId,
     Long id
   ) {
-    SeriesComment seriesComment = this.seriesCommentRepositoryCustom.findById(id)
+    SeriesComment seriesComment = this.customSeriesCommentRepository.findById(id)
       .orElseThrow(() -> new SeriesCommentNotFound("id= " + id));
 
     if (!seriesComment.isMine(userId)) {

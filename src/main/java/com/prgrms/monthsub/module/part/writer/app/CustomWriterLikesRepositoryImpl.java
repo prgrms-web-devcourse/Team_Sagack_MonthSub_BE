@@ -14,12 +14,12 @@ import javax.persistence.criteria.Root;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class WriterLikesRepositoryCustomImpl implements DynamicWriterLikesRepository {
+public class CustomWriterLikesRepositoryImpl implements DynamicWriterLikesRepository {
 
   @PersistenceContext
   private final EntityManager em;
 
-  public WriterLikesRepositoryCustomImpl(EntityManager em) {
+  public CustomWriterLikesRepositoryImpl(EntityManager em) {
     this.em = em;
   }
 

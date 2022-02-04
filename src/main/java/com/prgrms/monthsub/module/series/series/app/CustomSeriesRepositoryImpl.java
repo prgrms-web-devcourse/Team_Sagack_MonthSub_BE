@@ -14,11 +14,11 @@ import javax.persistence.criteria.Root;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class SeriesRepositoryCustomImpl implements DynamicSeriesRepository {
+public class CustomSeriesRepositoryImpl implements DynamicSeriesRepository {
   @PersistenceContext
   private final EntityManager em;
 
-  public SeriesRepositoryCustomImpl(EntityManager em) {
+  public CustomSeriesRepositoryImpl(EntityManager em) {
     this.em = em;
   }
 
