@@ -76,6 +76,10 @@ public class SeriesService implements SeriesProvider, ScheduledHandler {
     return this.seriesRepository.findByTitleContainingIgnoreCase(title);
   }
 
+  public List<Series> findAll(Sort sort) {
+    return this.seriesRepository.findAll(sort);
+  }
+
   public List<Series> findAll(Pageable pageable) {
     return this.seriesRepository.findAll(pageable).getContent();
   }
