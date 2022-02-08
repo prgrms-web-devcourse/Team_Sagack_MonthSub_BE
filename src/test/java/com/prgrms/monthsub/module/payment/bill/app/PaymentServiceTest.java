@@ -41,6 +41,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 class PaymentServiceTest {
   private static final String FILE_KEY = "originalFilename.jpg";
   private static final int ARTICLE_COUNT = 10;
+
   @Mock
   SeriesProvider seriesProvider;
   @Mock
@@ -51,6 +52,7 @@ class PaymentServiceTest {
   PaymentRepository paymentRepository;
   @InjectMocks
   private PaymentService paymentService;
+
   private Series series;
   private Writer writer;
   private Payment payment;
@@ -94,7 +96,7 @@ class PaymentServiceTest {
     ReflectionTestUtils.setField(this.series, "id", 1L);
 
     this.payment = Payment.builder()
-      .series(this.series)
+      .seriesId(1L)
       .userId(1L)
       .state(State.NULL)
       .build();

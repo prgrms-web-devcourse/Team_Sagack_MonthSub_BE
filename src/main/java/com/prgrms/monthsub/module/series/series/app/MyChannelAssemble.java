@@ -69,12 +69,14 @@ public class MyChannelAssemble {
     List<Series> mySubscribeList = this.paymentProvider
       .findAllMySubscribeByUserId(userId)
       .stream()
-      .map(Payment::getSeries)
-      .peek(series -> {
-        if (likeSeriesList.contains(series.getId())) {
+      .map(Payment::getSeriesId)
+      .peek(seriesId -> {
+        if (likeSeriesList.contains(seriesId)) {
+          Series series = this.seriesService.getById(seriesId);
           series.changeSeriesIsLiked(true);
         }
       })
+      .map(this.seriesService::getById)
       .collect(Collectors.toList());
 
     //4. (유저가 작가면) 내가 발행한 리스트 가져오기

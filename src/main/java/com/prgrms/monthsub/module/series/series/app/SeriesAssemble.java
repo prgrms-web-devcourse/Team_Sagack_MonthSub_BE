@@ -31,7 +31,6 @@ import com.prgrms.monthsub.module.worker.expulsion.domain.Expulsion.DomainType;
 import com.prgrms.monthsub.module.worker.expulsion.domain.Expulsion.FileCategory;
 import com.prgrms.monthsub.module.worker.expulsion.domain.Expulsion.FileType;
 import com.prgrms.monthsub.module.worker.expulsion.domain.Expulsion.Status;
-import com.prgrms.monthsub.module.worker.expulsion.app.ExpulsionService;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
@@ -201,8 +200,8 @@ public class SeriesAssemble {
 
     return new Response(
       recentSeriesList.stream()
-      .map(seriesConverter::toResponse)
-      .collect(Collectors.toList())
+        .map(seriesConverter::toResponse)
+        .collect(Collectors.toList())
     );
   }
 
@@ -270,7 +269,7 @@ public class SeriesAssemble {
         .findAllMySubscribeByUserId(userId)
         .stream()
         .map(payment -> {
-          Series series = payment.getSeries();
+          Series series = this.seriesService.getById(payment.getSeriesId());
           if (likeSeriesList.contains(series.getId())) {
             series.changeSeriesIsLiked(true);
           }
