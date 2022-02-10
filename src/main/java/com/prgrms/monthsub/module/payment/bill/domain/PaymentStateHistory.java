@@ -1,7 +1,6 @@
 package com.prgrms.monthsub.module.payment.bill.domain;
 
 import com.prgrms.monthsub.common.domain.BaseEntity;
-import com.prgrms.monthsub.module.series.series.domain.Series;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -12,7 +11,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -31,9 +29,8 @@ public class PaymentStateHistory extends BaseEntity {
   @Column(name = "user_id", columnDefinition = "BIGINT", nullable = false)
   private Long userId;
 
-  @OneToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "series_id", referencedColumnName = "id")
-  private Series series;
+  @Column(name = "series_id", columnDefinition = "BIGINT", nullable = false)
+  private Long seriesId;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "payment_id", referencedColumnName = "id")
@@ -51,13 +48,13 @@ public class PaymentStateHistory extends BaseEntity {
     Payment.State state,
     Payment.Event event,
     Long userId,
-    Series series,
+    Long seriesId,
     Payment payment
   ) {
     this.state = state;
     this.event = event;
     this.userId = userId;
-    this.series = series;
+    this.seriesId = seriesId;
     this.payment = payment;
   }
 }

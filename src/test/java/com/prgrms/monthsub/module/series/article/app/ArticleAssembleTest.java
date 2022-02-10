@@ -224,7 +224,7 @@ public class ArticleAssembleTest {
 
     Payment payment = Payment.builder()
       .userId(10L)
-      .series(this.series)
+      .seriesId(1L)
       .build();
     ReflectionTestUtils.setField(payment, "id", 1L);
 

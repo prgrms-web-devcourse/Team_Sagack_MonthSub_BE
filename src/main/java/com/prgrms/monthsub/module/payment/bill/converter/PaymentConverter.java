@@ -45,7 +45,7 @@ public class PaymentConverter {
     User user
   ) {
     return Payment.builder()
-      .series(series)
+      .seriesId(series.getId())
       .userId(user.getId())
       .state(State.NULL)
       .build();
