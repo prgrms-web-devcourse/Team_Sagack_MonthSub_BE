@@ -1,5 +1,6 @@
 package com.prgrms.monthsub.module.part.writer.app;
 
+import com.prgrms.monthsub.module.part.writer.app.provider.WriterLikesProvider;
 import com.prgrms.monthsub.module.part.writer.converter.WriterConverter;
 import com.prgrms.monthsub.module.part.writer.domain.Writer;
 import com.prgrms.monthsub.module.part.writer.domain.WriterLikes;
@@ -20,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional(readOnly = true)
-public class WriterLikesService {
+public class WriterLikesService implements WriterLikesProvider {
 
   private final int INCREASE_NUM = 1;
   private final int DECREASE_NUM = -1;
@@ -70,6 +71,7 @@ public class WriterLikesService {
     );
   }
 
+  @Override
   public List<WriterLikes> getFollowWriterList(
     Long userId,
     LikesStatus likesStatus
