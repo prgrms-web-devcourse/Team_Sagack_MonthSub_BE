@@ -1,5 +1,6 @@
 package com.prgrms.monthsub.module.series.series.app;
 
+import com.prgrms.monthsub.module.series.series.app.Provider.SeriesLikesProvider;
 import com.prgrms.monthsub.module.series.series.converter.SeriesConverter;
 import com.prgrms.monthsub.module.series.series.domain.SeriesLikes;
 import com.prgrms.monthsub.module.series.series.domain.SeriesLikes.LikesStatus;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class SeriesLikesService {
+public class SeriesLikesService implements SeriesLikesProvider {
 
   private final SeriesLikesRepository seriesLikesRepository;
   private final SeriesConverter seriesConverter;
@@ -25,12 +26,15 @@ public class SeriesLikesService {
   }
 
   @Transactional
-  public Long save(SeriesLikes seriesLikes){
+  public Long save(SeriesLikes seriesLikes) {
     return this.seriesLikesRepository.save(seriesLikes).getId();
   }
 
   @Transactional(readOnly = true)
-  public Optional<SeriesLikes> findSeriesLikes(Long userId, Long seriesId){
+  public Optional<SeriesLikes> findSeriesLikes(
+    Long userId,
+    Long seriesId
+  ) {
     return this.seriesLikesRepository.findSeriesLikesByUserIdAndSeriesId(userId, seriesId);
   }
 
@@ -48,6 +52,7 @@ public class SeriesLikesService {
     );
   }
 
+  @Override
   @Transactional(readOnly = true)
   public List<Long> findAllByUserId(Long userId) {
     return this.seriesLikesRepository.findAllByUserIdAndLikesStatus(userId, LikesStatus.Like)
