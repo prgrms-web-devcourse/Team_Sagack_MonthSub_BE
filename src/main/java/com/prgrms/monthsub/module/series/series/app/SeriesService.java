@@ -52,6 +52,16 @@ public class SeriesService implements SeriesProvider, ScheduledHandler {
     this.articleUploadDateRepository.save(articleUploadDate);
   }
 
+  @Transactional
+  public void articleUploadDateDeleteBySeriesId(Long seriesId) {
+    this.articleUploadDateRepository.deleteAllBySeriesId(seriesId);
+  }
+
+  @Transactional
+  public void delete(Long seriesId) {
+    this.seriesRepository.deleteById(seriesId);
+  }
+
   @Override
   public List<ArticleUploadDate> getArticleUploadDate(Long seriesId) {
     return this.articleUploadDateRepository.findAllBySeriesId(seriesId);

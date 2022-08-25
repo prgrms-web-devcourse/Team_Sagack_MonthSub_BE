@@ -30,6 +30,11 @@ public class SeriesLikesService implements SeriesLikesProvider {
     return this.seriesLikesRepository.save(seriesLikes).getId();
   }
 
+  @Transactional
+  public void deleteBySeriesId(Long seriesId) {
+    this.seriesLikesRepository.deleteAllBySeriesId(seriesId);
+  }
+
   @Transactional(readOnly = true)
   public Optional<SeriesLikes> findSeriesLikes(
     Long userId,
