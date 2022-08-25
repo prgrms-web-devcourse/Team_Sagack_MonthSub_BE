@@ -10,4 +10,6 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
 
   long countBySeriesId(Long seriesId);
 
+  void deleteAllBySeriesId(Long seriesId);
+
 }

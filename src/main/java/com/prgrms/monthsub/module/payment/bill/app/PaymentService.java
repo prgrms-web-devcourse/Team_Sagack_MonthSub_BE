@@ -23,7 +23,6 @@ import org.springframework.retry.annotation.EnableRetry;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.TransactionTemplate;
 
 @Service
 @EnableRetry
@@ -34,17 +33,20 @@ public class PaymentService implements PaymentProvider {
   private final UserProvider userProvider;
   private final PaymentConverter paymentConverter;
   private final PaymentRepository paymentRepository;
+  private final PaymentStateHistoryRepository paymentStateHistoryRepository;
 
   public PaymentService(
     SeriesProvider seriesProvider,
     UserProvider userProvider,
     PaymentConverter paymentConverter,
-    PaymentRepository paymentRepository
+    PaymentRepository paymentRepository,
+    PaymentStateHistoryRepository paymentStateHistoryRepository
   ) {
     this.seriesProvider = seriesProvider;
     this.userProvider = userProvider;
     this.paymentConverter = paymentConverter;
     this.paymentRepository = paymentRepository;
+    this.paymentStateHistoryRepository = paymentStateHistoryRepository;
   }
 
   @Transactional
@@ -109,6 +111,18 @@ public class PaymentService implements PaymentProvider {
   ) {
     return this.paymentRepository.findByUserIdAndSeriesIdAndState(
       userId, seriesId, State.PAY_COMPLETE);
+  }
+
+  @Override
+  @Transactional
+  public void deleteBySeriesId(Long seriesId) {
+    this.paymentRepository.deleteAllBySeriesId(seriesId);
+  }
+
+  @Override
+  @Transactional
+  public void deleteAllHistoryBySeriesId(Long seriesId) {
+    this.paymentStateHistoryRepository.deleteAllBySeriesId(seriesId);
   }
 
 }

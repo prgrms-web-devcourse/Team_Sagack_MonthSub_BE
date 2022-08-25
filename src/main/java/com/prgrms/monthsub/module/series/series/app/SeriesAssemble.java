@@ -62,6 +62,7 @@ public class SeriesAssemble {
   private final ArticleUploadDateConverter articleUploadDateConverter;
   private final SeriesLikesService seriesLikesService;
   private final PaymentProvider paymentProvider;
+  private final SeriesCommentService seriesCommentService;
   private List<Category> categoryList;
 
   public SeriesAssemble(
@@ -74,7 +75,8 @@ public class SeriesAssemble {
     SeriesConverter seriesConverter,
     ArticleUploadDateConverter articleUploadDateConverter,
     SeriesLikesService seriesLikesService,
-    PaymentProvider paymentProvider
+    PaymentProvider paymentProvider,
+    SeriesCommentService seriesCommentService
   ) {
     this.seriesService = seriesService;
     this.articleService = articleService;
@@ -86,6 +88,7 @@ public class SeriesAssemble {
     this.articleUploadDateConverter = articleUploadDateConverter;
     this.seriesLikesService = seriesLikesService;
     this.paymentProvider = paymentProvider;
+    this.seriesCommentService = seriesCommentService;
   }
 
   @Transactional
@@ -112,6 +115,34 @@ public class SeriesAssemble {
     series.changeThumbnailKey(thumbnailKey);
 
     return new SeriesSubscribePost.Response(seriesId);
+  }
+
+  @Transactional
+  public void removeSeriesByIdAndUserId(
+    Long seriesId,
+    Long userId
+  ) {
+    Series series = this.seriesService.getById(seriesId);
+
+    if (!series.isMine(userId)) {
+      final String message = "seriesId=" + series.getId() + ", userId=" + userId;
+      throw new AccessDeniedException(message + ":삭제 권한이 없습니다.");
+    }
+
+    //  1. 시리즈 좋아요 삭제 (series_like)
+    this.seriesLikesService.deleteBySeriesId(seriesId);
+    //  2. 결제 히스토리 삭제
+    this.paymentProvider.deleteAllHistoryBySeriesId(seriesId);
+    //  3. 결제 삭제        (payment)
+    this.paymentProvider.deleteBySeriesId(seriesId);
+    //  4. 아티클 삭제       (article)
+    this.articleService.deleteBySeriesId(seriesId);
+    //  5. 아티클 생성 날짜 정보 삭제  (article_upload_date)
+    this.seriesService.articleUploadDateDeleteBySeriesId(seriesId);
+    //  6. 댓글 모두 삭제
+    this.seriesCommentService.deleteBySeriesId(seriesId);
+
+    this.seriesService.delete(seriesId);
   }
 
   @Transactional
