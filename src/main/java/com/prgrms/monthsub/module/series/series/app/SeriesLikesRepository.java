@@ -18,4 +18,7 @@ public interface SeriesLikesRepository extends JpaRepository<SeriesLikes, Long> 
     LikesStatus likesStatus
   );
 
+  void deleteAllBySeriesId(
+    Long seriesId
+  );
 }

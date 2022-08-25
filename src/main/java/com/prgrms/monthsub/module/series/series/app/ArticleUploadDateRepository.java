@@ -8,4 +8,6 @@ public interface ArticleUploadDateRepository extends JpaRepository<ArticleUpload
 
   List<ArticleUploadDate> findAllBySeriesId(Long seriesId);
 
+  void deleteAllBySeriesId(Long seriesId);
+
 }

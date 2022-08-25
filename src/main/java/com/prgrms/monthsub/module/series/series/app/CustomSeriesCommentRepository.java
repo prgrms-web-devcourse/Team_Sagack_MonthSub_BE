@@ -8,8 +8,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface CustomSeriesCommentRepository extends JpaRepository<SeriesComment, Long>,
   DynamicSeriesCommentRepository {
 
-  List<SeriesComment> findAllBySeriesIdAndParentIdIsNull(Long seriesId, Pageable pageable);
+  List<SeriesComment> findAllBySeriesIdAndParentIdIsNull(
+    Long seriesId,
+    Pageable pageable
+  );
 
   List<SeriesComment> findAllBySeriesIdAndParentIdIsNotNull(Long seriesId);
+
+  void deleteAllBySeriesId(Long seriesId);
 
 }

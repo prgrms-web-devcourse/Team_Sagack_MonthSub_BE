@@ -2,7 +2,6 @@ package com.prgrms.monthsub.module.series.series.app;
 
 import com.prgrms.monthsub.common.scheduler.ScheduledHandler;
 import com.prgrms.monthsub.module.series.series.app.Provider.SeriesProvider;
-import com.prgrms.monthsub.module.series.series.converter.SeriesConverter;
 import com.prgrms.monthsub.module.series.series.domain.ArticleUploadDate;
 import com.prgrms.monthsub.module.series.series.domain.Series;
 import com.prgrms.monthsub.module.series.series.domain.Series.Category;
@@ -30,7 +29,6 @@ public class SeriesService implements SeriesProvider, ScheduledHandler {
 
   public SeriesService(
     CustomSeriesRepository seriesRepository,
-    SeriesConverter seriesConverter,
     ArticleUploadDateRepository articleUploadDateRepository
   ) {
     this.seriesRepository = seriesRepository;
@@ -54,11 +52,22 @@ public class SeriesService implements SeriesProvider, ScheduledHandler {
     this.articleUploadDateRepository.save(articleUploadDate);
   }
 
+  @Transactional
+  public void articleUploadDateDeleteBySeriesId(Long seriesId) {
+    this.articleUploadDateRepository.deleteAllBySeriesId(seriesId);
+  }
+
+  @Transactional
+  public void delete(Long seriesId) {
+    this.seriesRepository.deleteById(seriesId);
+  }
+
   @Override
   public List<ArticleUploadDate> getArticleUploadDate(Long seriesId) {
     return this.articleUploadDateRepository.findAllBySeriesId(seriesId);
   }
 
+  @Override
   public boolean checkSeriesStatusByWriterId(
     Long writerId,
     SeriesStatus status
@@ -66,6 +75,7 @@ public class SeriesService implements SeriesProvider, ScheduledHandler {
     return this.seriesRepository.existsAllByWriterIdAndSubscribeStatus(writerId, status);
   }
 
+  @Override
   public List<Series> findAllByWriterId(
     Long writerId
   ) {

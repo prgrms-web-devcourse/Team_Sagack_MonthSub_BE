@@ -11,6 +11,14 @@ public interface PaymentProvider {
     Long seriesId
   );
 
+  void deleteBySeriesId(
+    Long seriesId
+  );
+
+  void deleteAllHistoryBySeriesId(
+    Long seriesId
+  );
+
   List<Payment> findAllMySubscribeByUserId(Long userId);
 
 }

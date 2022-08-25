@@ -37,14 +37,11 @@ import org.springframework.web.multipart.MultipartFile;
 public class SeriesController {
 
   private final SeriesAssemble seriesAssemble;
-  private final SeriesLikesService seriesLikesService;
 
   public SeriesController(
-    SeriesAssemble seriesAssemble,
-    SeriesLikesService seriesLikesService
+    SeriesAssemble seriesAssemble
   ) {
     this.seriesAssemble = seriesAssemble;
-    this.seriesLikesService = seriesLikesService;
   }
 
   @PostMapping(consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
@@ -120,6 +117,16 @@ public class SeriesController {
     @PathVariable Long id
   ) {
     return this.seriesAssemble.getSeriesUsageEdit(id);
+  }
+
+  @DeleteMapping(value = "/{id}/delete")
+  @Operation(summary = "시리즈 공고 게시글 단건 삭제")
+  @Tag(name = "[화면]-시리즈")
+  public void deleteSeriesById(
+    @AuthenticationPrincipal JwtAuthentication authentication,
+    @PathVariable Long id
+  ) {
+    this.seriesAssemble.removeSeriesByIdAndUserId(id, authentication.userId);
   }
 
   @PutMapping(path = "/{id}/edit", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })

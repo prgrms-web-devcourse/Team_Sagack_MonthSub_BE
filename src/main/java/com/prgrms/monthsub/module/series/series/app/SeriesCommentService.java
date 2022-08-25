@@ -39,6 +39,10 @@ public class SeriesCommentService {
     this.userProvider = userProvider;
   }
 
+  public void deleteBySeriesId(Long seriesId) {
+    this.customSeriesCommentRepository.deleteAllBySeriesId(seriesId);
+  }
+
   public SeriesComment getById(Long id) {
     return this.customSeriesCommentRepository
       .findById(id)
