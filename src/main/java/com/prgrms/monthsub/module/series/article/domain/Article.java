@@ -71,6 +71,12 @@ public class Article extends BaseEntity {
     this.contents = contents;
   }
 
+  public void changeRound(
+    int round
+  ) {
+    this.round = round;
+  }
+
   public Boolean isMine(Long userId) {
     return Objects.equals(
       this.getSeries()
