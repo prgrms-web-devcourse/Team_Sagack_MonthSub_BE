@@ -10,6 +10,7 @@ import java.util.Optional;
 import javax.validation.Valid;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -69,5 +70,15 @@ public class ArticleController {
     return this.articleAssemble.getArticle(id, seriesId, authentication.userId);
   }
 
+  @DeleteMapping(path = "/{id}/delete")
+  @Operation(summary = "아티클 단건 삭제")
+  @Tag(name = "[화면]-아티클")
+  public void removeArticle(
+    @AuthenticationPrincipal JwtAuthentication authentication,
+    @PathVariable Long id,
+    @RequestParam(value = "seriesId", required = true) Long seriesId
+  ) {
+    this.articleAssemble.deleteArticle(id, seriesId, authentication.userId);
+  }
 }
 
