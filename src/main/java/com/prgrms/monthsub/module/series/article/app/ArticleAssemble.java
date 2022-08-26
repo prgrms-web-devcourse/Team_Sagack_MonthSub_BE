@@ -18,6 +18,7 @@ import com.prgrms.monthsub.module.worker.expulsion.domain.Expulsion.FileType;
 import com.prgrms.monthsub.module.worker.expulsion.domain.Expulsion.Status;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -121,6 +122,30 @@ public class ArticleAssemble {
         .getWriter()
         .getUser()
     );
+  }
+
+  @Transactional
+  public void deleteArticle(
+    Long id,
+    Long seriesId,
+    Long userId
+  ) {
+    Article article = articleService.find(id);
+
+    if (!article.isMine(userId)) {
+      final String message = "articleId=" + article.getId() + ", userId=" + userId;
+      throw new AccessDeniedException(message + ":삭제 권한이 없습니다.");
+    }
+
+    // 1. 아티클 삭제
+    this.articleService.deleteById(id);
+
+    // 2. 아티클 round 업데이트하기
+    AtomicInteger index = new AtomicInteger(1);
+    this.articleService.getArticleListBySeriesId(seriesId)
+      .forEach(a -> {
+        a.changeRound(index.getAndIncrement());
+      });
   }
 
   @Transactional

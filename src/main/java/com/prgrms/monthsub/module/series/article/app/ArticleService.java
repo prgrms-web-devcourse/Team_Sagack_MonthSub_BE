@@ -28,6 +28,11 @@ public class ArticleService {
     this.articleRepository.deleteAllBySeriesId(seriesId);
   }
 
+  @Transactional
+  public void deleteById(long articleId) {
+    this.articleRepository.deleteById(articleId);
+  }
+
   public Article find(Long id) {
     return this.articleRepository
       .findById(id)
